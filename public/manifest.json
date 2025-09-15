@@ -1,0 +1,17 @@
+{
+  "name": "Schnecke",
+  "description": "TODO",
+  "version": "0.1",
+  "manifest_version": 3,
+  "action": {},
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_start"
+    }
+  ],
+  "permissions": ["tabs"]
+}

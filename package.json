@@ -1,0 +1,25 @@
+{
+  "name": "schnecke",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && vite build",
+    "dev": "vite",
+    "format": "prettier --write . !build/ !pnpm-lock.yaml",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.11",
+    "prettier": "^3.6.2",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.2"
+  },
+  "prettier": {
+    "arrowParens": "avoid",
+    "printWidth": 100,
+    "proseWrap": "always",
+    "singleQuote": true,
+    "semi": false
+  }
+}
