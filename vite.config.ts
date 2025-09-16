@@ -7,6 +7,7 @@ export default defineConfig({
       input: {
         background: 'src/background.ts',
         content: 'src/content.ts',
+        settings: 'src/settings.ts',
       },
       output: {
         entryFileNames: () => {

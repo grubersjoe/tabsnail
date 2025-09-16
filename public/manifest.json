@@ -3,15 +3,19 @@
   "description": "TODO",
   "version": "0.1",
   "manifest_version": 3,
-  "action": {},
-  "background": { "service_worker": "background.js" },
+  "action": {
+    "default_popup": "settings.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"],
-      "css": ["content.css"],
-      "run_at": "document_start"
+      "css": ["content.css"]
     }
   ],
-  "permissions": ["tabs"]
+  "permissions": ["tabs", "storage"]
 }
