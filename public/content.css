@@ -1,4 +1,4 @@
-#schnecke {
+#tabsnail {
   pointer-events: none;
   position: fixed;
   inset: 0;
@@ -13,6 +13,8 @@
     display: flex;
     align-items: center;
     padding: 1em;
+    font-size: 14px;
+    font-family: sans-serif;
 
     > span {
       display: -webkit-box;

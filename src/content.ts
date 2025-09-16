@@ -6,7 +6,7 @@ function isTabListMessage(msg: { type: string }): msg is TabListMessage {
 
 chrome.runtime.onMessage.addListener((msg, _, sendResponse) => {
   if (isTabListMessage(msg)) {
-    const id = 'schnecke'
+    const id = 'tabsnail'
     let elem = document.getElementById(id)
 
     if (!elem) {
