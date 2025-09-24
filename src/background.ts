@@ -1,7 +1,7 @@
 type Tab = Pick<chrome.tabs.Tab, 'id' | 'title'>
 
 export type TabListMessage = {
-  type: 'tabList'
+  type: 'tab-list'
   tabs: Tab[]
 }
 
@@ -13,7 +13,7 @@ async function sendTabs() {
     if (tab.id && tab.status === chrome.tabs.TabStatus.COMPLETE) {
       promises.push(
         chrome.tabs.sendMessage<TabListMessage>(tab.id, {
-          type: 'tabList',
+          type: 'tab-list',
           tabs: tabs.map(tab => ({
             id: tab.id,
             title: tab.title,

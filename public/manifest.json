@@ -17,5 +17,5 @@
       "css": ["content.css"]
     }
   ],
-  "permissions": ["tabs", "storage"]
+  "permissions": ["tabs", "storage", "management"]
 }
