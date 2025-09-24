@@ -7,10 +7,12 @@
     "build": "tsc && vite build",
     "dev": "vite",
     "format": "prettier --write . !build/ !pnpm-lock.yaml",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "watch": "npm run build && chokidar 'src/**/*.ts' 'public/*' -c 'npm run build'"
   },
   "devDependencies": {
     "@types/chrome": "^0.1.11",
+    "chokidar-cli": "^3.0.0",
     "prettier": "^3.6.2",
     "typescript": "~5.8.3",
     "vite": "^7.1.2"
