@@ -1,32 +1,38 @@
 import type { TabListMessage } from './background.ts'
-import { isDarkColor, snailOrder } from './lib.ts'
+import { isDarkColor, snailLayout } from './lib.ts'
+
+const tabsnail = init()
+
+function init() {
+  let tabsnail = document.getElementById('tabsnail')
+
+  if (!tabsnail) {
+    tabsnail = document.createElement('div')
+    tabsnail.id = 'tabsnail'
+    document.documentElement.appendChild(tabsnail)
+  }
+
+  return tabsnail
+}
 
 function isTabListMessage(msg: { type: string }): msg is TabListMessage {
   return msg.type === 'tab-list'
 }
 
-let tabsnail = document.getElementById('tabsnail')
-
-if (!tabsnail) {
-  tabsnail = document.createElement('div')
-  tabsnail.id = 'tabsnail'
-  document.documentElement.appendChild(tabsnail)
-}
-
-chrome.runtime.onMessage.addListener((msg, _, sendResponse) => {
-  if (isTabListMessage(msg)) {
-    const gridCols = 10
-    const gridRows = 20
-    const gridPositions = snailOrder(gridCols, gridRows)
+chrome.runtime.onMessage.addListener((message, _sender, response) => {
+  if (isTabListMessage(message)) {
+    const gridCols = 60
+    const gridRows = 30
+    const layout = snailLayout(gridCols, gridRows, 6)
 
     tabsnail.style.setProperty('--grid-columns', String(gridCols))
     tabsnail.style.setProperty('--grid-rows', String(gridRows))
 
-    tabsnail.innerHTML = msg.tabs
-      .map((tab, idx) => {
-        const [row, col] = gridPositions[idx]
+    tabsnail.innerHTML = message.tabs
+      .map((tab, i) => {
+        const { row, column, edge } = layout[i]
         return `
-            <div style="grid-row: ${row + 1}; grid-column: ${col + 1};">
+            <div style="grid-row: ${row}; grid-column: ${column}" class="segment ${edge}">
               <span>${tab.title}</span>
             </div>
           `
@@ -34,7 +40,7 @@ chrome.runtime.onMessage.addListener((msg, _, sendResponse) => {
       .join('')
   }
 
-  sendResponse()
+  response()
 })
 
 chrome.storage.sync.get('color', ({ color }) => {

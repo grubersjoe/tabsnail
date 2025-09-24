@@ -1,22 +1,22 @@
-const picker = document.getElementById('color-picker') as HTMLInputElement
+const colorPicker = document.getElementById('color-picker') as HTMLInputElement
 const reloadButton = document.getElementById('reload') as HTMLButtonElement
 
 chrome.storage.sync.get('color', ({ color }) => {
   if (color) {
-    picker.value = color
+    colorPicker.value = color
   }
 })
 
-picker.addEventListener(
+colorPicker.addEventListener(
   'input',
   debounce(() => {
-    chrome.storage.sync.set({ color: picker.value })
+    chrome.storage.sync.set({ color: colorPicker.value })
   }, 200),
 )
 
-reloadButton.addEventListener('click', async () => {
+reloadButton.addEventListener('click', () => {
   chrome.runtime.reload()
-  await chrome.tabs.reload()
+  chrome.tabs.reload()
 })
 
 function debounce(callback: (...args: unknown[]) => unknown, wait: number) {

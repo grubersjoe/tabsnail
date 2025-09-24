@@ -8,15 +8,31 @@
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), 1fr);
   grid-template-rows: repeat(var(--grid-rows), minmax(0, 1fr));
+  gap: 1px;
 
   > * {
     display: flex;
     align-items: center;
-    padding: 1em;
-    background-color: white;
-    font-size: 14px;
-    font-family: sans-serif;
+    padding: 0 5%;
+    background-color: #eee;
     color: #000;
+    outline: solid 1px #333;
+    font-family: 'Victor Mono', sans-serif; /* add font */
+    font-size: 12px;
+    font-weight: 600;
+
+    &.left,
+    &.right {
+      padding: 5% 0;
+    }
+
+    &.left {
+      writing-mode: sideways-lr;
+    }
+
+    &.right {
+      writing-mode: sideways-rl;
+    }
 
     &:nth-of-type(odd) {
       color: var(--contrast-color);
@@ -24,9 +40,10 @@
     }
 
     > span {
-      display: -webkit-box;
-      -webkit-line-clamp: 2; /* show at most 2 lines */
-      -webkit-box-orient: vertical;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }

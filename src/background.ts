@@ -10,17 +10,18 @@ async function sendTabs() {
 
   const promises = []
   for (const tab of tabs) {
-    if (tab.id && tab.status === chrome.tabs.TabStatus.COMPLETE) {
-      promises.push(
-        chrome.tabs.sendMessage<TabListMessage>(tab.id, {
-          type: 'tab-list',
-          tabs: tabs.map(tab => ({
-            id: tab.id,
-            title: tab.title,
-          })),
-        }),
-      )
+    if (!tab.id) {
+      continue
     }
+    promises.push(
+      chrome.tabs.sendMessage<TabListMessage>(tab.id, {
+        type: 'tab-list',
+        tabs: tabs.map(tab => ({
+          id: tab.id,
+          title: tab.title,
+        })),
+      }),
+    )
   }
 
   return Promise.allSettled(promises)
