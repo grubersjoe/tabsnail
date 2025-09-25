@@ -1,9 +1,9 @@
 import { isDarkColor, snailLayout } from './snail.ts'
-import type { TabSetActiveMessage } from './background.ts'
+import type { ActivateTabMessage, CloseTabMessage } from './background.ts'
 
-export type Tab = Pick<chrome.tabs.Tab, 'id' | 'title'>
+export type Tab = Required<Pick<chrome.tabs.Tab, 'id' | 'title' | 'active'>>
 
-export type TabListMessage = {
+export type ListTabsMessage = {
   type: 'list-tabs'
   tabs: Tab[]
 }
@@ -22,11 +22,11 @@ function init() {
   return tabsnail
 }
 
-function isListTabsMessage(msg: { type: string }): msg is TabListMessage {
+function isListTabsMessage(msg: { type: string }): msg is ListTabsMessage {
   return msg.type === 'list-tabs'
 }
 
-function handleListTabsMessage(message: TabListMessage) {
+function handleListTabsMessage(message: ListTabsMessage) {
   tabsnail.innerHTML = ''
 
   const gridCols = 48
@@ -39,33 +39,53 @@ function handleListTabsMessage(message: TabListMessage) {
   message.tabs.forEach((tab, i) => {
     const { gridArea, side } = layout[i]
 
-    const segment = document.createElement('div')
-    segment.style.gridArea = gridArea
-    segment.className = side
+    const tabContainer = document.createElement('div')
+    tabContainer.style.gridArea = gridArea
+    tabContainer.className = side
 
-    const button = document.createElement('button')
-    button.type = 'button'
-    button.textContent = tab.title ?? '???'
-    button.addEventListener('click', () => {
+    const activateButton = document.createElement('button')
+    activateButton.type = 'button'
+    activateButton.className = 'activate'
+
+    activateButton.addEventListener('click', () => {
       if (tab.id) {
-        return chrome.runtime.sendMessage<TabSetActiveMessage>({
+        return chrome.runtime.sendMessage<ActivateTabMessage>({
           type: 'activate-tab',
           tabId: tab.id,
         })
       }
     })
 
-    segment.appendChild(button)
-    tabsnail.appendChild(segment)
+    // Required for text overflow with ellipsis
+    const span = document.createElement('span')
+    span.textContent = tab.title
+    activateButton.appendChild(span)
+
+    const closeButton = document.createElement('button')
+    closeButton.type = 'button'
+    closeButton.className = 'close'
+    closeButton.textContent = 'x'
+
+    closeButton.addEventListener('click', () => {
+      if (tab.id) {
+        return chrome.runtime.sendMessage<CloseTabMessage>({
+          type: 'close-tab',
+          tabId: tab.id,
+        })
+      }
+    })
+
+    tabContainer.appendChild(activateButton)
+    tabContainer.appendChild(closeButton)
+    tabsnail.appendChild(tabContainer)
   })
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, response) => {
   if (isListTabsMessage(message)) {
     handleListTabsMessage(message)
+    response()
   }
-
-  response()
 })
 
 chrome.storage.sync.get('color', ({ color }) => {
