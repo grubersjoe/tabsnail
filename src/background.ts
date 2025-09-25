@@ -1,4 +1,9 @@
-import type { Tab, TabListMessage, TabSetActiveMessage } from './types.ts'
+import type { Tab, TabListMessage } from './content.ts'
+
+export type TabSetActiveMessage = {
+  type: 'activate-tab'
+  tabId: number
+}
 
 type Settings = {
   color: string

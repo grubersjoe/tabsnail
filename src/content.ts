@@ -1,5 +1,12 @@
 import { isDarkColor, snailLayout } from './snail.ts'
-import type { TabListMessage, TabSetActiveMessage } from './types.ts'
+import type { TabSetActiveMessage } from './background.ts'
+
+export type Tab = Pick<chrome.tabs.Tab, 'id' | 'title'>
+
+export type TabListMessage = {
+  type: 'list-tabs'
+  tabs: Tab[]
+}
 
 const tabsnail = init()
 
