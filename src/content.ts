@@ -39,7 +39,6 @@ function handleListTabsMessage(message: TabListMessage) {
 
     const button = document.createElement('button')
     button.type = 'button'
-    button.title = tab.title
     button.textContent = tab.title
     button.addEventListener('click', () =>
       chrome.runtime.sendMessage<TabSetActiveMessage>({
