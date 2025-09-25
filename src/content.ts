@@ -30,12 +30,11 @@ function handleListTabsMessage(message: TabListMessage) {
   tabsnail.style.setProperty('--grid-rows', String(gridRows))
 
   message.tabs.forEach((tab, i) => {
-    const { row, column, edge } = layout[i]
+    const { gridArea, side } = layout[i]
 
     const segment = document.createElement('div')
-    segment.style.gridRow = row
-    segment.style.gridColumn = column
-    segment.className = edge
+    segment.style.gridArea = gridArea
+    segment.className = side
 
     const button = document.createElement('button')
     button.type = 'button'

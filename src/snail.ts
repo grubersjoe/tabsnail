@@ -1,4 +1,4 @@
-type Edge = 'top' | 'right' | 'bottom' | 'left'
+type Side = 'top' | 'right' | 'bottom' | 'left'
 
 export function snailLayout(cols: number, rows: number, blockSize: number) {
   let top = 0
@@ -6,39 +6,36 @@ export function snailLayout(cols: number, rows: number, blockSize: number) {
   let left = 0
   let right = cols - 1
 
-  let result: { row: string; column: string; edge: Edge }[] = []
+  let result: { gridArea: string; side: Side }[] = []
 
   while (top <= bottom && left <= right) {
     // top: left -> right
-    for (let c = left; c <= right; c += blockSize) {
-      let endC = Math.min(c + blockSize - 1, right)
+    for (let col = left; col <= right; col += blockSize) {
+      let endCol = Math.min(col + blockSize - 1, right)
       result.push({
-        row: `${top + 1} / ${top + 2}`,
-        column: `${c + 1} / ${endC + 2}`,
-        edge: 'top',
+        gridArea: `${top + 1} / ${col + 1} / ${top + 2} / ${endCol + 2}`,
+        side: 'top',
       })
     }
     top++
 
     // right: top -> bottom
-    for (let r = top; r <= bottom; r += blockSize) {
-      let endR = Math.min(r + blockSize - 1, bottom)
+    for (let row = top; row <= bottom; row += blockSize) {
+      let endRow = Math.min(row + blockSize - 1, bottom)
       result.push({
-        row: `${r + 1} / ${endR + 2}`,
-        column: `${right + 1} / ${right + 2}`,
-        edge: 'right',
+        gridArea: `${row + 1} / ${right + 1} / ${endRow + 2} / ${right + 2}`,
+        side: 'right',
       })
     }
     right--
 
     // bottom: right -> left
     if (top <= bottom) {
-      for (let c = right; c >= left; c -= blockSize) {
-        let endC = Math.max(c - blockSize + 1, left)
+      for (let col = right; col >= left; col -= blockSize) {
+        let endCol = Math.max(col - blockSize + 1, left)
         result.push({
-          row: `${bottom + 1} / ${bottom + 2}`,
-          column: `${endC + 1} / ${c + 2}`,
-          edge: 'bottom',
+          gridArea: `${bottom + 1} / ${endCol + 1} / ${bottom + 2} / ${col + 2}`,
+          side: 'bottom',
         })
       }
       bottom--
@@ -46,12 +43,11 @@ export function snailLayout(cols: number, rows: number, blockSize: number) {
 
     // left: bottom -> top
     if (left <= right) {
-      for (let r = bottom; r >= top; r -= blockSize) {
-        let endR = Math.max(r - blockSize + 1, top)
+      for (let row = bottom; row >= top; row -= blockSize) {
+        let endRow = Math.max(row - blockSize + 1, top)
         result.push({
-          row: `${endR + 1} / ${r + 2}`,
-          column: `${left + 1} / ${left + 2}`,
-          edge: 'left',
+          gridArea: `${endRow + 1} / ${left + 1} / ${row + 2} / ${left + 2}`,
+          side: 'left',
         })
       }
       left++
