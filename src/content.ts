@@ -1,5 +1,5 @@
-import type { TabListMessage } from './background.ts'
-import { isDarkColor, snailLayout } from './lib.ts'
+import { isDarkColor, snailLayout } from './snail.ts'
+import type { TabListMessage, TabSetActiveMessage } from './types.ts'
 
 const tabsnail = init()
 
@@ -15,29 +15,47 @@ function init() {
   return tabsnail
 }
 
-function isTabListMessage(msg: { type: string }): msg is TabListMessage {
-  return msg.type === 'tab-list'
+function isListTabsMessage(msg: { type: string }): msg is TabListMessage {
+  return msg.type === 'list-tabs'
+}
+
+function handleListTabsMessage(message: TabListMessage) {
+  tabsnail.innerHTML = ''
+
+  const gridCols = 48
+  const gridRows = 30
+  const layout = snailLayout(gridCols, gridRows, 6)
+
+  tabsnail.style.setProperty('--grid-columns', String(gridCols))
+  tabsnail.style.setProperty('--grid-rows', String(gridRows))
+
+  message.tabs.forEach((tab, i) => {
+    const { row, column, edge } = layout[i]
+
+    const segment = document.createElement('div')
+    segment.style.gridRow = row
+    segment.style.gridColumn = column
+    segment.className = edge
+
+    const button = document.createElement('button')
+    button.type = 'button'
+    button.title = tab.title
+    button.textContent = tab.title
+    button.addEventListener('click', () =>
+      chrome.runtime.sendMessage<TabSetActiveMessage>({
+        type: 'activate-tab',
+        tabId: tab.id,
+      }),
+    )
+
+    segment.appendChild(button)
+    tabsnail.appendChild(segment)
+  })
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, response) => {
-  if (isTabListMessage(message)) {
-    const gridCols = 60
-    const gridRows = 30
-    const layout = snailLayout(gridCols, gridRows, 6)
-
-    tabsnail.style.setProperty('--grid-columns', String(gridCols))
-    tabsnail.style.setProperty('--grid-rows', String(gridRows))
-
-    tabsnail.innerHTML = message.tabs
-      .map((tab, i) => {
-        const { row, column, edge } = layout[i]
-        return `
-            <div style="grid-row: ${row}; grid-column: ${column}" class="segment ${edge}">
-              <span>${tab.title}</span>
-            </div>
-          `
-      })
-      .join('')
+  if (isListTabsMessage(message)) {
+    handleListTabsMessage(message)
   }
 
   response()

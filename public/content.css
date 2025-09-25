@@ -26,12 +26,16 @@
       padding: 5% 0;
     }
 
-    &.left {
-      writing-mode: sideways-lr;
-    }
-
     &.right {
       writing-mode: sideways-rl;
+    }
+
+    &.bottom > button {
+      transform: rotate(180deg);
+    }
+
+    &.left {
+      writing-mode: sideways-lr;
     }
 
     &:nth-of-type(odd) {
@@ -39,17 +43,15 @@
       background-color: var(--bg-color);
     }
 
-    > span {
-      font-family: inherit;
-      font-size: inherit;
-      font-weight: inherit;
+    > button {
+      all: unset;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
   }
 
-  a {
+  button {
     pointer-events: auto;
   }
 }

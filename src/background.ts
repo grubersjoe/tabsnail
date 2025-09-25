@@ -1,9 +1,4 @@
-type Tab = Pick<chrome.tabs.Tab, 'id' | 'title'>
-
-export type TabListMessage = {
-  type: 'tab-list'
-  tabs: Tab[]
-}
+import type { TabListMessage, TabSetActiveMessage } from './types.ts'
 
 async function sendTabs() {
   const tabs = await chrome.tabs.query({})
@@ -15,11 +10,17 @@ async function sendTabs() {
     }
     promises.push(
       chrome.tabs.sendMessage<TabListMessage>(tab.id, {
-        type: 'tab-list',
-        tabs: tabs.map(tab => ({
-          id: tab.id,
-          title: tab.title,
-        })),
+        type: 'list-tabs',
+        tabs: tabs.map(tab => {
+          if (!tab.id || !tab.title) {
+            throw new Error(`Invalid tab: ${tab}`)
+          }
+
+          return {
+            id: tab.id,
+            title: tab.title,
+          }
+        }),
       }),
     )
   }
@@ -33,4 +34,15 @@ chrome.tabs.onUpdated.addListener(async () => {
 
 chrome.tabs.onRemoved.addListener(async () => {
   await sendTabs()
+})
+
+function isActivateTabMessage(msg: { type: string }): msg is TabSetActiveMessage {
+  return msg.type === 'activate-tab'
+}
+
+chrome.runtime.onMessage.addListener(async (message, _sender, response) => {
+  if (isActivateTabMessage(message)) {
+    await chrome.tabs.update(message.tabId, { active: true })
+  }
+  response()
 })
