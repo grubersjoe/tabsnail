@@ -14,7 +14,7 @@
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"],
-      "css": ["content.css"]
+      "css": ["styles.css"]
     }
   ],
   "permissions": ["tabs", "storage"]

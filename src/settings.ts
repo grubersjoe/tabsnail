@@ -9,14 +9,14 @@ chrome.storage.sync.get('color', ({ color }) => {
 
 colorPicker.addEventListener(
   'input',
-  debounce(() => {
-    chrome.storage.sync.set({ color: colorPicker.value })
+  debounce(async () => {
+    await chrome.storage.sync.set({ color: colorPicker.value })
   }, 200),
 )
 
-reloadButton.addEventListener('click', () => {
+reloadButton.addEventListener('click', async () => {
   chrome.runtime.reload()
-  chrome.tabs.reload()
+  await chrome.tabs.reload()
 })
 
 function debounce(callback: (...args: unknown[]) => unknown, wait: number) {

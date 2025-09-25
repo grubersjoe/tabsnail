@@ -1,5 +1,20 @@
 import type { TabListMessage, TabSetActiveMessage } from './types.ts'
 
+type Settings = {
+  color: string
+}
+
+const defaultSettings: Settings = {
+  color: '#6495ED',
+}
+
+// Initialize settings
+chrome.storage.sync.get('color', async ({ color }) => {
+  if (!color) {
+    await chrome.storage.sync.set({ color: defaultSettings.color })
+  }
+})
+
 async function sendTabs() {
   const tabs = await chrome.tabs.query({})
 
