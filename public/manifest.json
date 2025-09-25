@@ -17,5 +17,11 @@
       "css": ["styles.css"]
     }
   ],
+  "web_accessible_resources": [
+    {
+      "resources": ["fonts/*.woff2"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   "permissions": ["tabs", "storage"]
 }

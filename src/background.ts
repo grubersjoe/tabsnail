@@ -1,4 +1,4 @@
-import type { TabListMessage, TabSetActiveMessage } from './types.ts'
+import type { Tab, TabListMessage, TabSetActiveMessage } from './types.ts'
 
 type Settings = {
   color: string
@@ -34,7 +34,7 @@ async function sendTabs() {
           return {
             id: tab.id,
             title: tab.title,
-          }
+          } satisfies Tab
         }),
       }),
     )

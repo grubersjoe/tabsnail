@@ -1,4 +1,4 @@
-type Tab = Required<Pick<chrome.tabs.Tab, 'id' | 'title'>>
+export type Tab = Pick<chrome.tabs.Tab, 'id' | 'title'>
 
 export type TabListMessage = {
   type: 'list-tabs'

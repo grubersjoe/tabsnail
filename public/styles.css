@@ -17,7 +17,7 @@
     background-color: #eee;
     color: #000;
     outline: solid 1px #333;
-    font-family: 'Victor Mono', sans-serif; /* add font */
+    font-family: 'Victor Mono', monospace;
     font-size: 12px;
     font-weight: 600;
 

@@ -39,13 +39,15 @@ function handleListTabsMessage(message: TabListMessage) {
 
     const button = document.createElement('button')
     button.type = 'button'
-    button.textContent = tab.title
-    button.addEventListener('click', () =>
-      chrome.runtime.sendMessage<TabSetActiveMessage>({
-        type: 'activate-tab',
-        tabId: tab.id,
-      }),
-    )
+    button.textContent = tab.title ?? '???'
+    button.addEventListener('click', () => {
+      if (tab.id) {
+        return chrome.runtime.sendMessage<TabSetActiveMessage>({
+          type: 'activate-tab',
+          tabId: tab.id,
+        })
+      }
+    })
 
     segment.appendChild(button)
     tabsnail.appendChild(segment)
@@ -75,3 +77,41 @@ chrome.storage.onChanged.addListener(changes => {
     tabsnail.style.setProperty('--bg-color', changes.color.newValue)
   }
 })
+
+const fonts = [
+  new FontFace('Victor Mono', `url('${chrome.runtime.getURL('fonts/VictorMono-Regular.woff2')}'`, {
+    weight: '400',
+    style: 'normal',
+  }),
+  new FontFace('Victor Mono', `url('${chrome.runtime.getURL('fonts/VictorMono-Medium.woff2')}'`, {
+    weight: '500',
+    style: 'normal',
+  }),
+  new FontFace(
+    'Victor Mono',
+    `url('${chrome.runtime.getURL('fonts/VictorMono-MediumItalic.woff2')}'`,
+    {
+      weight: '500',
+      style: 'italic',
+    },
+  ),
+  new FontFace('Victor Mono', `url('${chrome.runtime.getURL('fonts/VictorMono-SemiBold.woff2')}'`, {
+    weight: '600',
+    style: 'normal',
+  }),
+  new FontFace(
+    'Viktor Mono',
+    `url('${chrome.runtime.getURL('fonts/VictorMono-SemiBoldItalic.woff2')}'`,
+    {
+      weight: '600',
+      style: 'italic',
+    },
+  ),
+]
+
+fonts.forEach(f =>
+  f
+    .load()
+    .then(f => document.fonts.add(f))
+    .catch(console.error),
+)
