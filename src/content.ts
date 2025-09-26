@@ -1,12 +1,6 @@
 import { isDarkColor, snailLayout } from './snail.ts'
 import type { ActivateTabMessage, CloseTabMessage } from './background.ts'
-
-export type Tab = Required<Pick<chrome.tabs.Tab, 'id' | 'title' | 'active'>>
-
-export type ListTabsMessage = {
-  type: 'list-tabs'
-  tabs: Tab[]
-}
+import { loadFonts } from './fonts.ts'
 
 const tabsnail = init()
 
@@ -22,9 +16,43 @@ function init() {
   return tabsnail
 }
 
+export type Tab = {
+  id?: number
+  title?: string
+  active: boolean
+}
+
+export type ListTabsMessage = {
+  type: 'list-tabs'
+  tabs: Tab[]
+}
+
 function isListTabsMessage(msg: { type: string }): msg is ListTabsMessage {
   return msg.type === 'list-tabs'
 }
+
+chrome.runtime.onMessage.addListener((message, _sender, response) => {
+  if (isListTabsMessage(message)) {
+    handleListTabsMessage(message)
+    response()
+  }
+})
+
+chrome.storage.sync.get('color', ({ color }) => {
+  if (color) {
+    const isDark = isDarkColor(color)
+    tabsnail.style.setProperty('--dark-color', isDark ? '#fff' : '#111')
+    tabsnail.style.setProperty('--dark-bg', color)
+  }
+})
+
+chrome.storage.onChanged.addListener(changes => {
+  if (changes.color) {
+    const isDark = isDarkColor(changes.color.newValue)
+    tabsnail.style.setProperty('--dark-color', isDark ? '#fff' : '#000')
+    tabsnail.style.setProperty('--dark-bg', changes.color.newValue)
+  }
+})
 
 function handleListTabsMessage(message: ListTabsMessage) {
   tabsnail.innerHTML = ''
@@ -37,42 +65,53 @@ function handleListTabsMessage(message: ListTabsMessage) {
   tabsnail.style.setProperty('--grid-rows', String(gridRows))
 
   message.tabs.forEach((tab, i) => {
+    const tabId = tab.id
+
+    if (!tabId) {
+      console.error(`Unexpected: Tab ${i} has no ID.`)
+      return
+    }
+
     const { gridArea, side } = layout[i]
 
     const tabContainer = document.createElement('div')
     tabContainer.style.gridArea = gridArea
-    tabContainer.className = side
+    tabContainer.classList.add(className(side))
+
+    if (tab.active) {
+      tabContainer.classList.add(className('active'))
+    }
 
     const activateButton = document.createElement('button')
     activateButton.type = 'button'
-    activateButton.className = 'activate'
+    activateButton.classList.add(className('btn-activate'))
 
     activateButton.addEventListener('click', () => {
-      if (tab.id) {
-        return chrome.runtime.sendMessage<ActivateTabMessage>({
-          type: 'activate-tab',
-          tabId: tab.id,
-        })
-      }
+      return chrome.runtime.sendMessage<ActivateTabMessage>({
+        type: 'activate-tab',
+        tabId,
+      })
     })
 
-    // Required for text overflow with ellipsis
+    // Required for text overflow with ellipsis.
     const span = document.createElement('span')
-    span.textContent = tab.title
+    span.textContent = tab.title ?? ''
     activateButton.appendChild(span)
 
     const closeButton = document.createElement('button')
     closeButton.type = 'button'
-    closeButton.className = 'close'
-    closeButton.textContent = 'x'
+    closeButton.classList.add(className('btn-close'))
+    closeButton.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path fill="currentColor" d="m10.94 12-3.97 3.97 1.06 1.06L12 13.06l3.97 3.97 1.06-1.06L13.06 12l3.97-3.97-1.06-1.06L12 10.94 8.03 6.97 6.97 8.03 10.94 12Z" />
+        </svg>    
+    `
 
     closeButton.addEventListener('click', () => {
-      if (tab.id) {
-        return chrome.runtime.sendMessage<CloseTabMessage>({
-          type: 'close-tab',
-          tabId: tab.id,
-        })
-      }
+      return chrome.runtime.sendMessage<CloseTabMessage>({
+        type: 'close-tab',
+        tabId,
+      })
     })
 
     tabContainer.appendChild(activateButton)
@@ -81,63 +120,8 @@ function handleListTabsMessage(message: ListTabsMessage) {
   })
 }
 
-chrome.runtime.onMessage.addListener((message, _sender, response) => {
-  if (isListTabsMessage(message)) {
-    handleListTabsMessage(message)
-    response()
-  }
-})
+function className(name: string) {
+  return `tabsnail-${name}`
+}
 
-chrome.storage.sync.get('color', ({ color }) => {
-  if (color) {
-    const contrastColor = isDarkColor(color) ? '#fff' : '#000'
-    tabsnail.style.setProperty('--contrast-color', contrastColor)
-    tabsnail.style.setProperty('--bg-color', color)
-  }
-})
-
-chrome.storage.onChanged.addListener(changes => {
-  if (changes.color) {
-    const contrastColor = isDarkColor(changes.color.newValue) ? '#fff' : '#000'
-    tabsnail.style.setProperty('--contrast-color', contrastColor)
-    tabsnail.style.setProperty('--bg-color', changes.color.newValue)
-  }
-})
-
-const fonts = [
-  new FontFace('Victor Mono', `url('${chrome.runtime.getURL('fonts/VictorMono-Regular.woff2')}'`, {
-    weight: '400',
-    style: 'normal',
-  }),
-  new FontFace('Victor Mono', `url('${chrome.runtime.getURL('fonts/VictorMono-Medium.woff2')}'`, {
-    weight: '500',
-    style: 'normal',
-  }),
-  new FontFace(
-    'Victor Mono',
-    `url('${chrome.runtime.getURL('fonts/VictorMono-MediumItalic.woff2')}'`,
-    {
-      weight: '500',
-      style: 'italic',
-    },
-  ),
-  new FontFace('Victor Mono', `url('${chrome.runtime.getURL('fonts/VictorMono-SemiBold.woff2')}'`, {
-    weight: '600',
-    style: 'normal',
-  }),
-  new FontFace(
-    'Viktor Mono',
-    `url('${chrome.runtime.getURL('fonts/VictorMono-SemiBoldItalic.woff2')}'`,
-    {
-      weight: '600',
-      style: 'italic',
-    },
-  ),
-]
-
-fonts.forEach(f =>
-  f
-    .load()
-    .then(f => document.fonts.add(f))
-    .catch(console.error),
-)
+loadFonts()

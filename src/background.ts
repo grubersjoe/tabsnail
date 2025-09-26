@@ -1,4 +1,4 @@
-import type { Tab, ListTabsMessage } from './content.ts'
+import type { ListTabsMessage, Tab } from './content.ts'
 
 export type ActivateTabMessage = {
   type: 'activate-tab'
@@ -33,35 +33,6 @@ chrome.storage.sync.get('color', async ({ color }) => {
   }
 })
 
-async function sendTabs() {
-  const tabs = await chrome.tabs.query({})
-
-  const sanitizedTabs: Tab[] = tabs
-    .filter((tab): tab is chrome.tabs.Tab & Tab => tab.id != null && tab.title != null)
-    .map(t => ({
-      id: t.id,
-      title: t.title,
-      active: t.active,
-    }))
-
-  const promises = []
-  for (const tab of tabs) {
-    if (tab.id) {
-      promises.push(
-        chrome.tabs.sendMessage<ListTabsMessage>(tab.id, {
-          type: 'list-tabs',
-          tabs: sanitizedTabs,
-        }),
-      )
-    }
-  }
-
-  return Promise.allSettled(promises)
-}
-
-chrome.tabs.onUpdated.addListener(sendTabs)
-chrome.tabs.onRemoved.addListener(sendTabs)
-
 chrome.runtime.onMessage.addListener(async (message, _sender, response) => {
   if (isActivateTabMessage(message)) {
     chrome.tabs.update(message.tabId, { active: true }).then(response)
@@ -70,3 +41,31 @@ chrome.runtime.onMessage.addListener(async (message, _sender, response) => {
     chrome.tabs.remove(message.tabId).then(response)
   }
 })
+
+chrome.tabs.onActivated.addListener(sendTabs)
+chrome.tabs.onUpdated.addListener(sendTabs)
+chrome.tabs.onRemoved.addListener(sendTabs)
+
+export async function sendTabs() {
+  const tabs = await chrome.tabs.query({ currentWindow: true })
+
+  const mappedTabs: Tab[] = tabs.map(t => ({
+    id: t.id,
+    title: t.title,
+    active: t.active,
+  }))
+
+  const promises = []
+  for (const tab of tabs) {
+    if (tab.id) {
+      promises.push(
+        chrome.tabs.sendMessage<ListTabsMessage>(tab.id, {
+          type: 'list-tabs',
+          tabs: mappedTabs,
+        }),
+      )
+    }
+  }
+
+  return Promise.allSettled(promises)
+}

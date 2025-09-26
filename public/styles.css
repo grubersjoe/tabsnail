@@ -1,6 +1,9 @@
 #tabsnail {
-  --padding: 0.75em;
-  --close-btn-size: 22px;
+  /* Some CSS properties are set by the content script dynamically. */
+  --padding: 12px;
+  --btn-close-size: 20px;
+  --outline-width: 1px;
+  --outline-color: #555;
 
   pointer-events: none;
   position: fixed;
@@ -9,9 +12,15 @@
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(var(--grid-columns), 1fr);
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
   grid-template-rows: repeat(var(--grid-rows), minmax(0, 1fr));
-  gap: 1px;
+  gap: var(--outline-width);
+
+  &,
+  > *,
+  > * > * {
+    box-sizing: border-box;
+  }
 
   /* Tab containers */
   > * {
@@ -20,71 +29,75 @@
     align-items: center;
     justify-content: space-between;
     gap: calc(var(--padding) / 2);
-    padding: 0 0 0 var(--padding);
     background-color: #eee; /* FIXME: use vars */
     color: #111;
-    outline: solid 1px #555;
-
-    &:nth-of-type(odd) {
-      color: var(--contrast-color);
-      background-color: var(--bg-color);
-
-      &:hover {
-        background-color: lch(from var(--bg-color) calc(l + 6) c h);
-      }
-    }
-
-    &.left {
-      writing-mode: sideways-lr;
-    }
-
-    &.right {
-      writing-mode: sideways-rl;
-    }
-
-    &.left,
-    &.right {
-      padding: var(--padding) 0 0 0;
-    }
+    box-shadow: 0 0 0 var(--outline-width) var(--outline-color);
 
     &:hover {
       background-color: lch(from #eee calc(l + 6) c h);
     }
+
+    &.tabsnail-active {
+      font-style: italic;
+    }
+
+    &:nth-of-type(odd) {
+      color: var(--dark-color);
+      background-color: var(--dark-bg);
+
+      &:hover {
+        background-color: lch(from var(--dark-bg) calc(l + 6) c h);
+      }
+
+      .tabsnail-btn-close {
+        color: var(--dark-color);
+      }
+    }
+  }
+
+  .tabsnail-top,
+  .tabsnail-bottom {
+    padding: 0 var(--padding) 0 0;
+
+    .tabsnail-btn-activate {
+      padding: 0 0 0 var(--padding);
+    }
+  }
+
+  .tabsnail-left,
+  .tabsnail-right {
+    padding: 0 0 var(--padding) 0;
+
+    .tabsnail-btn-activate {
+      padding: var(--padding) 0 0 0;
+    }
+  }
+
+  .tabsnail-left {
+    writing-mode: sideways-lr;
+  }
+
+  .tabsnail-right {
+    writing-mode: sideways-rl;
   }
 
   button {
     all: unset;
-    box-sizing: border-box;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    font-family: 'Victor Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
 
     /* Important for text overflow with ellipsis. */
     min-width: 0;
     min-height: 0;
 
-    &.activate {
-      flex-grow: 1;
-      width: 100%;
-      height: 100%;
-    }
-
-    &.close {
-      flex: 0 0 var(--close-btn-size);
-      width: 100%;
-      height: var(--close-btn-size);
-      display: flex;
-      align-content: center;
-      justify-content: center;
-      border-radius: 4px;
-      text-align: center;
-
-      &:hover {
-        background-color: rgba(255, 0, 0, 0.12);
-      }
+    &,
+    span {
+      font-family: 'Victor Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: normal; /* Some websites set this 🌝 */
     }
 
     &:active {
@@ -98,24 +111,29 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    &,
-    span {
-      line-height: 1;
-    }
   }
 
-  .top,
-  .bottom {
-    .close {
-      margin: 0 6px 0 0;
-    }
+  .tabsnail-btn-activate {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
   }
 
-  .left,
-  .right {
-    .close {
-      margin: 0 0 6px 0;
+  .tabsnail-btn-close {
+    flex: 0 0 var(--btn-close-size);
+    width: 100%;
+    height: var(--btn-close-size);
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    border-radius: 2px;
+    text-align: center;
+    color: #000;
+    opacity: 0.6;
+    transition: opacity 150ms ease;
+
+    &:hover {
+      opacity: 1;
     }
   }
 }

@@ -16,7 +16,6 @@ colorPicker.addEventListener(
 
 reloadButton.addEventListener('click', async () => {
   chrome.runtime.reload()
-  await chrome.tabs.reload()
 })
 
 function debounce(callback: (...args: unknown[]) => unknown, wait: number) {
