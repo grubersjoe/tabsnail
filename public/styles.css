@@ -1,6 +1,6 @@
 #tabsnail {
   /* The --color, --grid-columns and --grid-rows properties are set dynamically. */
-  --padding: 12px;
+  --padding: 8px;
   --color-text: hsl(0, 0%, 7%);
   --color-bg: hsl(0, 0%, 95%);
   --color-bg-hover: oklab(from var(--color-bg) calc(l - 0.04) a b);
@@ -44,7 +44,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: calc(var(--padding) / 2);
+    gap: calc(var(--padding));
     color: var(--color-text);
     background-color: var(--color-bg);
     box-shadow: 0 0 0 var(--outline-width) var(--color-outline);
@@ -61,28 +61,29 @@
 
   .tabsnail-top,
   .tabsnail-bottom {
-    padding: 0 var(--padding) 0 0;
+    padding: 0 calc(var(--padding) / 2) 0 0;
 
     .tabsnail-btn-activate {
       padding: 0 0 0 var(--padding);
     }
   }
 
-  .tabsnail-left,
-  .tabsnail-right {
-    padding: 0 0 var(--padding) 0;
-
-    .tabsnail-btn-activate {
-      padding: var(--padding) 0 0 0;
-    }
-  }
-
   .tabsnail-left {
     writing-mode: sideways-lr;
+    padding: calc(var(--padding) / 2) 0 0 0;
+
+    .tabsnail-btn-activate {
+      padding: 0 0 var(--padding) 0;
+    }
   }
 
   .tabsnail-right {
     writing-mode: sideways-rl;
+    padding: 0 0 calc(var(--padding) / 2) 0;
+
+    .tabsnail-btn-activate {
+      padding: var(--padding) 0 0 0;
+    }
   }
 
   button {
