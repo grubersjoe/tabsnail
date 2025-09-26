@@ -23,7 +23,7 @@ type Settings = {
 }
 
 const defaultSettings: Settings = {
-  color: '#6495ED',
+  color: '#edffb8',
 }
 
 // Initialize settings

@@ -11,7 +11,7 @@ colorPicker.addEventListener(
   'input',
   debounce(async () => {
     await chrome.storage.sync.set({ color: colorPicker.value })
-  }, 200),
+  }, 100),
 )
 
 reloadButton.addEventListener('click', async () => {

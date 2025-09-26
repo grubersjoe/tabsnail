@@ -1,9 +1,26 @@
 #tabsnail {
-  /* Some CSS properties are set by the content script dynamically. */
+  /* The --color, --grid-columns and --grid-rows properties are set dynamically. */
   --padding: 12px;
-  --btn-close-size: 20px;
+  --color-text: hsl(0, 0%, 7%);
+  --color-bg: hsl(0, 0%, 95%);
+  --color-bg-hover: oklab(from var(--color-bg) calc(l - 0.04) a b);
+  --color-icons: oklab(from var(--color-text) calc(l + 0.3) a b);
+  --color-icons-hover: oklab(from var(--color-text) calc(l + 0.15) a b);
+  --color-outline: hsl(0, 0%, 33%);
   --outline-width: 1px;
-  --outline-color: #555;
+  --btn-close-size: 20px;
+
+  > :nth-of-type(odd) {
+    --color-bg: var(--color);
+    --color-bg-hover: oklab(from var(--color-bg) calc(l - 0.04) a b);
+  }
+
+  &.tabsnail-dark > :nth-of-type(odd) {
+    --color-text: white;
+    --color-bg-hover: oklab(from var(--color-bg) calc(l + 0.04) a b);
+    --color-icons: oklab(from var(--color-text) calc(l - 0.3) a b);
+    --color-icons-hover: oklab(from var(--color-text) calc(l - 0.15) a b);
+  }
 
   pointer-events: none;
   position: fixed;
@@ -17,8 +34,7 @@
   gap: var(--outline-width);
 
   &,
-  > *,
-  > * > * {
+  * {
     box-sizing: border-box;
   }
 
@@ -29,29 +45,17 @@
     align-items: center;
     justify-content: space-between;
     gap: calc(var(--padding) / 2);
-    background-color: #eee; /* FIXME: use vars */
-    color: #111;
-    box-shadow: 0 0 0 var(--outline-width) var(--outline-color);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    box-shadow: 0 0 0 var(--outline-width) var(--color-outline);
+    transition: background-color 200ms ease-in-out;
 
     &:hover {
-      background-color: lch(from #eee calc(l + 6) c h);
+      background-color: var(--color-bg-hover);
     }
 
     &.tabsnail-active {
       font-style: italic;
-    }
-
-    &:nth-of-type(odd) {
-      color: var(--dark-color);
-      background-color: var(--dark-bg);
-
-      &:hover {
-        background-color: lch(from var(--dark-bg) calc(l + 6) c h);
-      }
-
-      .tabsnail-btn-close {
-        color: var(--dark-color);
-      }
     }
   }
 
@@ -128,12 +132,11 @@
     justify-content: center;
     border-radius: 2px;
     text-align: center;
-    color: #000;
-    opacity: 0.6;
-    transition: opacity 150ms ease;
+    color: var(--color-icons);
+    transition: color 150ms ease;
 
     &:hover {
-      opacity: 1;
+      color: var(--color-icons-hover);
     }
   }
 }

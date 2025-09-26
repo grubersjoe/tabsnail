@@ -40,17 +40,15 @@ chrome.runtime.onMessage.addListener((message, _sender, response) => {
 
 chrome.storage.sync.get('color', ({ color }) => {
   if (color) {
-    const isDark = isDarkColor(color)
-    tabsnail.style.setProperty('--dark-color', isDark ? '#fff' : '#111')
-    tabsnail.style.setProperty('--dark-bg', color)
+    tabsnail.style.setProperty('--color', color)
+    tabsnail.classList.toggle(className('dark'), isDarkColor(color))
   }
 })
 
 chrome.storage.onChanged.addListener(changes => {
   if (changes.color) {
-    const isDark = isDarkColor(changes.color.newValue)
-    tabsnail.style.setProperty('--dark-color', isDark ? '#fff' : '#000')
-    tabsnail.style.setProperty('--dark-bg', changes.color.newValue)
+    tabsnail.style.setProperty('--color', changes.color.newValue)
+    tabsnail.classList.toggle(className('dark'), isDarkColor(changes.color.newValue))
   }
 })
 
