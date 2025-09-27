@@ -4,8 +4,7 @@
   --color-text: hsl(0, 0%, 7%);
   --color-bg: hsl(0, 0%, 95%);
   --color-bg-hover: oklab(from var(--color-bg) calc(l - 0.04) a b);
-  --color-icons: oklab(from var(--color-text) calc(l + 0.3) a b);
-  --color-icons-hover: oklab(from var(--color-text) calc(l + 0.15) a b);
+  --color-muted: oklab(from var(--color-text) calc(l + 0.2) a b);
   --color-outline: hsl(0, 0%, 33%);
   --outline-width: 1px;
   --btn-close-size: 20px;
@@ -18,8 +17,7 @@
   &.tabsnail-dark > :nth-of-type(odd) {
     --color-text: white;
     --color-bg-hover: oklab(from var(--color-bg) calc(l + 0.04) a b);
-    --color-icons: oklab(from var(--color-text) calc(l - 0.3) a b);
-    --color-icons-hover: oklab(from var(--color-text) calc(l - 0.15) a b);
+    --color-muted: oklab(from var(--color-text) calc(l - 0.2) a b);
   }
 
   pointer-events: none;
@@ -52,10 +50,6 @@
 
     &:hover {
       background-color: var(--color-bg-hover);
-    }
-
-    &.tabsnail-active {
-      font-style: italic;
     }
   }
 
@@ -125,19 +119,17 @@
   }
 
   .tabsnail-btn-close {
-    flex: 0 0 var(--btn-close-size);
+    margin-top: -1px;
     width: 100%;
     height: var(--btn-close-size);
     display: flex;
+    flex: 0 0 var(--btn-close-size);
     align-content: center;
     justify-content: center;
     border-radius: 2px;
     text-align: center;
-    color: var(--color-icons);
+    font-size: 14px;
+    color: var(--color-muted);
     transition: color 150ms ease;
-
-    &:hover {
-      color: var(--color-icons-hover);
-    }
   }
 }

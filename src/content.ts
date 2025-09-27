@@ -93,10 +93,6 @@ function updateTabs(message: UpdateTabsMessage) {
     container.style.gridArea = gridArea
     container.classList.add(className(side))
 
-    if (tab.active) {
-      container.classList.add(className('active'))
-    }
-
     const activateButton = document.createElement('button')
     activateButton.type = 'button'
     activateButton.classList.add(className('btn-activate'))
@@ -113,17 +109,14 @@ function updateTabs(message: UpdateTabsMessage) {
     span.textContent = tab.title ?? ''
     activateButton.appendChild(span)
 
+    if (tab.active) {
+      span.innerText = `> ${span.innerText}`
+    }
+
     const closeButton = document.createElement('button')
     closeButton.type = 'button'
     closeButton.classList.add(className('btn-close'))
-    closeButton.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path 
-          fill="currentColor" 
-          d="m10.94 12-3.97 3.97 1.06 1.06L12 13.06l3.97 3.97 1.06-1.06L13.06 12l3.97-3.97-1.06-1.06L12 10.94 8.03 6.97 6.97 8.03 10.94 12Z" 
-        />
-      </svg>    
-    `
+    closeButton.innerHTML = '✕'
 
     closeButton.addEventListener('click', () => {
       return chrome.runtime.sendMessage<CloseTabMessage>({
