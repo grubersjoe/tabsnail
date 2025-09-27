@@ -1,9 +1,21 @@
-<label for="color-picker">Color</label>
-<input type="color" id="color-picker" />
+<html lang="en">
+  <head>
+    <title>Tabsnail</title>
+    <link rel="stylesheet" href="settings.css" />
+  </head>
+  <body>
+    <form>
+      <div class="flex flex-column">
+        <label for="color-picker">Color</label>
+        <input type="color" id="color-picker" />
+      </div>
+      <div class="flex flex-column">
+        <label for="tab-size">Tab size</label>
+        <input type="range" id="tab-size" min="6" max="12" />
+      </div>
 
-<label for="tab-size">Tab size</label>
-<input type="range" id="tab-size" min="6" max="12" />
-
-<button type="button" id="reload">reload</button>
-
-<script src="settings.js"></script>
+      <button type="button" id="reload">Reload</button>
+    </form>
+    <script src="settings.js"></script>
+  </body>
+</html>
