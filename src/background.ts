@@ -1,4 +1,4 @@
-import type { ListTabsMessage, Tab } from './content.ts'
+import type { Tab, UpdateTabsMessage } from './content.ts'
 
 export type ActivateTabMessage = {
   type: 'activate-tab'
@@ -18,19 +18,37 @@ function isCloseTabMessage(msg: { type: string }): msg is CloseTabMessage {
   return msg.type === 'close-tab'
 }
 
-type Settings = {
+export type Settings = {
   color: string
+  tabSize: number
 }
 
 const defaultSettings: Settings = {
   color: '#edffb8',
+  tabSize: 8,
 }
 
 // Initialize settings
-chrome.storage.sync.get('color', async ({ color }) => {
+chrome.storage.sync.get<Settings>(['color', 'tabSize'], async ({ color, tabSize }) => {
+  const promises: Promise<void>[] = []
+
   if (!color) {
-    await chrome.storage.sync.set({ color: defaultSettings.color })
+    promises.push(
+      chrome.storage.sync.set({
+        color: defaultSettings.color,
+      }),
+    )
   }
+
+  if (!tabSize) {
+    promises.push(
+      chrome.storage.sync.set({
+        tabSize: defaultSettings.tabSize,
+      }),
+    )
+  }
+
+  return Promise.all(promises)
 })
 
 chrome.runtime.onMessage.addListener(async (message, _sender, response) => {
@@ -59,8 +77,8 @@ export async function sendTabs() {
   for (const tab of tabs) {
     if (tab.id) {
       promises.push(
-        chrome.tabs.sendMessage<ListTabsMessage>(tab.id, {
-          type: 'list-tabs',
+        chrome.tabs.sendMessage<UpdateTabsMessage>(tab.id, {
+          type: 'update-tabs',
           tabs: mappedTabs,
         }),
       )
