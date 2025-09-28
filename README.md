@@ -23,3 +23,4 @@ snail you get.
   - [ ] Sea Slug
   - [ ] Carpathian Blue Slug
   - [ ] Yellow Slug?
+- [ ] Visualize tab groups?
