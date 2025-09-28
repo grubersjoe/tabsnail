@@ -72,6 +72,10 @@ export function snailLayout(blockSize: number = 8) {
   return layout
 }
 
+export function className(name: string) {
+  return `tabsnail-${name}`
+}
+
 export function isDarkColor(hex: string) {
   hex = hex.slice(1)
   const int = parseInt(

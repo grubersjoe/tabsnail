@@ -1,9 +1,11 @@
-import { debounce, isDarkColor, snailLayout } from './lib.ts'
+import { className, debounce, isDarkColor, snailLayout } from './lib.ts'
 import type { ActivateTabMessage, CloseTabMessage, Settings } from './background.ts'
 import { loadFonts } from './fonts.ts'
 
-const settings: Partial<Settings> = {}
 const tabsnail = init()
+
+let settingsReadyResolve!: (s: Settings) => void
+const settingsReady = new Promise<Settings>(res => (settingsReadyResolve = res))
 
 function init() {
   let tabsnail = document.getElementById('tabsnail')
@@ -14,30 +16,23 @@ function init() {
     document.documentElement.appendChild(tabsnail)
   }
 
-  chrome.storage.sync.get<Settings>(['color', 'tabSize'], ({ color, tabSize }) => {
-    if (color) {
-      settings.color = color
-      tabsnail.style.setProperty('--color', color)
-      tabsnail.classList.toggle(className('dark'), isDarkColor(color))
+  chrome.storage.sync.get<Settings>(['color', 'tabSize'], settings => {
+    if (settings.color) {
+      tabsnail.style.setProperty('--color', settings.color)
+      tabsnail.classList.toggle(className('dark'), isDarkColor(settings.color))
     }
 
-    if (tabSize) {
-      settings.tabSize = tabSize
-    }
+    settingsReadyResolve(settings)
   })
+
+  loadFonts().catch(console.error)
 
   return tabsnail
 }
 
-export type Tab = {
-  id?: number
-  title?: string
-  active: boolean
-}
-
 export type UpdateTabsMessage = {
   type: 'update-tabs'
-  tabs: Tab[]
+  tabs: Pick<chrome.tabs.Tab, 'id' | 'title' | 'active'>[]
 }
 
 function isUpdateTabsMessage(msg: { type: string }): msg is UpdateTabsMessage {
@@ -45,36 +40,38 @@ function isUpdateTabsMessage(msg: { type: string }): msg is UpdateTabsMessage {
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, response) => {
-  if (isUpdateTabsMessage(message)) {
-    updateTabs(message)
-    response()
-  }
+  settingsReady.then(({ tabSize }) => {
+    if (isUpdateTabsMessage(message)) {
+      updateTabs(message, tabSize)
+      response()
+    }
+  })
 })
 
 chrome.storage.onChanged.addListener(({ color, tabSize }) => {
   if (color) {
-    settings.color = color.newValue
     tabsnail.style.setProperty('--color', color.newValue)
     tabsnail.classList.toggle(className('dark'), isDarkColor(color.newValue))
   }
 
   if (tabSize) {
-    settings.tabSize = tabSize.newValue
-    updateLayout()
+    updateLayout(tabSize.newValue)
   }
 })
 
 window.addEventListener(
   'resize',
   debounce(() => {
-    updateLayout()
+    settingsReady.then(({ tabSize }) => {
+      updateLayout(tabSize)
+    })
   }, 150),
 )
 
-function updateTabs(message: UpdateTabsMessage) {
+function updateTabs(message: UpdateTabsMessage, tabSize: number) {
   tabsnail.innerHTML = ''
 
-  const { cols, rows, blocks } = snailLayout(settings.tabSize)
+  const { cols, rows, blocks } = snailLayout(tabSize)
 
   tabsnail.style.setProperty('--grid-columns', String(cols))
   tabsnail.style.setProperty('--grid-rows', String(rows))
@@ -130,8 +127,8 @@ function updateTabs(message: UpdateTabsMessage) {
   })
 }
 
-function updateLayout() {
-  const { cols, rows, blocks } = snailLayout(settings.tabSize)
+function updateLayout(tabSize: number) {
+  const { cols, rows, blocks } = snailLayout(tabSize)
 
   tabsnail.style.setProperty('--grid-columns', String(cols))
   tabsnail.style.setProperty('--grid-rows', String(rows))
@@ -146,9 +143,3 @@ function updateLayout() {
     container.classList.toggle(className('left'), side === 'left')
   })
 }
-
-function className(name: string) {
-  return `tabsnail-${name}`
-}
-
-loadFonts()

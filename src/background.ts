@@ -1,4 +1,4 @@
-import type { Tab, UpdateTabsMessage } from './content.ts'
+import type { UpdateTabsMessage } from './content.ts'
 
 export type ActivateTabMessage = {
   type: 'activate-tab'
@@ -66,24 +66,24 @@ chrome.tabs.onRemoved.addListener(sendTabs)
 
 export async function sendTabs() {
   const tabs = await chrome.tabs.query({ currentWindow: true })
-
-  const mappedTabs: Tab[] = tabs.map(t => ({
-    id: t.id,
-    title: t.title,
-    active: t.active,
-  }))
-
   const promises = []
+
   for (const tab of tabs) {
-    if (tab.id) {
-      promises.push(
-        chrome.tabs.sendMessage<UpdateTabsMessage>(tab.id, {
-          type: 'update-tabs',
-          tabs: mappedTabs,
-        }),
-      )
+    if (!tab.id) {
+      console.warn(`Tab #${tab.index} has no ID.`)
+      continue
     }
+    promises.push(
+      chrome.tabs.sendMessage<UpdateTabsMessage>(tab.id, {
+        type: 'update-tabs',
+        tabs: tabs.map(t => ({
+          id: t.id,
+          title: t.title,
+          active: t.active,
+        })),
+      }),
+    )
   }
 
-  return Promise.allSettled(promises)
+  return Promise.all(promises)
 }
