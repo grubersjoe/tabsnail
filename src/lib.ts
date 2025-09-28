@@ -1,26 +1,33 @@
-type Side = 'top' | 'right' | 'bottom' | 'left'
-
 /**
  * Calculates the grid position of each element in a snail-shaped layout that
- * goes from top, to right, to bottom, to left. `elemSize` is the number of
- * cells to use per element.
+ * goes from top, to right, to bottom, to left. `blockSize` is the number of
+ * cells to use for one element, where one cell is a square of 32x32 pixels.
+ * Blocks are one cell tall or wide, depending on the side.
  */
-export function snailLayout(cols: number, rows: number, elemSize: number = 8) {
+export function snailLayout(blockSize: number = 8) {
+  const cellSize = 32
+  const cols = Math.round(document.documentElement.clientWidth / cellSize)
+  const rows = Math.round(document.documentElement.clientHeight / cellSize)
+
   let top = 0
   let bottom = rows - 1
   let left = 0
   let right = cols - 1
 
   let layout: {
-    gridArea: string
-    side: Side
-  }[] = []
+    cols: number
+    rows: number
+    blocks: {
+      gridArea: string
+      side: 'top' | 'right' | 'bottom' | 'left'
+    }[]
+  } = { cols, rows, blocks: [] }
 
   while (top <= bottom && left <= right) {
     // top: left -> right
-    for (let col = left; col <= right; col += elemSize) {
-      let endCol = Math.min(col + elemSize - 1, right)
-      layout.push({
+    for (let col = left; col <= right; col += blockSize) {
+      let endCol = Math.min(col + blockSize - 1, right)
+      layout.blocks.push({
         gridArea: `${top + 1} / ${col + 1} / ${top + 2} / ${endCol + 2}`,
         side: 'top',
       })
@@ -28,9 +35,9 @@ export function snailLayout(cols: number, rows: number, elemSize: number = 8) {
     top++
 
     // right: top -> bottom
-    for (let row = top; row <= bottom; row += elemSize) {
-      let endRow = Math.min(row + elemSize - 1, bottom)
-      layout.push({
+    for (let row = top; row <= bottom; row += blockSize) {
+      let endRow = Math.min(row + blockSize - 1, bottom)
+      layout.blocks.push({
         gridArea: `${row + 1} / ${right + 1} / ${endRow + 2} / ${right + 2}`,
         side: 'right',
       })
@@ -39,9 +46,9 @@ export function snailLayout(cols: number, rows: number, elemSize: number = 8) {
 
     // bottom: right -> left
     if (top <= bottom) {
-      for (let col = right; col >= left; col -= elemSize) {
-        let endCol = Math.max(col - elemSize + 1, left)
-        layout.push({
+      for (let col = right; col >= left; col -= blockSize) {
+        let endCol = Math.max(col - blockSize + 1, left)
+        layout.blocks.push({
           gridArea: `${bottom + 1} / ${endCol + 1} / ${bottom + 2} / ${col + 2}`,
           side: 'bottom',
         })
@@ -51,9 +58,9 @@ export function snailLayout(cols: number, rows: number, elemSize: number = 8) {
 
     // left: bottom -> top
     if (left <= right) {
-      for (let row = bottom; row >= top; row -= elemSize) {
-        let endRow = Math.max(row - elemSize + 1, top)
-        layout.push({
+      for (let row = bottom; row >= top; row -= blockSize) {
+        let endRow = Math.max(row - blockSize + 1, top)
+        layout.blocks.push({
           gridArea: `${endRow + 1} / ${left + 1} / ${row + 2} / ${left + 2}`,
           side: 'left',
         })
@@ -63,23 +70,6 @@ export function snailLayout(cols: number, rows: number, elemSize: number = 8) {
   }
 
   return layout
-}
-
-/**
- * Calculates the number of grid cells and their dimension based on the
- * current viewport. Each cell is roughly 32x32 pixels (rounding).
- */
-export function gridDimensionsForViewport() {
-  const cellSize = 32
-  const cellWidth = document.documentElement.clientWidth / cellSize
-  const cellHeight = document.documentElement.clientHeight / cellSize
-
-  return {
-    cols: Math.round(cellWidth),
-    rows: Math.round(cellHeight),
-    cellWidth,
-    cellHeight,
-  }
 }
 
 export function isDarkColor(hex: string) {

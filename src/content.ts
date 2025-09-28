@@ -1,4 +1,4 @@
-import { debounce, gridDimensionsForViewport, isDarkColor, snailLayout } from './lib.ts'
+import { debounce, isDarkColor, snailLayout } from './lib.ts'
 import type { ActivateTabMessage, CloseTabMessage, Settings } from './background.ts'
 import { loadFonts } from './fonts.ts'
 
@@ -74,8 +74,7 @@ window.addEventListener(
 function updateTabs(message: UpdateTabsMessage) {
   tabsnail.innerHTML = ''
 
-  const { cols, rows } = gridDimensionsForViewport()
-  const layout = snailLayout(cols, rows, settings.tabSize)
+  const { cols, rows, blocks } = snailLayout(settings.tabSize)
 
   tabsnail.style.setProperty('--grid-columns', String(cols))
   tabsnail.style.setProperty('--grid-rows', String(rows))
@@ -88,7 +87,7 @@ function updateTabs(message: UpdateTabsMessage) {
       return
     }
 
-    const { gridArea, side } = layout[i]
+    const { gridArea, side } = blocks[i]
     const container = document.createElement('div')
     container.style.gridArea = gridArea
     container.classList.add(className(side))
@@ -132,15 +131,14 @@ function updateTabs(message: UpdateTabsMessage) {
 }
 
 function updateLayout() {
-  const { cols, rows } = gridDimensionsForViewport()
-  const layout = snailLayout(cols, rows, settings.tabSize)
+  const { cols, rows, blocks } = snailLayout(settings.tabSize)
 
   tabsnail.style.setProperty('--grid-columns', String(cols))
   tabsnail.style.setProperty('--grid-rows', String(rows))
 
   Array.from(tabsnail.children).forEach((elem, i) => {
     const container = elem as HTMLElement
-    const { gridArea, side } = layout[i]
+    const { gridArea, side } = blocks[i]
     container.style.gridArea = gridArea
     container.classList.toggle(className('top'), side === 'top')
     container.classList.toggle(className('right'), side === 'right')
