@@ -88,9 +88,11 @@ function updateTabs(message: UpdateTabsMessage, tabSize: number) {
     const container = document.createElement('div')
     container.style.gridArea = gridArea
     container.classList.add(className(side))
+    container.classList.toggle(className('active'), tab.active)
 
     const activateButton = document.createElement('button')
     activateButton.type = 'button'
+    activateButton.textContent = tab.title ?? ''
     activateButton.classList.add(className('btn-activate'))
 
     activateButton.addEventListener('click', () => {
@@ -100,19 +102,17 @@ function updateTabs(message: UpdateTabsMessage, tabSize: number) {
       })
     })
 
-    // Required for text overflow with ellipsis.
-    const span = document.createElement('span')
-    span.textContent = tab.title ?? ''
-    activateButton.appendChild(span)
-
-    if (tab.active) {
-      span.innerText = `> ${span.innerText}`
-    }
-
     const closeButton = document.createElement('button')
     closeButton.type = 'button'
     closeButton.classList.add(className('btn-close'))
-    closeButton.innerHTML = '✕'
+    closeButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path 
+          fill="currentColor" 
+          d="m10.94 12-3.97 3.97 1.06 1.06L12 13.06l3.97 3.97 1.06-1.06L13.06 12l3.97-3.97-1.06-1.06L12 10.94 8.03 6.97 6.97 8.03 10.94 12Z" 
+        />
+      </svg>    
+    `
 
     closeButton.addEventListener('click', () => {
       return chrome.runtime.sendMessage<CloseTabMessage>({
