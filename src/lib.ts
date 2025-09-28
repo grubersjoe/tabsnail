@@ -1,77 +1,72 @@
 import type { Settings } from './background.ts'
 
-/**
- * Calculates the grid position of each element in a snail-shaped layout that
- * goes from top, to right, to bottom, to left. `blockSize` is the number of
- * cells to use for one element, where one cell is a square of 32x32 pixels.
- * Blocks are one cell tall or wide, depending on the side.
- */
-export function snailLayout(blockSize: number = 8) {
-  const cellSize = 32
-  const cols = Math.round(document.documentElement.clientWidth / cellSize)
-  const rows = Math.round(document.documentElement.clientHeight / cellSize)
+type Side = 'top' | 'right' | 'bottom' | 'left'
 
+/**
+ * Yields the grid position of elements in a snail-shaped layout that goes
+ * from top, to right, to bottom, to left. `elemSize` is the number of cells
+ * to use for one element. Elements are one cell tall or wide, depending on
+ * the side.
+ */
+export function* snailGrid(cols: number, rows: number, elemSize: number) {
   let top = 0
   let bottom = rows - 1
   let left = 0
   let right = cols - 1
 
-  let layout: {
-    cols: number
-    rows: number
-    blocks: {
-      gridArea: string
-      side: 'top' | 'right' | 'bottom' | 'left'
-    }[]
-  } = { cols, rows, blocks: [] }
-
   while (top <= bottom && left <= right) {
-    // top: left -> right
-    for (let col = left; col <= right; col += blockSize) {
-      let endCol = Math.min(col + blockSize - 1, right)
-      layout.blocks.push({
-        gridArea: `${top + 1} / ${col + 1} / ${top + 2} / ${endCol + 2}`,
-        side: 'top',
-      })
+    for (let c = left; c <= right; c += elemSize) {
+      yield {
+        gridArea: `
+          ${top + 1} / ${c + 1} / ${top + 2} / ${Math.min(c + elemSize - 1, right) + 2}
+        `,
+        side: 'top' as Side,
+      }
     }
     top++
 
-    // right: top -> bottom
-    for (let row = top; row <= bottom; row += blockSize) {
-      let endRow = Math.min(row + blockSize - 1, bottom)
-      layout.blocks.push({
-        gridArea: `${row + 1} / ${right + 1} / ${endRow + 2} / ${right + 2}`,
-        side: 'right',
-      })
+    for (let r = top; r <= bottom; r += elemSize) {
+      yield {
+        gridArea: `
+          ${r + 1} / ${right + 1} / ${Math.min(r + elemSize - 1, bottom) + 2} / ${right + 2}
+        `,
+        side: 'right' as Side,
+      }
     }
     right--
 
-    // bottom: right -> left
     if (top <= bottom) {
-      for (let col = right; col >= left; col -= blockSize) {
-        let endCol = Math.max(col - blockSize + 1, left)
-        layout.blocks.push({
-          gridArea: `${bottom + 1} / ${endCol + 1} / ${bottom + 2} / ${col + 2}`,
-          side: 'bottom',
-        })
+      for (let c = right; c >= left; c -= elemSize) {
+        yield {
+          gridArea: `
+            ${bottom + 1} / ${Math.max(c - elemSize + 1, left) + 1} / ${bottom + 2} / ${c + 2}
+          `,
+          side: 'bottom' as Side,
+        }
       }
       bottom--
     }
 
-    // left: bottom -> top
     if (left <= right) {
-      for (let row = bottom; row >= top; row -= blockSize) {
-        let endRow = Math.max(row - blockSize + 1, top)
-        layout.blocks.push({
-          gridArea: `${endRow + 1} / ${left + 1} / ${row + 2} / ${left + 2}`,
-          side: 'left',
-        })
+      for (let r = bottom; r >= top; r -= elemSize) {
+        yield {
+          gridArea: `
+            ${Math.max(r - elemSize + 1, top) + 1} / ${left + 1} / ${r + 2} / ${left + 2}
+          `,
+          side: 'left' as Side,
+        }
       }
       left++
     }
   }
+}
 
-  return layout
+export function snailGridSize() {
+  const cellSize = 32
+  const cols = Math.round(document.documentElement.clientWidth / cellSize)
+  const rows = Math.round(document.documentElement.clientHeight / cellSize)
+
+  return { cols, rows }
 }
 
 export function loadTheme(theme: Settings['theme']) {
