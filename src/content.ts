@@ -1,4 +1,4 @@
-import { className, debounce, isDarkColor, snailLayout } from './lib.ts'
+import { className, debounce, isDarkColor, loadTheme, snailLayout } from './lib.ts'
 import type { ActivateTabMessage, CloseTabMessage, Settings } from './background.ts'
 import { loadFonts } from './fonts.ts'
 
@@ -16,15 +16,15 @@ function init() {
     document.documentElement.appendChild(tabsnail)
   }
 
-  chrome.storage.sync.get<Settings>(['color', 'tabSize'], settings => {
-    if (settings.color) {
-      tabsnail.style.setProperty('--color', settings.color)
-      tabsnail.classList.toggle(className('dark'), isDarkColor(settings.color))
-    }
+  chrome.storage.sync.get<Settings>(['color', 'theme', 'tabSize'], settings => {
+    tabsnail.style.setProperty('--color', settings.color)
+    tabsnail.classList.toggle(className('dark'), isDarkColor(settings.color))
 
+    loadTheme(settings.theme)
     settingsReadyResolve(settings)
   })
 
+  loadTheme('default')
   loadFonts().catch(console.error)
 
   return tabsnail
@@ -48,7 +48,11 @@ chrome.runtime.onMessage.addListener((message, _sender, response) => {
   })
 })
 
-chrome.storage.onChanged.addListener(({ color, tabSize }) => {
+chrome.storage.onChanged.addListener(({ theme, color, tabSize }) => {
+  if (theme) {
+    loadTheme(theme.newValue as Settings['theme'])
+  }
+
   if (color) {
     tabsnail.style.setProperty('--color', color.newValue)
     tabsnail.classList.toggle(className('dark'), isDarkColor(color.newValue))

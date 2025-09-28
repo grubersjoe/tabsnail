@@ -1,3 +1,5 @@
+import type { Settings } from './background.ts'
+
 /**
  * Calculates the grid position of each element in a snail-shaped layout that
  * goes from top, to right, to bottom, to left. `blockSize` is the number of
@@ -70,6 +72,17 @@ export function snailLayout(blockSize: number = 8) {
   }
 
   return layout
+}
+
+export function loadTheme(theme: Settings['theme']) {
+  document.getElementById('tabsnail-theme')?.remove()
+
+  const stylesheet = document.createElement('link')
+  stylesheet.id = 'tabsnail-theme'
+  stylesheet.rel = 'stylesheet'
+  stylesheet.href = chrome.runtime.getURL(`themes/${theme}.css`)
+
+  document.head.appendChild(stylesheet)
 }
 
 export function className(name: string) {

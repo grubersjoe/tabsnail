@@ -1,0 +1,79 @@
+#tabsnail {
+  --color-shift-hover: 0.05;
+  --color-text: hsl(0, 0%, 5%);
+  --color-bg: hsl(0, 0%, 95%);
+  --color-bg-active: oklab(from var(--color-bg) calc(l - var(--color-shift-hover)) a b);
+  --color-bg-hover: var(--color-bg-active);
+  --color-outline: hsl(0, 0%, 33%);
+  --btn-close-bg-hover: oklab(
+    from var(--color-bg-hover) calc(l - calc(var(--color-shift-hover) * 1.5)) a b
+  );
+  --outline-width: 1px;
+
+  gap: var(--outline-width);
+
+  > :nth-of-type(odd) {
+    --color-bg: var(--color);
+    --color-bg-active: oklab(from var(--color-bg) calc(l - var(--color-shift-hover)) a b);
+    --color-bg-hover: var(--color-bg-active);
+    --btn-close-bg-hover: oklab(
+      from var(--color-bg-hover) calc(l - calc(var(--color-shift-hover) * 1.5)) a b
+    );
+  }
+
+  &.tabsnail-dark > :nth-of-type(odd) {
+    --color-text: white;
+    --color-bg-active: oklab(from var(--color-bg) calc(l + calc(var(--color-shift-hover) * 2)) a b);
+    --color-bg-hover: var(--color-bg-active);
+    --btn-close-bg-hover: oklab(
+      from var(--color-bg-hover) calc(l + calc(var(--color-shift-hover) * 1.5)) a b
+    );
+  }
+
+  > * {
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    box-shadow: 0 0 0 var(--outline-width) var(--color-outline);
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &.tabsnail-active {
+      background-color: var(--color-bg-active);
+    }
+  }
+
+  > *:hover,
+  .tabsnail-btn-close:hover {
+    transition: background-color 200ms ease-in-out;
+  }
+
+  button {
+    font-family: 'Victor Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .tabsnail-btn-activate {
+    mask-image: linear-gradient(to right, var(--color-bg) 94%, transparent 100%);
+    mask-repeat: no-repeat;
+    mask-size: cover;
+
+    &:active {
+      position: relative;
+      top: 1px;
+      left: 1px;
+    }
+  }
+
+  .tabsnail-btn-close {
+    border-radius: 50%;
+    background-color: transparent;
+    transition-duration: 150ms;
+
+    &:hover {
+      background-color: var(--btn-close-bg-hover);
+    }
+  }
+}

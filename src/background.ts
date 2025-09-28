@@ -20,35 +20,23 @@ function isCloseTabMessage(msg: { type: string }): msg is CloseTabMessage {
 
 export type Settings = {
   color: string
+  theme: 'default' | 'win95'
   tabSize: number
 }
 
 const defaultSettings: Settings = {
   color: '#edffb8',
+  theme: 'default',
   tabSize: 8,
 }
 
 // Initialize settings
-chrome.storage.sync.get<Settings>(['color', 'tabSize'], async ({ color, tabSize }) => {
-  const promises: Promise<void>[] = []
+chrome.storage.sync.get<Settings>(null, async settings => {
+  const emptyValues = Object.fromEntries(
+    Object.entries(defaultSettings).filter(([key]) => settings[key as keyof Settings] == null),
+  )
 
-  if (!color) {
-    promises.push(
-      chrome.storage.sync.set({
-        color: defaultSettings.color,
-      }),
-    )
-  }
-
-  if (!tabSize) {
-    promises.push(
-      chrome.storage.sync.set({
-        tabSize: defaultSettings.tabSize,
-      }),
-    )
-  }
-
-  return Promise.all(promises)
+  return chrome.storage.sync.set(emptyValues)
 })
 
 chrome.runtime.onMessage.addListener(async (message, _sender, response) => {
