@@ -9,14 +9,19 @@
     "build:content": "vite build -c vite.config.content.ts",
     "build:settings": "vite build -c vite.config.settings.ts",
     "build:themes": "vite build -c vite.config.themes.ts",
-    "dev": "vite",
+    "dev": "npm run watch",
     "format": "prettier --write . !build/ !pnpm-lock.yaml",
-    "watch": "pnpm run build && chokidar 'src/**/*' 'public/*' -c 'pnpm run build'"
+    "watch": "pnpm run build && concurrently -n 'background,content,settings,themes' 'pnpm run watch:background' 'pnpm run watch:content' 'pnpm run watch:settings' 'pnpm run watch:themes'",
+    "watch:content": "chokidar 'public/manifest.json' 'src/lib/**' 'src/content/**/*' -c 'pnpm run build:content'",
+    "watch:background": "chokidar 'public/manifest.json' 'src/lib/**' 'src/background.ts' -c 'pnpm run build:background'",
+    "watch:settings": "chokidar 'public/manifest.json' 'src/lib/**' 'src/settings/**/*' -c 'pnpm run build:settings'",
+    "watch:themes": "chokidar 'public/manifest.json' 'src/lib/**' 'src/content/themes/**/*' -c 'pnpm run build:themes'"
   },
   "devDependencies": {
     "@types/chrome": "^0.1.11",
     "@types/node": "^24.7.0",
     "chokidar-cli": "^3.0.0",
+    "concurrently": "^9.2.1",
     "prettier": "^3.6.2",
     "typescript": "~5.8.3",
     "vite": "^7.1.2"
