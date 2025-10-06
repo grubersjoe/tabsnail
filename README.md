@@ -1,8 +1,8 @@
-# Tabsnail
+# Tabsnail 🐌
 
-This is a **work in progress** to make a great idea of [Fiona](https://runjak.codes/) a reality:
-showing all your browser tabs in snail form around the page. The more tabs you have open, the more
-snail you get.
+This project is a **work in progress** to bring [Fiona's](https://runjak.codes/) brilliant idea to
+life: display the tab bar in a snail-like layout around the page. The more tabs you have open, the
+bigger the snail grows!
 
 ![Screenshot](tabsnail.png)
 
@@ -24,3 +24,25 @@ snail you get.
   - [ ] Carpathian Blue Slug
   - [ ] Yellow Slug?
 - [ ] Visualize tab groups?
+
+## Development
+
+To start development mode (with automatic rebuilds):
+
+```shell
+pnpm install
+pnpm dev
+```
+
+Then, enable the extension in Chrome by loading the `./build` folder as an
+[unpacked extension](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked).
+After making changes, reload the extension either via its popup or from the `chrome://extensions`
+page. For convenience, you may also find it helpful to install another
+[extension](https://chromewebstore.google.com/detail/reload-all-tabs/midkcinmplflbiflboepnahkboeonkam)
+to reload all tabs.
+
+For a production build:
+
+```shell
+pnpm build
+```
