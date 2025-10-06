@@ -19,7 +19,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["fonts/*.woff2", "themes/*.css"],
+      "resources": ["*.css", "themes/*"],
       "matches": ["<all_urls>"]
     }
   ],

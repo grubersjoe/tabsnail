@@ -1,6 +1,13 @@
-import { className, debounce, isDarkColor, loadTheme, snailGrid, snailGridSize } from './lib.ts'
-import type { ActivateTabMessage, CloseTabMessage, Settings } from './background.ts'
-import { loadFonts } from './fonts.ts'
+import { snailGrid, snailGridSize } from '../lib/layout.ts'
+import './content.css'
+import {
+  type ActivateTabMessage,
+  type CloseTabMessage,
+  isUpdateTabsMessage,
+  type UpdateTabsMessage,
+} from '../lib/messages.ts'
+import type { Settings } from '../background.ts'
+import { className, debounce, isDarkColor, loadTheme } from '../lib'
 
 const tabsnail = init()
 
@@ -25,18 +32,8 @@ function init() {
   })
 
   loadTheme('default')
-  loadFonts().catch(console.error)
 
   return tabsnail
-}
-
-export type UpdateTabsMessage = {
-  type: 'update-tabs'
-  tabs: Pick<chrome.tabs.Tab, 'id' | 'title' | 'active'>[]
-}
-
-function isUpdateTabsMessage(msg: { type: string }): msg is UpdateTabsMessage {
-  return msg.type === 'update-tabs'
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, response) => {

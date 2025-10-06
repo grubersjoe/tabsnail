@@ -1,4 +1,5 @@
-import type { Settings } from './background.ts'
+import type { Settings } from '../background.ts'
+import { debounce } from '../lib'
 
 const themeSelect = document.getElementById('theme') as HTMLSelectElement
 const colorPicker = document.getElementById('color-picker') as HTMLInputElement
@@ -38,13 +39,3 @@ tabSizeInput.addEventListener('input', () =>
 reloadButton.addEventListener('click', async () => {
   chrome.runtime.reload()
 })
-
-function debounce(callback: (...args: unknown[]) => unknown, wait: number) {
-  let timeoutId: number | undefined
-  return (...args: unknown[]) => {
-    window.clearTimeout(timeoutId)
-    timeoutId = window.setTimeout(() => {
-      callback.apply(null, args)
-    }, wait)
-  }
-}

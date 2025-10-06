@@ -1,17 +1,21 @@
 {
   "name": "tabsnail",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "tsc && rm -rf build/* && pnpm run build:background && pnpm run build:content && pnpm run build:settings && pnpm run build:themes",
+    "build:background": "vite build -c vite.config.background.ts",
+    "build:content": "vite build -c vite.config.content.ts",
+    "build:settings": "vite build -c vite.config.settings.ts",
+    "build:themes": "vite build -c vite.config.themes.ts",
     "dev": "vite",
     "format": "prettier --write . !build/ !pnpm-lock.yaml",
-    "preview": "vite preview",
-    "watch": "npm run build && chokidar 'src/**/*.ts' 'public/*' -c 'npm run build'"
+    "watch": "pnpm run build && chokidar 'src/**/*' 'public/*' -c 'pnpm run build'"
   },
   "devDependencies": {
     "@types/chrome": "^0.1.11",
+    "@types/node": "^24.7.0",
     "chokidar-cli": "^3.0.0",
     "prettier": "^3.6.2",
     "typescript": "~5.8.3",

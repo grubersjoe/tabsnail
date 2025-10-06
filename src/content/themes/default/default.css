@@ -1,3 +1,11 @@
+@font-face {
+  src: url('./victor-mono-medium.woff2');
+  font-family: 'Victor Mono';
+  font-display: swap;
+  font-style: normal;
+  font-weight: 500;
+}
+
 #tabsnail {
   --color-shift-hover: 0.05;
   --color-text: hsl(0, 0%, 5%);

@@ -1,22 +1,4 @@
-import type { UpdateTabsMessage } from './content.ts'
-
-export type ActivateTabMessage = {
-  type: 'activate-tab'
-  tabId: number
-}
-
-function isActivateTabMessage(msg: { type: string }): msg is ActivateTabMessage {
-  return msg.type === 'activate-tab'
-}
-
-export type CloseTabMessage = {
-  type: 'close-tab'
-  tabId: number
-}
-
-function isCloseTabMessage(msg: { type: string }): msg is CloseTabMessage {
-  return msg.type === 'close-tab'
-}
+import { isActivateTabMessage, isCloseTabMessage, type UpdateTabsMessage } from './lib/messages.ts'
 
 export type Settings = {
   color: string
@@ -32,11 +14,11 @@ const defaultSettings: Settings = {
 
 // Initialize settings
 chrome.storage.sync.get<Settings>(null, async settings => {
-  const emptyValues = Object.fromEntries(
+  const uninitializedSettings = Object.fromEntries(
     Object.entries(defaultSettings).filter(([key]) => settings[key as keyof Settings] == null),
   )
 
-  return chrome.storage.sync.set(emptyValues)
+  return chrome.storage.sync.set(uninitializedSettings)
 })
 
 chrome.runtime.onMessage.addListener(async (message, _sender, response) => {
@@ -73,5 +55,5 @@ export async function sendTabs() {
     )
   }
 
-  return Promise.all(promises)
+  return Promise.allSettled(promises)
 }
