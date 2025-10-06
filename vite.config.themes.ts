@@ -1,14 +1,17 @@
 import { defineConfig } from 'vite'
-import { basename } from 'node:path'
-import { globSync } from 'node:fs'
+import path, { basename } from 'node:path'
+import { existsSync, globSync } from 'node:fs'
 
-const themes = globSync('./src/content/themes/**/*.css').reduce<Record<string, string>>(
-  (input, file) => {
+const themes = globSync(path.join(__dirname, './src/content/themes/**/*.css'))
+  .filter(existsSync)
+  .reduce<Record<string, string>>((input, file) => {
     input[basename(file, '.css')] = file
     return input
-  },
-  {},
-)
+  }, {})
+
+if (Object.keys(themes).length === 0) {
+  throw new Error('No themes found.')
+}
 
 export default defineConfig({
   build: {
