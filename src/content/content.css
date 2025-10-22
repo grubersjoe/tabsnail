@@ -75,8 +75,6 @@
   }
 
   .tabsnail-btn-close {
-    width: 100%;
-    height: var(--btn-close-size);
     display: flex;
     flex: 0 0 var(--btn-close-size);
     align-content: center;

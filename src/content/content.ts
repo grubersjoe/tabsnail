@@ -70,13 +70,13 @@ window.addEventListener(
 )
 
 function updateTabs(message: UpdateTabsMessage, tabSize: number) {
-  tabsnail.innerHTML = ''
-
   const { cols, rows } = snailGridSize()
-  const gridPosition = snailGrid(cols, rows, tabSize)
+  const grid = snailGrid(cols, rows, tabSize)
 
   tabsnail.style.setProperty('--grid-columns', String(cols))
   tabsnail.style.setProperty('--grid-rows', String(rows))
+
+  const fragment = new DocumentFragment()
 
   message.tabs.forEach((tab, i) => {
     const tabId = tab.id
@@ -86,9 +86,10 @@ function updateTabs(message: UpdateTabsMessage, tabSize: number) {
       return
     }
 
-    const { gridArea, side } = gridPosition.next().value!
+    const { gridRowStart, gridRowEnd, gridColumnStart, gridColumnEnd, side } = grid.next().value!
+
     const container = document.createElement('div')
-    container.style.gridArea = gridArea
+    container.style.gridArea = `${gridRowStart} / ${gridColumnStart} / ${gridRowEnd} / ${gridColumnEnd}`
     container.classList.add(className(side))
     container.classList.toggle(className('active'), tab.active)
 
@@ -125,21 +126,25 @@ function updateTabs(message: UpdateTabsMessage, tabSize: number) {
 
     container.appendChild(activateButton)
     container.appendChild(closeButton)
-    tabsnail.appendChild(container)
+    fragment.appendChild(container)
   })
+
+  tabsnail.replaceChildren(fragment)
 }
 
 function updateLayout(tabSize: number) {
   const { cols, rows } = snailGridSize()
-  const gridPosition = snailGrid(cols, rows, tabSize)
+  const grid = snailGrid(cols, rows, tabSize)
 
   tabsnail.style.setProperty('--grid-columns', String(cols))
   tabsnail.style.setProperty('--grid-rows', String(rows))
 
   Array.from(tabsnail.children).forEach(elem => {
     const container = elem as HTMLElement
-    const { gridArea, side } = gridPosition.next().value!
-    container.style.gridArea = gridArea
+
+    const { gridRowStart, gridRowEnd, gridColumnStart, gridColumnEnd, side } = grid.next().value!
+
+    container.style.gridArea = `${gridRowStart} / ${gridColumnStart} / ${gridRowEnd} / ${gridColumnEnd}`
     container.classList.toggle(className('top'), side === 'top')
     container.classList.toggle(className('right'), side === 'right')
     container.classList.toggle(className('bottom'), side === 'bottom')

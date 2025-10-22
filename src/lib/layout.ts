@@ -13,32 +13,35 @@ export function* snailGrid(cols: number, rows: number, elemSize: number) {
   let right = cols - 1
 
   while (top <= bottom && left <= right) {
-    for (let c = left; c <= right; c += elemSize) {
+    for (let col = left; col <= right; col += elemSize) {
       yield {
-        gridArea: `
-          ${top + 1} / ${c + 1} / ${top + 2} / ${Math.min(c + elemSize - 1, right) + 2}
-        `,
+        gridRowStart: top + 1,
+        gridColumnStart: col + 1,
+        gridRowEnd: top + 2,
+        gridColumnEnd: Math.min(col + elemSize - 1, right) + 2,
         side: 'top' as Side,
       }
     }
     top++
 
-    for (let r = top; r <= bottom; r += elemSize) {
+    for (let row = top; row <= bottom; row += elemSize) {
       yield {
-        gridArea: `
-          ${r + 1} / ${right + 1} / ${Math.min(r + elemSize - 1, bottom) + 2} / ${right + 2}
-        `,
+        gridRowStart: row + 1,
+        gridColumnStart: right + 1,
+        gridRowEnd: Math.min(row + elemSize - 1, bottom) + 2,
+        gridColumnEnd: right + 2,
         side: 'right' as Side,
       }
     }
     right--
 
     if (top <= bottom) {
-      for (let c = right; c >= left; c -= elemSize) {
+      for (let col = right; col >= left; col -= elemSize) {
         yield {
-          gridArea: `
-            ${bottom + 1} / ${Math.max(c - elemSize + 1, left) + 1} / ${bottom + 2} / ${c + 2}
-          `,
+          gridRowStart: bottom + 1,
+          gridColumnStart: Math.max(col - elemSize + 1, left) + 1,
+          gridRowEnd: bottom + 2,
+          gridColumnEnd: col + 2,
           side: 'bottom' as Side,
         }
       }
@@ -46,11 +49,12 @@ export function* snailGrid(cols: number, rows: number, elemSize: number) {
     }
 
     if (left <= right) {
-      for (let r = bottom; r >= top; r -= elemSize) {
+      for (let row = bottom; row >= top; row -= elemSize) {
         yield {
-          gridArea: `
-            ${Math.max(r - elemSize + 1, top) + 1} / ${left + 1} / ${r + 2} / ${left + 2}
-          `,
+          gridRowStart: Math.max(row - elemSize + 1, top) + 1,
+          gridColumnStart: left + 1,
+          gridRowEnd: row + 2,
+          gridColumnEnd: left + 2,
           side: 'left' as Side,
         }
       }
