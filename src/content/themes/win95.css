@@ -1,57 +1,6 @@
+/* Windows 95 theme - Work in progress */
 #tabsnail {
   > * {
-    background-color: red;
+    background-color: lightgray;
   }
-  /*button {*/
-  /*  color: var(--color-black);*/
-  /*  text-decoration: none;*/
-  /*  background-color: var(--color-gray-200);*/
-  /*  box-shadow: var(--shadow-default-button-default);*/
-  /*  position: relative;*/
-  /*  padding: 12px 14px;*/
-  /*  cursor: pointer;*/
-  /*}*/
-
-  /*button:not(.tab).is-highlighted,*/
-  /*.btn:not(.tab).is-highlighted {*/
-  /*  box-shadow: var(--shadow-default-button-highlighted);*/
-  /*}*/
-
-  /*button:not(.tab):not(:active):focus,*/
-  /*button:not(.tab):not(:active).is-focused,*/
-  /*.btn:not(.tab):not(:active):focus,*/
-  /*.btn:not(.tab):not(:active).is-focused {*/
-  /*  box-shadow: var(--shadow-default-button-focused);*/
-  /*  outline: none;*/
-  /*}*/
-
-  /*button:not(.tab):not(:active):focus::after,*/
-  /*button:not(.tab):not(:active).is-focused::after,*/
-  /*.btn:not(.tab):not(:active):focus::after,*/
-  /*.btn:not(.tab):not(:active).is-focused::after {*/
-  /*  content: '';*/
-  /*  display: block;*/
-  /*  border: 1.5px dashed var(--color-black);*/
-  /*  width: calc(100% - 14px);*/
-  /*  height: calc(100% - 14px);*/
-  /*  position: absolute;*/
-  /*  top: 6px;*/
-  /*  left: 6px;*/
-  /*}*/
-
-  /*button:not(.tab):active,*/
-  /*button:not(.tab).is-active,*/
-  /*.btn:not(.tab):active,*/
-  /*.btn:not(.tab).is-active {*/
-  /*  box-shadow: var(--shadow-default-button-active);*/
-  /*}*/
-
-  /*button:not(.tab):disabled,*/
-  /*button:not(.tab).is-disabled,*/
-  /*.btn:not(.tab):disabled,*/
-  /*.btn:not(.tab).is-disabled {*/
-  /*  box-shadow: var(--shadow-default-button-disabled);*/
-  /*  text-shadow: var(--shadow-text-disabled);*/
-  /*  cursor: default;*/
-  /*}*/
 }
