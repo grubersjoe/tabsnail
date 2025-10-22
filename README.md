@@ -6,6 +6,9 @@ bigger the snail grows!
 
 ![Screenshot](tabsnail.png)
 
+Licensed under the
+[Non-White-Heterosexual-Male License](https://nonwhiteheterosexualmalelicense.org).
+
 ## TODO
 
 - [x] Show all tabs in snail form
