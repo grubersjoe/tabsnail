@@ -1,5 +1,10 @@
-import type { Settings } from '../background.ts'
 import { debounce } from '../lib'
+
+export type Settings = {
+  color: string
+  theme: 'default' | 'pride' | 'win95'
+  tabSize: number
+}
 
 const themeSelect = document.getElementById('theme') as HTMLSelectElement
 const colorPicker = document.getElementById('color-picker') as HTMLInputElement

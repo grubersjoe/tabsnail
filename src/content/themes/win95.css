@@ -1,6 +1,8 @@
 /* Windows 95 theme - Work in progress */
 #tabsnail {
+  --color-bg: lightgray;
+
   > * {
-    background-color: lightgray;
+    background-color: var(--color-bg);
   }
 }

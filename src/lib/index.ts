@@ -1,4 +1,4 @@
-import type { Settings } from '../background.ts'
+import type { Settings } from '../settings/settings.ts'
 
 export function debounce(callback: (...args: unknown[]) => unknown, wait: number) {
   let timeoutId: number | undefined

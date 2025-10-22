@@ -1,0 +1,77 @@
+/* Pride theme 🏳️‍🌈*/
+#tabsnail {
+  --color-outline: hsl(0, 0%, 50%);
+  --outline-width: 1px;
+
+  /* https://en.wikipedia.org/wiki/Rainbow_flag_(LGBTQ) */
+  --color-pride-red: #e60001;
+  --color-pride-orange: #ff8e00;
+  --color-pride-yellow: #ffee03;
+  --color-pride-green: #00821b;
+  --color-pride-blue: #004bff;
+  --color-pride-violet: #780089;
+
+  gap: var(--outline-width);
+
+  > * {
+    color: var(--color-text);
+    box-shadow: 0 0 0 var(--outline-width) var(--color-outline);
+
+    &:nth-of-type(6n) {
+      --color-text: white;
+      --color-bg-1: var(--color-pride-red);
+      --color-bg-2: var(--color-pride-orange);
+    }
+    &:nth-of-type(6n + 1) {
+      --color-text: hsl(0, 0%, 5%);
+      --color-bg-1: var(--color-pride-orange);
+      --color-bg-2: var(--color-pride-yellow);
+    }
+    &:nth-of-type(6n + 2) {
+      --color-text: hsl(0, 0%, 5%);
+      --color-bg-1: var(--color-pride-yellow);
+      --color-bg-2: var(--color-pride-green);
+    }
+    &:nth-of-type(6n + 3) {
+      --color-text: white;
+      --color-bg-1: var(--color-pride-green);
+      --color-bg-2: var(--color-pride-blue);
+    }
+    &:nth-of-type(6n + 4) {
+      --color-text: white;
+      --color-bg-1: var(--color-pride-blue);
+      --color-bg-2: var(--color-pride-violet);
+    }
+    &:nth-of-type(6n + 5) {
+      --color-text: white;
+      --color-bg-1: var(--color-pride-violet);
+      --color-bg-2: var(--color-pride-red);
+    }
+  }
+
+  .tabsnail-top {
+    background: linear-gradient(in oklab to right, var(--color-bg-1), var(--color-bg-2));
+  }
+
+  .tabsnail-right {
+    background: linear-gradient(in oklab to bottom, var(--color-bg-1), var(--color-bg-2));
+  }
+
+  .tabsnail-bottom {
+    background: linear-gradient(in oklab to left, var(--color-bg-1), var(--color-bg-2));
+  }
+
+  .tabsnail-left {
+    background: linear-gradient(in oklab to top, var(--color-bg-1), var(--color-bg-2));
+  }
+
+  button {
+    font-size: 12px;
+  }
+
+  .tabsnail-btn-activate {
+    mask-image: linear-gradient(to right, var(--color-bg-2) 94%, transparent 100%);
+    mask-repeat: no-repeat;
+    mask-size: cover;
+  }
+}

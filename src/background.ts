@@ -1,10 +1,5 @@
 import { isActivateTabMessage, isCloseTabMessage, type UpdateTabsMessage } from './lib/messages.ts'
-
-export type Settings = {
-  color: string
-  theme: 'default' | 'win95'
-  tabSize: number
-}
+import type { Settings } from './settings/settings.ts'
 
 const defaultSettings: Settings = {
   color: '#edffb8',

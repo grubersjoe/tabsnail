@@ -6,8 +6,8 @@ import {
   isUpdateTabsMessage,
   type UpdateTabsMessage,
 } from '../lib/messages.ts'
-import type { Settings } from '../background.ts'
 import { className, debounce, isDarkColor, loadTheme } from '../lib'
+import type { Settings } from '../settings/settings.ts'
 
 const tabsnail = init()
 

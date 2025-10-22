@@ -65,10 +65,6 @@
   }
 
   .tabsnail-btn-activate {
-    mask-image: linear-gradient(to right, var(--color-bg) 94%, transparent 100%);
-    mask-repeat: no-repeat;
-    mask-size: cover;
-
     &:active {
       position: relative;
       top: 1px;
