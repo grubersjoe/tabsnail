@@ -11,6 +11,7 @@
     "build:themes": "vite build -c vite.config.themes.ts",
     "dev": "npm run watch",
     "format": "prettier --write . !build/ !pnpm-lock.yaml",
+    "lint": "eslint .",
     "watch": "pnpm run build && concurrently -n 'background,content,settings,themes' 'pnpm run watch:background' 'pnpm run watch:content' 'pnpm run watch:settings' 'pnpm run watch:themes'",
     "watch:content": "chokidar 'public/manifest.json' 'src/lib/**' 'src/content/**/*' -c 'pnpm run build:content'",
     "watch:background": "chokidar 'public/manifest.json' 'src/lib/**' 'src/background.ts' -c 'pnpm run build:background'",
@@ -18,12 +19,17 @@
     "watch:themes": "chokidar 'public/manifest.json' 'src/lib/**' 'src/content/themes/**/*' -c 'pnpm run build:themes'"
   },
   "devDependencies": {
+    "@eslint/js": "^9.38.0",
     "@types/chrome": "^0.1.11",
     "@types/node": "^24.7.0",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^9.2.1",
+    "eslint": "^9.38.0",
+    "globals": "^16.4.0",
+    "jiti": "^2.6.1",
     "prettier": "^3.6.2",
     "typescript": "~5.8.3",
+    "typescript-eslint": "^8.46.2",
     "vite": "^7.1.2"
   },
   "prettier": {

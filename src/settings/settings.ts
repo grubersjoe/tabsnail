@@ -12,25 +12,25 @@ const colorPickerContainer = document.getElementById('color-picker-container') a
 const tabSizeInput = document.getElementById('tab-size') as HTMLInputElement
 const reloadButton = document.getElementById('reload') as HTMLButtonElement
 
-chrome.storage.sync.get<Settings>(['theme', 'color', 'tabSize'], ({ theme, color, tabSize }) => {
-  if (theme) {
-    themeSelect.value = theme
-    colorPickerContainer.style.display = theme === 'default' ? 'flex' : 'none'
+chrome.storage.sync.get<Partial<Settings>>(null, settings => {
+  if (settings.theme) {
+    themeSelect.value = settings.theme
+    colorPickerContainer.style.display = settings.theme === 'default' ? 'flex' : 'none'
   }
 
-  if (color) {
-    colorPicker.value = color
+  if (settings.color) {
+    colorPicker.value = settings.color
   }
 
-  if (tabSize) {
-    tabSizeInput.value = tabSize.toString()
+  if (settings.tabSize) {
+    tabSizeInput.value = String(settings.tabSize)
   }
 })
 
 themeSelect.addEventListener('change', () => {
   const theme = themeSelect.value as Settings['theme']
   colorPickerContainer.style.display = theme === 'default' ? 'flex' : 'none'
-  return chrome.storage.sync.set<Settings>({ theme })
+  void chrome.storage.sync.set<Settings>({ theme })
 })
 
 colorPicker.addEventListener(
@@ -38,10 +38,10 @@ colorPicker.addEventListener(
   debounce(() => chrome.storage.sync.set<Settings>({ color: colorPicker.value }), 100),
 )
 
-tabSizeInput.addEventListener('input', () =>
-  chrome.storage.sync.set<Settings>({ tabSize: Number(tabSizeInput.value) }),
-)
+tabSizeInput.addEventListener('input', () => {
+  void chrome.storage.sync.set<Settings>({ tabSize: Number(tabSizeInput.value) })
+})
 
-reloadButton.addEventListener('click', async () => {
+reloadButton.addEventListener('click', () => {
   chrome.runtime.reload()
 })

@@ -3,17 +3,9 @@ export type UpdateTabsMessage = {
   tabs: Pick<chrome.tabs.Tab, 'id' | 'title' | 'active'>[]
 }
 
-export function isUpdateTabsMessage(msg: { type: string }): msg is UpdateTabsMessage {
-  return msg.type === 'update-tabs'
-}
-
 export type ActivateTabMessage = {
   type: 'activate-tab'
   tabId: number
-}
-
-export function isActivateTabMessage(msg: { type: string }): msg is ActivateTabMessage {
-  return msg.type === 'activate-tab'
 }
 
 export type CloseTabMessage = {
@@ -21,6 +13,16 @@ export type CloseTabMessage = {
   tabId: number
 }
 
-export function isCloseTabMessage(msg: { type: string }): msg is CloseTabMessage {
+export type Message = UpdateTabsMessage | ActivateTabMessage | CloseTabMessage
+
+export function isUpdateTabsMessage(msg: Message): msg is UpdateTabsMessage {
+  return msg.type === 'update-tabs'
+}
+
+export function isActivateTabMessage(msg: Message): msg is ActivateTabMessage {
+  return msg.type === 'activate-tab'
+}
+
+export function isCloseTabMessage(msg: Message): msg is CloseTabMessage {
   return msg.type === 'close-tab'
 }

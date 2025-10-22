@@ -5,7 +5,7 @@ export function debounce(callback: (...args: unknown[]) => unknown, wait: number
   return (...args: unknown[]) => {
     window.clearTimeout(timeoutId)
     timeoutId = window.setTimeout(() => {
-      callback.apply(null, args)
+      callback(...args)
     }, wait)
   }
 }

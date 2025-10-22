@@ -4,6 +4,7 @@ import {
   type ActivateTabMessage,
   type CloseTabMessage,
   isUpdateTabsMessage,
+  type Message,
   type UpdateTabsMessage,
 } from '../lib/messages.ts'
 import { className, debounce, isDarkColor, loadTheme } from '../lib'
@@ -23,7 +24,7 @@ function init() {
     document.documentElement.appendChild(tabsnail)
   }
 
-  chrome.storage.sync.get<Settings>(['color', 'theme', 'tabSize'], settings => {
+  chrome.storage.sync.get<Settings>(null, settings => {
     tabsnail.style.setProperty('--color', settings.color)
     tabsnail.classList.toggle(className('dark'), isDarkColor(settings.color))
 
@@ -36,8 +37,8 @@ function init() {
   return tabsnail
 }
 
-chrome.runtime.onMessage.addListener((message, _sender, response) => {
-  settingsReady.then(({ tabSize }) => {
+chrome.runtime.onMessage.addListener((message: Message, _sender, response) => {
+  void settingsReady.then(({ tabSize }) => {
     if (isUpdateTabsMessage(message)) {
       updateTabs(message, tabSize)
       response()
@@ -45,25 +46,27 @@ chrome.runtime.onMessage.addListener((message, _sender, response) => {
   })
 })
 
-chrome.storage.onChanged.addListener(({ theme, color, tabSize }) => {
-  if (theme) {
-    loadTheme(theme.newValue as Settings['theme'])
-  }
+chrome.storage.onChanged.addListener(
+  ({ theme, color, tabSize }: Partial<Record<string, chrome.storage.StorageChange>>) => {
+    if (theme?.newValue) {
+      loadTheme(theme.newValue as Settings['theme'])
+    }
 
-  if (color) {
-    tabsnail.style.setProperty('--color', color.newValue)
-    tabsnail.classList.toggle(className('dark'), isDarkColor(color.newValue))
-  }
+    if (color?.newValue) {
+      tabsnail.style.setProperty('--color', color.newValue as Settings['color'])
+      tabsnail.classList.toggle(className('dark'), isDarkColor(color.newValue as Settings['color']))
+    }
 
-  if (tabSize) {
-    updateLayout(tabSize.newValue)
-  }
-})
+    if (tabSize?.newValue) {
+      updateLayout(tabSize.newValue as Settings['tabSize'])
+    }
+  },
+)
 
 window.addEventListener(
   'resize',
   debounce(() => {
-    settingsReady.then(({ tabSize }) => {
+    void settingsReady.then(({ tabSize }) => {
       updateLayout(tabSize)
     })
   }, 150),
@@ -82,11 +85,18 @@ function updateTabs(message: UpdateTabsMessage, tabSize: number) {
     const tabId = tab.id
 
     if (!tabId) {
-      console.error(`Unexpected: Tab ${i} has no ID.`)
+      console.warn(`Unexpected: Tab ${i} has no ID.`)
       return
     }
 
-    const { gridRowStart, gridRowEnd, gridColumnStart, gridColumnEnd, side } = grid.next().value!
+    const { value, done } = grid.next()
+
+    if (done) {
+      console.error(`No grid cell for tab ${tab.title ?? tabId}`)
+      return
+    }
+
+    const { gridRowStart, gridRowEnd, gridColumnStart, gridColumnEnd, side } = value
 
     const container = document.createElement('div')
     container.style.gridArea = `${gridRowStart} / ${gridColumnStart} / ${gridRowEnd} / ${gridColumnEnd}`
@@ -99,7 +109,7 @@ function updateTabs(message: UpdateTabsMessage, tabSize: number) {
     activateButton.classList.add(className('btn-activate'))
 
     activateButton.addEventListener('click', () => {
-      return chrome.runtime.sendMessage<ActivateTabMessage>({
+      void chrome.runtime.sendMessage<ActivateTabMessage>({
         type: 'activate-tab',
         tabId,
       })
@@ -118,7 +128,7 @@ function updateTabs(message: UpdateTabsMessage, tabSize: number) {
     `
 
     closeButton.addEventListener('click', () => {
-      return chrome.runtime.sendMessage<CloseTabMessage>({
+      void chrome.runtime.sendMessage<CloseTabMessage>({
         type: 'close-tab',
         tabId,
       })
@@ -142,7 +152,14 @@ function updateLayout(tabSize: number) {
   Array.from(tabsnail.children).forEach(elem => {
     const container = elem as HTMLElement
 
-    const { gridRowStart, gridRowEnd, gridColumnStart, gridColumnEnd, side } = grid.next().value!
+    const { value, done } = grid.next()
+
+    if (done) {
+      console.error(`No grid cell for tab`)
+      return
+    }
+
+    const { gridRowStart, gridRowEnd, gridColumnStart, gridColumnEnd, side } = value
 
     container.style.gridArea = `${gridRowStart} / ${gridColumnStart} / ${gridRowEnd} / ${gridColumnEnd}`
     container.classList.toggle(className('top'), side === 'top')

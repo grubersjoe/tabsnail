@@ -1,4 +1,9 @@
-import { isActivateTabMessage, isCloseTabMessage, type UpdateTabsMessage } from './lib/messages.ts'
+import {
+  isActivateTabMessage,
+  isCloseTabMessage,
+  type Message,
+  type UpdateTabsMessage,
+} from './lib/messages.ts'
 import type { Settings } from './settings/settings.ts'
 
 const defaultSettings: Settings = {
@@ -8,26 +13,33 @@ const defaultSettings: Settings = {
 }
 
 // Initialize settings
-chrome.storage.sync.get<Settings>(null, async settings => {
-  const uninitializedSettings = Object.fromEntries(
+chrome.storage.sync.get<Partial<Settings>>(null, settings => {
+  const initialSettings = Object.fromEntries(
     Object.entries(defaultSettings).filter(([key]) => settings[key as keyof Settings] == null),
   )
-
-  return chrome.storage.sync.set(uninitializedSettings)
+  void chrome.storage.sync.set(initialSettings)
 })
 
-chrome.runtime.onMessage.addListener(async (message, _sender, response) => {
+chrome.runtime.onMessage.addListener((message: Message, _sender, response) => {
   if (isActivateTabMessage(message)) {
-    chrome.tabs.update(message.tabId, { active: true }).then(response)
+    void chrome.tabs.update(message.tabId, { active: true }).then(response)
   }
   if (isCloseTabMessage(message)) {
-    chrome.tabs.remove(message.tabId).then(response)
+    void chrome.tabs.remove(message.tabId).then(response)
   }
 })
 
-chrome.tabs.onActivated.addListener(sendTabs)
-chrome.tabs.onUpdated.addListener(sendTabs)
-chrome.tabs.onRemoved.addListener(sendTabs)
+chrome.tabs.onActivated.addListener(() => {
+  void sendTabs()
+})
+
+chrome.tabs.onUpdated.addListener(() => {
+  void sendTabs()
+})
+
+chrome.tabs.onRemoved.addListener(() => {
+  void sendTabs()
+})
 
 export async function sendTabs() {
   const tabs = await chrome.tabs.query({ currentWindow: true })
