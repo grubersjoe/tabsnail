@@ -15,6 +15,7 @@ const reloadButton = document.getElementById('reload') as HTMLButtonElement
 chrome.storage.sync.get<Settings>(['theme', 'color', 'tabSize'], ({ theme, color, tabSize }) => {
   if (theme) {
     themeSelect.value = theme
+    colorPickerContainer.style.display = theme === 'default' ? 'flex' : 'none'
   }
 
   if (color) {
