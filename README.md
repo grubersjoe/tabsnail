@@ -1,5 +1,7 @@
 # Tabsnail 🐌
 
+[![CI](https://github.com/grubersjoe/tabsnail/actions/workflows/test.yml/badge.svg)](https://github.com/grubersjoe/tabsnail/actions/workflows/test.yml)
+
 This project is a **work in progress** to bring [Fiona's](https://runjak.codes/) brilliant idea to
 life: display the tab bar in a snail-like layout around the page. The more tabs you have open, the
 bigger the snail grows!
