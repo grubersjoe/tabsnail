@@ -20,14 +20,18 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
+    "@popperjs/core": "^2.11.8",
+    "@types/bootstrap": "^5.2.10",
     "@types/chrome": "^0.1.24",
     "@types/node": "^24.9.1",
+    "bootstrap": "^5.3.8",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^9.2.1",
     "eslint": "^9.38.0",
     "globals": "^16.4.0",
     "jiti": "^2.6.1",
     "prettier": "^3.6.2",
+    "sass": "^1.93.3",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.2",
     "vite": "^7.1.12"

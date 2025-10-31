@@ -1,0 +1,20 @@
+@import '~bootstrap/scss/bootstrap';
+
+html {
+  width: 220px;
+  padding: 1rem;
+  font-size: 14px;
+}
+
+html,
+body {
+  height: min-content;
+}
+
+form {
+  margin: 0;
+}
+
+.fs-7 {
+  font-size: 90%;
+}

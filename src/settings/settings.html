@@ -1,28 +1,37 @@
 <html lang="en">
   <head>
     <title>Tabsnail</title>
-    <link rel="stylesheet" href="settings.css" />
+    <link rel="stylesheet" href="settings.scss" />
   </head>
   <body>
     <form>
-      <div class="flex flex-column">
-        <label for="theme">Theme</label>
-        <select id="theme">
+      <div class="mb-3">
+        <label for="theme" class="form-label">Theme</label>
+        <select id="theme" class="form-select">
           <option value="default">Striped</option>
           <option value="pride">Pride</option>
           <option value="win95">Windows 95</option>
         </select>
       </div>
-      <div id="color-picker-container" class="flex flex-column">
-        <label for="color-picker">Color</label>
-        <input type="color" id="color-picker" />
-      </div>
-      <div class="flex flex-column">
-        <label for="tab-size">Tab size</label>
-        <input type="range" id="tab-size" min="6" max="12" />
+
+      <div id="color-picker-container" class="mb-3">
+        <label for="color-picker" class="form-label">Color</label>
+        <input type="color" id="color-picker" class="form-control form-control-color" />
       </div>
 
-      <button type="button" id="reload">Reload</button>
+      <div class="mb-4">
+        <label for="tab-size" class="form-label">Tab size</label>
+        <div class="row g-3">
+          <div class="col">
+            <input type="range" id="tab-size" min="4" max="12" class="form-range" />
+          </div>
+          <div id="tab-size-value" class="col-auto fs-7"></div>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="reload" class="btn btn-primary w-100">Reload</button>
+      </div>
     </form>
 
     <script type="module" src="./settings.ts"></script>
