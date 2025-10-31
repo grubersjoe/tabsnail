@@ -6,7 +6,7 @@ This project is a **work in progress** to bring [Fiona's](https://runjak.codes/)
 life: display your web browser's tab bar in a snail-like layout around the page. The more tabs you
 have open, the bigger the snail grows!
 
-![Screenshot](tabsnail.png)
+![Screenshot](tabsnail.jpg)
 
 Licensed under the
 [Non-White-Heterosexual-Male License](https://nonwhiteheterosexualmalelicense.org).
