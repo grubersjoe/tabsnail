@@ -3,8 +3,8 @@ import {
   isCloseTabMessage,
   type Message,
   type UpdateTabsMessage,
-} from './lib/messages.ts'
-import type { Settings } from './settings/settings.ts'
+} from './lib/messages'
+import type { Settings } from './settings/settings'
 
 const defaultSettings: Settings = {
   color: '#edffb8',

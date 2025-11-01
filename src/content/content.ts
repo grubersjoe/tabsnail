@@ -1,4 +1,4 @@
-import { snailGrid, snailGridSize } from '../lib/layout.ts'
+import { snailGrid, snailGridSize } from '../lib/layout'
 import './content.css'
 import {
   type ActivateTabMessage,
@@ -6,7 +6,7 @@ import {
   isUpdateTabsMessage,
   type Message,
   type UpdateTabsMessage,
-} from '../lib/messages.ts'
+} from '../lib/messages'
 import { className, debounce, isDarkColor, loadTheme } from '../lib'
 import type { Settings } from '../settings/settings.ts'
 
