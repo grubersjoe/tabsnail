@@ -110,3 +110,7 @@
     background-color: transparent;
   }
 }
+
+body {
+  translate: 0 32px; /* There will always be at least one tab. */
+}

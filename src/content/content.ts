@@ -197,10 +197,10 @@ function shrinkPage(
 }
 
 function resetPage() {
-  document.body.style.removeProperty('box-sizing')
-  document.body.style.removeProperty('translate')
-  document.body.style.removeProperty('width')
-  document.body.style.removeProperty('padding-bottom')
+  document.body.style.boxSizing = 'revert'
+  document.body.style.translate = '0' // overwrite default from content.css
+  document.body.style.width = 'revert'
+  document.body.style.paddingBottom = 'revert'
 }
 
 main()

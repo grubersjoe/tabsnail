@@ -9,9 +9,7 @@ const gridCellSize = 32
  * the side. The cell size is 32 pixels.
  */
 export function snailGrid(gridSize: ReturnType<typeof snailGridSize>, n: number, elemSize: number) {
-  if (n < 1) {
-    throw new RangeError('n must be at least 1.')
-  }
+  n = Math.max(1, n)
 
   const minElemSize = 4
 
