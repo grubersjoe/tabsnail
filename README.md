@@ -16,11 +16,12 @@ Licensed under the
 - [x] Show all tabs in snail form
 - [x] Navigation
 - [x] Close tabs
-- [ ] Shrink website viewport to inner snail bounds
+- [x] Shrink page to inner snail bounds
 - [x] Update layout on viewport changes
 - [x] Configurable tab size
 - [ ] [Themes](https://www.instagram.com/p/DMdTtUJpaxi)
-  - [x] default (striped) with color setting
+  - [x] Striped (default) with color setting
+  - [x] Pride
   - [ ] Windows 95
   - [ ] Leopard Slug
   - [ ] Pacific Banana Slug
