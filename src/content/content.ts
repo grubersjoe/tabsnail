@@ -1,4 +1,4 @@
-import { snailGrid, snailGridSize } from '../lib/layout'
+import { snailBounds, snailGrid, snailGridSize } from '../lib/layout'
 import './content.css'
 import {
   type ActivateTabMessage,
@@ -10,12 +10,7 @@ import {
 import { className, debounce, isDarkColor, loadTheme } from '../lib'
 import type { Settings } from '../settings/settings.ts'
 
-const tabsnail = init()
-
-let settingsReadyResolve!: (s: Settings) => void
-const settingsReady = new Promise<Settings>(res => (settingsReadyResolve = res))
-
-function init() {
+function main() {
   let tabsnail = document.getElementById('tabsnail')
 
   if (!tabsnail) {
@@ -23,6 +18,9 @@ function init() {
     tabsnail.id = 'tabsnail'
     document.documentElement.appendChild(tabsnail)
   }
+
+  let settingsReadyResolve!: (s: Settings) => void
+  const settingsReady = new Promise<Settings>(res => (settingsReadyResolve = res))
 
   chrome.storage.sync.get<Settings>(null, settings => {
     tabsnail.style.setProperty('--color', settings.color)
@@ -34,50 +32,55 @@ function init() {
 
   loadTheme('default')
 
+  chrome.runtime.onMessage.addListener((message: Message, _sender, response) => {
+    void settingsReady.then(({ tabSize }) => {
+      if (isUpdateTabsMessage(message)) {
+        updateTabs(tabsnail, message, tabSize)
+        response()
+      }
+    })
+  })
+
+  chrome.storage.onChanged.addListener(
+    ({ theme, color, tabSize }: Partial<Record<string, chrome.storage.StorageChange>>) => {
+      if (theme?.newValue) {
+        loadTheme(theme.newValue as Settings['theme'])
+      }
+
+      if (color?.newValue) {
+        tabsnail.style.setProperty('--color', color.newValue as Settings['color'])
+        tabsnail.classList.toggle(
+          className('dark'),
+          isDarkColor(color.newValue as Settings['color']),
+        )
+      }
+
+      if (tabSize?.newValue) {
+        updateLayout(tabsnail, tabSize.newValue as Settings['tabSize'])
+      }
+    },
+  )
+
+  window.addEventListener(
+    'resize',
+    debounce(() => {
+      void settingsReady.then(({ tabSize }) => {
+        updateLayout(tabsnail, tabSize)
+      })
+    }, 150),
+  )
+
   return tabsnail
 }
 
-chrome.runtime.onMessage.addListener((message: Message, _sender, response) => {
-  void settingsReady.then(({ tabSize }) => {
-    if (isUpdateTabsMessage(message)) {
-      updateTabs(message, tabSize)
-      response()
-    }
-  })
-})
+function updateTabs(tabsnail: HTMLElement, message: UpdateTabsMessage, tabSize: number) {
+  const { gridCols, gridRows } = snailGridSize()
+  const gridPositions = snailGrid(gridCols, gridRows, message.tabs.length, tabSize)
 
-chrome.storage.onChanged.addListener(
-  ({ theme, color, tabSize }: Partial<Record<string, chrome.storage.StorageChange>>) => {
-    if (theme?.newValue) {
-      loadTheme(theme.newValue as Settings['theme'])
-    }
+  updateViewportBounds(gridRows, gridCols, gridPositions)
 
-    if (color?.newValue) {
-      tabsnail.style.setProperty('--color', color.newValue as Settings['color'])
-      tabsnail.classList.toggle(className('dark'), isDarkColor(color.newValue as Settings['color']))
-    }
-
-    if (tabSize?.newValue) {
-      updateLayout(tabSize.newValue as Settings['tabSize'])
-    }
-  },
-)
-
-window.addEventListener(
-  'resize',
-  debounce(() => {
-    void settingsReady.then(({ tabSize }) => {
-      updateLayout(tabSize)
-    })
-  }, 150),
-)
-
-function updateTabs(message: UpdateTabsMessage, tabSize: number) {
-  const { cols, rows } = snailGridSize()
-  const grid = snailGrid(cols, rows, tabSize)
-
-  tabsnail.style.setProperty('--grid-columns', String(cols))
-  tabsnail.style.setProperty('--grid-rows', String(rows))
+  tabsnail.style.setProperty('--grid-columns', String(gridCols))
+  tabsnail.style.setProperty('--grid-rows', String(gridRows))
 
   const fragment = new DocumentFragment()
 
@@ -89,14 +92,12 @@ function updateTabs(message: UpdateTabsMessage, tabSize: number) {
       return
     }
 
-    const { value, done } = grid.next()
-
-    if (done) {
-      console.error(`No grid cell for tab ${tab.title ?? tabId}`)
+    if (!gridPositions[i]) {
+      console.warn(`Tab ${i} (${tabId}) has no grid position.`)
       return
     }
 
-    const { gridRowStart, gridRowEnd, gridColumnStart, gridColumnEnd, side } = value
+    const { gridRowStart, gridRowEnd, gridColumnStart, gridColumnEnd, side } = gridPositions[i]
 
     const container = document.createElement('div')
     container.style.gridArea = `${gridRowStart} / ${gridColumnStart} / ${gridRowEnd} / ${gridColumnEnd}`
@@ -142,24 +143,24 @@ function updateTabs(message: UpdateTabsMessage, tabSize: number) {
   tabsnail.replaceChildren(fragment)
 }
 
-function updateLayout(tabSize: number) {
-  const { cols, rows } = snailGridSize()
-  const grid = snailGrid(cols, rows, tabSize)
+function updateLayout(tabsnail: HTMLElement, tabSize: number) {
+  const { gridCols, gridRows } = snailGridSize()
+  const gridPositions = snailGrid(gridCols, gridRows, tabsnail.children.length, tabSize)
 
-  tabsnail.style.setProperty('--grid-columns', String(cols))
-  tabsnail.style.setProperty('--grid-rows', String(rows))
+  updateViewportBounds(gridRows, gridCols, gridPositions)
 
-  Array.from(tabsnail.children).forEach(elem => {
+  tabsnail.style.setProperty('--grid-columns', String(gridCols))
+  tabsnail.style.setProperty('--grid-rows', String(gridRows))
+
+  Array.from(tabsnail.children).forEach((elem, i) => {
     const container = elem as HTMLElement
 
-    const { value, done } = grid.next()
-
-    if (done) {
-      console.error(`No grid cell for tab`)
+    if (!gridPositions[i]) {
+      console.warn(`Tab ${i} has no grid position.`)
       return
     }
 
-    const { gridRowStart, gridRowEnd, gridColumnStart, gridColumnEnd, side } = value
+    const { gridRowStart, gridRowEnd, gridColumnStart, gridColumnEnd, side } = gridPositions[i]
 
     container.style.gridArea = `${gridRowStart} / ${gridColumnStart} / ${gridRowEnd} / ${gridColumnEnd}`
     container.classList.toggle(className('top'), side === 'top')
@@ -168,3 +169,24 @@ function updateLayout(tabSize: number) {
     container.classList.toggle(className('left'), side === 'left')
   })
 }
+
+function updateViewportBounds(
+  gridRows: number,
+  gridCols: number,
+  gridPositions: ReturnType<typeof snailGrid>,
+) {
+  const bounds = snailBounds(gridRows, gridCols, gridPositions)
+
+  document.body.style.boxSizing = 'border-box'
+  document.body.style.translate = `${bounds.left}px ${bounds.top}px`
+
+  if (bounds.left + bounds.right > 0) {
+    document.body.style.width = `calc(100vw - ${bounds.left + bounds.right}px)`
+  }
+
+  if (bounds.bottom > 0) {
+    document.body.style.paddingBottom = `${bounds.bottom}px`
+  }
+}
+
+main()

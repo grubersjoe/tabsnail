@@ -1,12 +1,18 @@
 type Side = 'top' | 'right' | 'bottom' | 'left'
 
+const gridCellSize = 32
+
 /**
- * Yields the grid position of elements in a snail-shaped layout that goes
+ * Returns the grid position of elements in a snail-shaped layout that goes
  * from top, to right, to bottom, to left. `elemSize` is the number of cells
  * to use for one element. Elements are one cell tall or wide, depending on
- * the side.
+ * the side. The cell size is 32 pixels.
  */
-export function* snailGrid(cols: number, rows: number, elemSize: number) {
+export function snailGrid(cols: number, rows: number, n: number, elemSize: number) {
+  if (n < 1) {
+    throw new RangeError('n must be at least 1.')
+  }
+
   const minElemSize = 4
 
   if (elemSize < minElemSize) {
@@ -18,23 +24,24 @@ export function* snailGrid(cols: number, rows: number, elemSize: number) {
   let left = 0
   let right = cols - 1
 
+  const result = []
   while (top <= bottom && left <= right) {
     // Top side
     for (let col = left; col <= right; col += elemSize) {
       const remaining = right - col + 1
       const desiredSize = Math.min(elemSize, remaining)
       const nextRemaining = remaining - desiredSize
-      const size = nextRemaining > 0 && nextRemaining < minElemSize ? remaining : desiredSize
+      const actualSize = nextRemaining > 0 && nextRemaining < minElemSize ? remaining : desiredSize
 
-      yield {
+      result.push({
         gridRowStart: top + 1,
         gridColumnStart: col + 1,
         gridRowEnd: top + 2,
-        gridColumnEnd: col + size + 1,
+        gridColumnEnd: col + actualSize + 1,
         side: 'top' as Side,
-      }
+      })
 
-      if (col + size > right) break
+      if (col + actualSize > right) break
     }
     top++
 
@@ -43,17 +50,17 @@ export function* snailGrid(cols: number, rows: number, elemSize: number) {
       const remaining = bottom - row + 1
       const desiredSize = Math.min(elemSize, remaining)
       const nextRemaining = remaining - desiredSize
-      const size = nextRemaining > 0 && nextRemaining < minElemSize ? remaining : desiredSize
+      const actualSize = nextRemaining > 0 && nextRemaining < minElemSize ? remaining : desiredSize
 
-      yield {
+      result.push({
         gridRowStart: row + 1,
         gridColumnStart: right + 1,
-        gridRowEnd: row + size + 1,
+        gridRowEnd: row + actualSize + 1,
         gridColumnEnd: right + 2,
         side: 'right' as Side,
-      }
+      })
 
-      if (row + size > bottom) break
+      if (row + actualSize > bottom) break
     }
     right--
 
@@ -63,17 +70,18 @@ export function* snailGrid(cols: number, rows: number, elemSize: number) {
         const remaining = col - left + 1
         const desiredSize = Math.min(elemSize, remaining)
         const nextRemaining = remaining - desiredSize
-        const size = nextRemaining > 0 && nextRemaining < minElemSize ? remaining : desiredSize
+        const actualSize =
+          nextRemaining > 0 && nextRemaining < minElemSize ? remaining : desiredSize
 
-        yield {
+        result.push({
           gridRowStart: bottom + 1,
-          gridColumnStart: col - size + 2,
+          gridColumnStart: col - actualSize + 2,
           gridRowEnd: bottom + 2,
           gridColumnEnd: col + 2,
           side: 'bottom' as Side,
-        }
+        })
 
-        if (col - size < left) break
+        if (col - actualSize < left) break
       }
       bottom--
     }
@@ -84,27 +92,59 @@ export function* snailGrid(cols: number, rows: number, elemSize: number) {
         const remaining = row - top + 1
         const desiredSize = Math.min(elemSize, remaining)
         const nextRemaining = remaining - desiredSize
-        const size = nextRemaining > 0 && nextRemaining < minElemSize ? remaining : desiredSize
+        const actualSize =
+          nextRemaining > 0 && nextRemaining < minElemSize ? remaining : desiredSize
 
-        yield {
-          gridRowStart: row - size + 2,
+        result.push({
+          gridRowStart: row - actualSize + 2,
           gridColumnStart: left + 1,
           gridRowEnd: row + 2,
           gridColumnEnd: left + 2,
           side: 'left' as Side,
-        }
+        })
 
-        if (row - size < top) break
+        if (row - actualSize < top) break
       }
       left++
     }
   }
+
+  return result.slice(0, n)
 }
 
 export function snailGridSize() {
-  const cellSize = 32
-  const cols = Math.round(document.documentElement.clientWidth / cellSize)
-  const rows = Math.round(document.documentElement.clientHeight / cellSize)
+  const gridCols = Math.round(document.documentElement.clientWidth / gridCellSize)
+  const gridRows = Math.round(document.documentElement.clientHeight / gridCellSize)
 
-  return { cols, rows }
+  return { gridCols, gridRows }
+}
+
+/**
+ * Returns the number of pixels occupied by the Tabsnail on each side.
+ */
+export function snailBounds(
+  gridRows: number,
+  gridCols: number,
+  elems: ReturnType<typeof snailGrid>,
+) {
+  const bounds = { top: 0, right: 0, bottom: 0, left: 0 }
+  const cellWidth = document.documentElement.clientWidth / gridCols
+  const cellHeight = document.documentElement.clientHeight / gridRows
+
+  return elems.reduce((bounds, { gridRowStart, gridColumnStart, side }) => {
+    switch (side) {
+      case 'top':
+        bounds.top = Math.max(bounds.top, gridRowStart * cellHeight)
+        return bounds
+      case 'right':
+        bounds.right = Math.max(bounds.right, (gridCols - gridColumnStart + 1) * cellWidth)
+        return bounds
+      case 'bottom':
+        bounds.bottom = Math.max(bounds.bottom, (gridRows - gridRowStart + 1) * cellHeight)
+        return bounds
+      case 'left':
+        bounds.left = Math.max(bounds.left, gridColumnStart * cellWidth)
+        return bounds
+    }
+  }, bounds)
 }
