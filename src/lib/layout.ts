@@ -8,7 +8,7 @@ const gridCellSize = 32
  * to use for one element. Elements are one cell tall or wide, depending on
  * the side. The cell size is 32 pixels.
  */
-export function snailGrid(cols: number, rows: number, n: number, elemSize: number) {
+export function snailGrid(gridSize: ReturnType<typeof snailGridSize>, n: number, elemSize: number) {
   if (n < 1) {
     throw new RangeError('n must be at least 1.')
   }
@@ -20,9 +20,9 @@ export function snailGrid(cols: number, rows: number, n: number, elemSize: numbe
   }
 
   let top = 0
-  let bottom = rows - 1
+  let bottom = gridSize.rows - 1
   let left = 0
-  let right = cols - 1
+  let right = gridSize.cols - 1
 
   const result = []
   while (top <= bottom && left <= right) {
@@ -113,23 +113,22 @@ export function snailGrid(cols: number, rows: number, n: number, elemSize: numbe
 }
 
 export function snailGridSize() {
-  const gridCols = Math.round(document.documentElement.clientWidth / gridCellSize)
-  const gridRows = Math.round(document.documentElement.clientHeight / gridCellSize)
-
-  return { gridCols, gridRows }
+  return {
+    cols: Math.round(document.documentElement.clientWidth / gridCellSize),
+    rows: Math.round(document.documentElement.clientHeight / gridCellSize),
+  }
 }
 
 /**
  * Returns the number of pixels occupied by the Tabsnail on each side.
  */
 export function snailBounds(
-  gridRows: number,
-  gridCols: number,
+  gridSize: ReturnType<typeof snailGridSize>,
   elems: ReturnType<typeof snailGrid>,
 ) {
   const bounds = { top: 0, right: 0, bottom: 0, left: 0 }
-  const cellWidth = document.documentElement.clientWidth / gridCols
-  const cellHeight = document.documentElement.clientHeight / gridRows
+  const cellWidth = document.documentElement.clientWidth / gridSize.cols
+  const cellHeight = document.documentElement.clientHeight / gridSize.rows
 
   return elems.reduce((bounds, { gridRowStart, gridColumnStart, side }) => {
     switch (side) {
@@ -137,10 +136,10 @@ export function snailBounds(
         bounds.top = Math.max(bounds.top, gridRowStart * cellHeight)
         return bounds
       case 'right':
-        bounds.right = Math.max(bounds.right, (gridCols - gridColumnStart + 1) * cellWidth)
+        bounds.right = Math.max(bounds.right, (gridSize.cols - gridColumnStart + 1) * cellWidth)
         return bounds
       case 'bottom':
-        bounds.bottom = Math.max(bounds.bottom, (gridRows - gridRowStart + 1) * cellHeight)
+        bounds.bottom = Math.max(bounds.bottom, (gridSize.rows - gridRowStart + 1) * cellHeight)
         return bounds
       case 'left':
         bounds.left = Math.max(bounds.left, gridColumnStart * cellWidth)

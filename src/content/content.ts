@@ -9,6 +9,9 @@ import {
 } from '../lib/messages'
 import { className, debounce, isDarkColor, loadTheme } from '../lib'
 import type { Settings } from '../settings/settings.ts'
+import { defaultSettings } from '../settings/default'
+
+let settings = defaultSettings
 
 function main() {
   let tabsnail = document.getElementById('tabsnail')
@@ -19,68 +22,73 @@ function main() {
     document.documentElement.appendChild(tabsnail)
   }
 
-  let settingsReadyResolve!: (s: Settings) => void
-  const settingsReady = new Promise<Settings>(res => (settingsReadyResolve = res))
-
-  chrome.storage.sync.get<Settings>(null, settings => {
+  chrome.storage.sync.get<Settings>(null, syncSettings => {
+    settings = syncSettings
     tabsnail.style.setProperty('--color', settings.color)
     tabsnail.classList.toggle(className('dark'), isDarkColor(settings.color))
-
     loadTheme(settings.theme)
-    settingsReadyResolve(settings)
   })
 
   loadTheme('default')
 
   chrome.runtime.onMessage.addListener((message: Message, _sender, response) => {
-    void settingsReady.then(({ tabSize }) => {
-      if (isUpdateTabsMessage(message)) {
-        updateTabs(tabsnail, message, tabSize)
-        response()
-      }
-    })
+    if (isUpdateTabsMessage(message)) {
+      updateTabs(tabsnail, message)
+      response()
+    }
   })
 
-  chrome.storage.onChanged.addListener(
-    ({ theme, color, tabSize }: Partial<Record<string, chrome.storage.StorageChange>>) => {
-      if (theme?.newValue) {
-        loadTheme(theme.newValue as Settings['theme'])
-      }
+  chrome.storage.onChanged.addListener(syncSettings => {
+    if (syncSettings.color) {
+      settings.color = syncSettings.color.newValue as Settings['color']
+      tabsnail.style.setProperty('--color', settings.color)
+      tabsnail.classList.toggle(className('dark'), isDarkColor(settings.color))
+    }
 
-      if (color?.newValue) {
-        tabsnail.style.setProperty('--color', color.newValue as Settings['color'])
-        tabsnail.classList.toggle(
-          className('dark'),
-          isDarkColor(color.newValue as Settings['color']),
-        )
-      }
+    if (syncSettings.shrinkPage) {
+      settings.shrinkPage = syncSettings.shrinkPage.newValue as Settings['shrinkPage']
 
-      if (tabSize?.newValue) {
-        updateLayout(tabsnail, tabSize.newValue as Settings['tabSize'])
+      if (settings.shrinkPage) {
+        const gridSize = snailGridSize()
+        shrinkPage(gridSize, snailGrid(gridSize, tabsnail.children.length, settings.tabSize))
+      } else {
+        resetPage()
       }
-    },
-  )
+    }
+
+    if (syncSettings.tabSize) {
+      settings.tabSize = syncSettings.tabSize.newValue as Settings['tabSize']
+      updateLayout(tabsnail, settings.tabSize)
+    }
+
+    if (syncSettings.theme) {
+      settings.theme = syncSettings.theme.newValue as Settings['theme']
+      loadTheme(settings.theme)
+    }
+  })
 
   window.addEventListener(
     'resize',
     debounce(() => {
-      void settingsReady.then(({ tabSize }) => {
-        updateLayout(tabsnail, tabSize)
-      })
+      updateLayout(tabsnail, settings.tabSize)
     }, 150),
   )
 
   return tabsnail
 }
 
-function updateTabs(tabsnail: HTMLElement, message: UpdateTabsMessage, tabSize: number) {
-  const { gridCols, gridRows } = snailGridSize()
-  const gridPositions = snailGrid(gridCols, gridRows, message.tabs.length, tabSize)
+function updateTabs(tabsnail: HTMLElement, message: UpdateTabsMessage) {
+  const gridSize = snailGridSize()
+  const gridPositions = snailGrid(gridSize, message.tabs.length, settings.tabSize)
 
-  updateViewportBounds(gridRows, gridCols, gridPositions)
+  if (settings.shrinkPage) {
+    shrinkPage(gridSize, gridPositions)
+  } else {
+    resetPage()
+  }
 
-  tabsnail.style.setProperty('--grid-columns', String(gridCols))
-  tabsnail.style.setProperty('--grid-rows', String(gridRows))
+  tabsnail.style.setProperty('--grid-columns', String(gridSize.cols))
+  tabsnail.style.setProperty('--grid-rows', String(gridSize.rows))
 
   const fragment = new DocumentFragment()
 
@@ -144,13 +152,13 @@ function updateTabs(tabsnail: HTMLElement, message: UpdateTabsMessage, tabSize: 
 }
 
 function updateLayout(tabsnail: HTMLElement, tabSize: number) {
-  const { gridCols, gridRows } = snailGridSize()
-  const gridPositions = snailGrid(gridCols, gridRows, tabsnail.children.length, tabSize)
+  const gridSize = snailGridSize()
+  const gridPositions = snailGrid(gridSize, tabsnail.children.length, tabSize)
 
-  updateViewportBounds(gridRows, gridCols, gridPositions)
+  shrinkPage(gridSize, gridPositions)
 
-  tabsnail.style.setProperty('--grid-columns', String(gridCols))
-  tabsnail.style.setProperty('--grid-rows', String(gridRows))
+  tabsnail.style.setProperty('--grid-columns', String(gridSize.cols))
+  tabsnail.style.setProperty('--grid-rows', String(gridSize.rows))
 
   Array.from(tabsnail.children).forEach((elem, i) => {
     const container = elem as HTMLElement
@@ -170,12 +178,11 @@ function updateLayout(tabsnail: HTMLElement, tabSize: number) {
   })
 }
 
-function updateViewportBounds(
-  gridRows: number,
-  gridCols: number,
+function shrinkPage(
+  gridSize: ReturnType<typeof snailGridSize>,
   gridPositions: ReturnType<typeof snailGrid>,
 ) {
-  const bounds = snailBounds(gridRows, gridCols, gridPositions)
+  const bounds = snailBounds(gridSize, gridPositions)
 
   document.body.style.boxSizing = 'border-box'
   document.body.style.translate = `${bounds.left}px ${bounds.top}px`
@@ -187,6 +194,13 @@ function updateViewportBounds(
   if (bounds.bottom > 0) {
     document.body.style.paddingBottom = `${bounds.bottom}px`
   }
+}
+
+function resetPage() {
+  document.body.style.removeProperty('box-sizing')
+  document.body.style.removeProperty('translate')
+  document.body.style.removeProperty('width')
+  document.body.style.removeProperty('padding-bottom')
 }
 
 main()

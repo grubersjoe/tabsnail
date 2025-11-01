@@ -5,12 +5,7 @@ import {
   type UpdateTabsMessage,
 } from './lib/messages'
 import type { Settings } from './settings/settings'
-
-const defaultSettings: Settings = {
-  color: '#edffb8',
-  theme: 'default',
-  tabSize: 8,
-}
+import { defaultSettings } from './settings/default'
 
 // Initialize settings
 chrome.storage.sync.get<Partial<Settings>>(null, settings => {
