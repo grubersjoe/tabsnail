@@ -1,12 +1,4 @@
 /* Striped theme */
-@font-face {
-  src: url('./victor-mono-medium.woff2');
-  font-family: 'Victor Mono';
-  font-display: swap;
-  font-style: normal;
-  font-weight: 500;
-}
-
 #tabsnail {
   --color-shift-hover: 0.05;
   --color-text: hsl(0, 0%, 5%);
@@ -56,12 +48,6 @@
   > *:hover,
   .tabsnail-btn-close:hover {
     transition: background-color 200ms ease-in-out;
-  }
-
-  button {
-    font-family: 'Victor Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
   }
 
   .tabsnail-btn-activate {
