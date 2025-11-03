@@ -1,10 +1,11 @@
 /* Striped theme */
 #tabsnail {
-  --color-shift-hover: 0.05;
+  --color-shift-active: 0.05;
+  --color-shift-hover: 0.04;
   --color-text: hsl(0, 0%, 5%);
   --color-bg: hsl(0, 0%, 95%);
-  --color-bg-active: oklab(from var(--color-bg) calc(l - var(--color-shift-hover)) a b);
-  --color-bg-hover: var(--color-bg-active);
+  --color-bg-active: oklab(from var(--color-bg) calc(l + var(--color-shift-active)) a b);
+  --color-bg-hover: oklab(from var(--color-bg) calc(l - var(--color-shift-hover)) a b);
   --color-outline: hsl(0, 0%, 33%);
   --btn-close-bg-hover: oklab(
     from var(--color-bg-hover) calc(l - calc(var(--color-shift-hover) * 1.5)) a b
@@ -15,8 +16,8 @@
 
   > :nth-of-type(odd) {
     --color-bg: var(--color);
-    --color-bg-active: oklab(from var(--color-bg) calc(l - var(--color-shift-hover)) a b);
-    --color-bg-hover: var(--color-bg-active);
+    --color-bg-active: oklab(from var(--color-bg) calc(l + var(--color-shift-active)) a b);
+    --color-bg-hover: oklab(from var(--color-bg) calc(l - var(--color-shift-hover)) a b);
     --btn-close-bg-hover: oklab(
       from var(--color-bg-hover) calc(l - calc(var(--color-shift-hover) * 1.5)) a b
     );
@@ -24,8 +25,10 @@
 
   &.tabsnail-dark > :nth-of-type(odd) {
     --color-text: white;
-    --color-bg-active: oklab(from var(--color-bg) calc(l + calc(var(--color-shift-hover) * 2)) a b);
-    --color-bg-hover: var(--color-bg-active);
+    --color-bg-active: oklab(
+      from var(--color-bg) calc(l - calc(var(--color-shift-active) * 2)) a b
+    );
+    --color-bg-hover: oklab(from var(--color-bg) calc(l + calc(var(--color-shift-hover) * 2)) a b);
     --btn-close-bg-hover: oklab(
       from var(--color-bg-hover) calc(l + calc(var(--color-shift-hover) * 1.5)) a b
     );
