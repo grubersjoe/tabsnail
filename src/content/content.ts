@@ -52,7 +52,7 @@ function main() {
         const gridSize = snailGridSize()
         shrinkPage(gridSize, snailGrid(gridSize, tabsnail.children.length, settings.tabSize))
       } else {
-        resetPage()
+        unshrinkPage()
       }
     }
 
@@ -84,7 +84,7 @@ function updateTabs(tabsnail: HTMLElement, message: UpdateTabsMessage) {
   if (settings.shrinkPage) {
     shrinkPage(gridSize, gridPositions)
   } else {
-    resetPage()
+    unshrinkPage()
   }
 
   tabsnail.style.setProperty('--grid-columns', String(gridSize.cols))
@@ -185,19 +185,25 @@ function shrinkPage(
   const bounds = snailBounds(gridSize, gridPositions)
 
   document.body.style.boxSizing = 'border-box'
+  document.body.style.maxHeight = `calc(100vh - ${bounds.top}px)`
   document.body.style.translate = `${bounds.left}px ${bounds.top}px`
 
   if (bounds.left + bounds.right > 0) {
     document.body.style.width = `calc(100vw - ${bounds.left + bounds.right}px)`
+  } else {
+    document.body.style.width = 'revert'
   }
 
   if (bounds.bottom > 0) {
     document.body.style.paddingBottom = `${bounds.bottom}px`
+  } else {
+    document.body.style.paddingBottom = 'revert'
   }
 }
 
-function resetPage() {
+function unshrinkPage() {
   document.body.style.boxSizing = 'revert'
+  document.body.style.maxHeight = 'revert'
   document.body.style.translate = '0' // overwrite default from content.css
   document.body.style.width = 'revert'
   document.body.style.paddingBottom = 'revert'

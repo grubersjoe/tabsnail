@@ -112,5 +112,8 @@
 }
 
 body {
-  translate: 0 32px; /* There will always be at least one tab. */
+  /* There will always be at least one tab. */
+  translate: 0 32px;
+  max-height: calc(100% - 32px);
+  box-sizing: border-box;
 }
