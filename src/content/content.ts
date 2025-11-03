@@ -67,12 +67,29 @@ function main() {
     }
   })
 
-  window.addEventListener(
-    'resize',
+  document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement) {
+      tabsnail.hidden = true
+      unshrinkPage()
+    } else {
+      tabsnail.hidden = false
+
+      if (settings.shrinkPage) {
+        const gridSize = snailGridSize()
+        shrinkPage(gridSize, snailGrid(gridSize, tabsnail.children.length, settings.tabSize))
+      }
+    }
+  })
+
+  window.addEventListener('resize', () => {
+    if (document.fullscreenElement) {
+      return
+    }
+
     debounce(() => {
       updateLayout(tabsnail, settings.tabSize)
-    }, 150),
-  )
+    }, 150)()
+  })
 
   return tabsnail
 }
