@@ -1,3 +1,7 @@
-.idea/
-node_modules/
-build/
+node_modules
+build
+.env*
+web-ext.config.ts
+
+.idea
+.DS_Store

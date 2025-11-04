@@ -6,7 +6,7 @@
   --color-bg: hsl(0, 0%, 95%);
   --color-bg-active: oklab(from var(--color-bg) calc(l + var(--color-shift-active)) a b);
   --color-bg-hover: oklab(from var(--color-bg) calc(l - var(--color-shift-hover)) a b);
-  --color-outline: hsl(0, 0%, 33%);
+  --color-outline: hsl(0, 0%, 88%);
   --btn-close-bg-hover: oklab(
     from var(--color-bg-hover) calc(l - calc(var(--color-shift-hover) * 1.5)) a b
   );

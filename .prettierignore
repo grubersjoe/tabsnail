@@ -1,2 +1,3 @@
-build/
+build
+.wxt
 pnpm-lock.yaml

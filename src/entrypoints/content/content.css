@@ -29,7 +29,6 @@
     align-items: center;
     justify-content: space-between;
     gap: calc(var(--padding));
-    background-color: #fff;
   }
 
   .tabsnail-top,

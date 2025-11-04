@@ -1,107 +1,91 @@
-import { snailBounds, snailGrid, snailGridSize } from '../lib/layout'
 import './content.css'
+import closeIcon from '@/assets/close.svg?raw'
+import { className, debounce, isDarkColor, loadTheme } from '@/lib'
+import { snailBounds, snailGrid, snailGridSize } from '@/lib/layout'
 import {
   type ActivateTabMessage,
   type CloseTabMessage,
   isUpdateTabsMessage,
   type Message,
   type UpdateTabsMessage,
-} from '../lib/messages'
-import { className, debounce, isDarkColor, loadTheme } from '../lib'
-import type { Settings } from '../settings/settings.ts'
-import { defaultSettings } from '../settings/default'
+} from '@/lib/messages'
+import { defaultSettings, getSettings, type Settings, settingsStorage } from '@/lib/settings'
 
-let settings = defaultSettings
+const tabsnail = document.createElement('div')
+tabsnail.id = 'tabsnail'
 
-function main() {
-  let tabsnail = document.getElementById('tabsnail')
+const settings: Settings = defaultSettings
 
-  if (!tabsnail) {
-    tabsnail = document.createElement('div')
-    tabsnail.id = 'tabsnail'
-    document.documentElement.appendChild(tabsnail)
-  }
+export default defineContentScript({
+  matches: ['<all_urls>'],
+  cssInjectionMode: 'manifest',
+  main(ctx) {
+    const ui = createIntegratedUi(ctx, {
+      position: 'inline',
+      anchor: 'html',
+      onMount(container) {
+        container.append(tabsnail)
 
-  chrome.storage.sync.get<Settings>(null, syncSettings => {
-    settings = syncSettings
-    tabsnail.style.setProperty('--color', settings.color)
-    tabsnail.classList.toggle(className('dark'), isDarkColor(settings.color))
-    loadTheme(settings.theme)
-  })
+        // Load settings from storage and initialize
+        getSettings()
+          .then(snapshot => {
+            onColorChange(snapshot.color)
+            onShrinkViewportChange(snapshot.shrinkViewport, snapshot.tabSize)
+            onThemeChange(snapshot.theme)
+            onTabSizeChange(snapshot.tabSize)
+          })
+          .catch(console.error)
+      },
+      onRemove() {
+        resetViewport()
+        tabsnail.remove()
+      },
+    })
 
-  loadTheme('default')
+    ui.mount()
 
-  chrome.runtime.onMessage.addListener((message: Message, _sender, response) => {
-    if (isUpdateTabsMessage(message)) {
-      updateTabs(tabsnail, message)
-      response()
-    }
-  })
-
-  chrome.storage.onChanged.addListener(syncSettings => {
-    if (syncSettings.color) {
-      settings.color = syncSettings.color.newValue as Settings['color']
-      tabsnail.style.setProperty('--color', settings.color)
-      tabsnail.classList.toggle(className('dark'), isDarkColor(settings.color))
-    }
-
-    if (syncSettings.shrinkPage) {
-      settings.shrinkPage = syncSettings.shrinkPage.newValue as Settings['shrinkPage']
-
-      if (settings.shrinkPage) {
-        const gridSize = snailGridSize()
-        shrinkPage(gridSize, snailGrid(gridSize, tabsnail.children.length, settings.tabSize))
-      } else {
-        unshrinkPage()
+    browser.runtime.onMessage.addListener((message: Message, _sender, response) => {
+      if (isUpdateTabsMessage(message)) {
+        updateTabs(tabsnail, message)
+        response()
       }
-    }
+    })
 
-    if (syncSettings.tabSize) {
-      settings.tabSize = syncSettings.tabSize.newValue as Settings['tabSize']
-      updateLayout(tabsnail, settings.tabSize)
-    }
+    settingsStorage.color.watch(color => {
+      onColorChange(color)
+    })
 
-    if (syncSettings.theme) {
-      settings.theme = syncSettings.theme.newValue as Settings['theme']
-      loadTheme(settings.theme)
-    }
-  })
+    settingsStorage.shrinkViewport.watch(shrinkViewport => {
+      onShrinkViewportChange(shrinkViewport, settings.tabSize)
+    })
 
-  document.addEventListener('fullscreenchange', () => {
-    if (document.fullscreenElement) {
-      tabsnail.hidden = true
-      unshrinkPage()
-    } else {
-      tabsnail.hidden = false
+    settingsStorage.tabSize.watch(tabSize => {
+      onTabSizeChange(tabSize)
+      onShrinkViewportChange(settings.shrinkViewport, tabSize) // also depends on the tabSize
+    })
 
-      if (settings.shrinkPage) {
-        const gridSize = snailGridSize()
-        shrinkPage(gridSize, snailGrid(gridSize, tabsnail.children.length, settings.tabSize))
-      }
-    }
-  })
+    settingsStorage.theme.watch(theme => {
+      onThemeChange(theme)
+    })
 
-  window.addEventListener('resize', () => {
-    if (document.fullscreenElement) {
-      return
-    }
+    window.addEventListener('resize', () => {
+      onResize()
+    })
 
-    debounce(() => {
-      updateLayout(tabsnail, settings.tabSize)
-    }, 150)()
-  })
-
-  return tabsnail
-}
+    document.addEventListener('fullscreenchange', () => {
+      onFullscreenChange()
+    })
+  },
+})
 
 function updateTabs(tabsnail: HTMLElement, message: UpdateTabsMessage) {
   const gridSize = snailGridSize()
   const gridPositions = snailGrid(gridSize, message.tabs.length, settings.tabSize)
 
-  if (settings.shrinkPage) {
-    shrinkPage(gridSize, gridPositions)
+  if (settings.shrinkViewport) {
+    shrinkViewport(gridSize, gridPositions)
   } else {
-    unshrinkPage()
+    resetViewport()
   }
 
   tabsnail.style.setProperty('--grid-columns', String(gridSize.cols))
@@ -135,7 +119,7 @@ function updateTabs(tabsnail: HTMLElement, message: UpdateTabsMessage) {
     activateButton.classList.add(className('btn-activate'))
 
     activateButton.addEventListener('click', () => {
-      void chrome.runtime.sendMessage<ActivateTabMessage>({
+      void browser.runtime.sendMessage<ActivateTabMessage>({
         type: 'activate-tab',
         tabId,
       })
@@ -144,17 +128,10 @@ function updateTabs(tabsnail: HTMLElement, message: UpdateTabsMessage) {
     const closeButton = document.createElement('button')
     closeButton.type = 'button'
     closeButton.classList.add(className('btn-close'))
-    closeButton.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path 
-          fill="currentColor" 
-          d="m10.94 12-3.97 3.97 1.06 1.06L12 13.06l3.97 3.97 1.06-1.06L13.06 12l3.97-3.97-1.06-1.06L12 10.94 8.03 6.97 6.97 8.03 10.94 12Z" 
-        />
-      </svg>    
-    `
+    closeButton.innerHTML = closeIcon
 
     closeButton.addEventListener('click', () => {
-      void chrome.runtime.sendMessage<CloseTabMessage>({
+      void browser.runtime.sendMessage<CloseTabMessage>({
         type: 'close-tab',
         tabId,
       })
@@ -168,11 +145,11 @@ function updateTabs(tabsnail: HTMLElement, message: UpdateTabsMessage) {
   tabsnail.replaceChildren(fragment)
 }
 
-function updateLayout(tabsnail: HTMLElement, tabSize: number) {
+function updateSnailLayout(tabsnail: HTMLElement, tabSize: number) {
   const gridSize = snailGridSize()
   const gridPositions = snailGrid(gridSize, tabsnail.children.length, tabSize)
 
-  shrinkPage(gridSize, gridPositions)
+  shrinkViewport(gridSize, gridPositions)
 
   tabsnail.style.setProperty('--grid-columns', String(gridSize.cols))
   tabsnail.style.setProperty('--grid-rows', String(gridSize.rows))
@@ -195,7 +172,7 @@ function updateLayout(tabsnail: HTMLElement, tabSize: number) {
   })
 }
 
-function shrinkPage(
+function shrinkViewport(
   gridSize: ReturnType<typeof snailGridSize>,
   gridPositions: ReturnType<typeof snailGrid>,
 ) {
@@ -218,7 +195,7 @@ function shrinkPage(
   }
 }
 
-function unshrinkPage() {
+function resetViewport() {
   document.body.style.boxSizing = 'revert'
   document.body.style.maxHeight = 'revert'
   document.body.style.translate = '0' // overwrite default from content.css
@@ -226,4 +203,54 @@ function unshrinkPage() {
   document.body.style.paddingBottom = 'revert'
 }
 
-main()
+function onThemeChange(theme: Settings['theme']) {
+  settings.theme = theme
+  loadTheme(theme)
+}
+
+function onColorChange(color: Settings['color']) {
+  settings.color = color
+  tabsnail.style.setProperty('--color', color)
+  tabsnail.classList.toggle(className('dark'), isDarkColor(color))
+}
+
+function onShrinkViewportChange(
+  shrinkViewportArg: Settings['shrinkViewport'],
+  tabSize: Settings['tabSize'],
+) {
+  settings.shrinkViewport = shrinkViewportArg
+  settings.tabSize = tabSize
+
+  if (shrinkViewportArg) {
+    const gridSize = snailGridSize()
+    shrinkViewport(gridSize, snailGrid(gridSize, tabsnail.children.length, tabSize))
+  } else {
+    resetViewport()
+  }
+}
+
+function onTabSizeChange(tabSize: Settings['tabSize']) {
+  settings.tabSize = tabSize
+  updateSnailLayout(tabsnail, tabSize)
+}
+
+function onResize() {
+  if (document.fullscreenElement) {
+    return
+  }
+
+  debounce(() => {
+    updateSnailLayout(tabsnail, settings.tabSize)
+  }, 150)()
+}
+
+function onFullscreenChange() {
+  tabsnail.hidden = Boolean(document.fullscreenElement)
+
+  if (tabsnail.hidden) {
+    resetViewport()
+  } else if (settings.shrinkViewport) {
+    const gridSize = snailGridSize()
+    shrinkViewport(gridSize, snailGrid(gridSize, tabsnail.children.length, settings.tabSize))
+  }
+}

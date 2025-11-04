@@ -1,18 +1,8 @@
 {
-  "include": ["src/**/*", "./*"],
+  "extends": "./.wxt/tsconfig.json",
   "compilerOptions": {
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "preserve",
-    "moduleDetection": "force",
-    "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
-    "noUncheckedSideEffectImports": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "ES2022",
-    "useDefineForClassFields": true,
     "verbatimModuleSyntax": true
   }
 }
