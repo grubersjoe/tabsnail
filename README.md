@@ -16,8 +16,8 @@ manually at the moment (see instructions below).
 - 🐌 **Tab management** – Navigate between tabs and close them using the intuitive snail interface
 - 😵‍💫 **Tab awareness** – Visual feedback that naturally discourages tab hoarding as the snail grows
 - 💅 **Beautiful themes** – Pick your favorite snail color scheme
-- 📏 **Customizable size** – Adjust tab dimensions to fit your preference
-- 🤓 **Smart viewport** – Automatically adjust the viewport to fit the snail's inner bounds
+- 📏 **Customizable size** – Configure tab dimensions to fit your preference
+- 🤓 **Smart viewport** – Automatically adjusts the viewport to fit the snail's inner bounds
 
 ## TODO
 
