@@ -1,49 +1,50 @@
 {
   "name": "tabsnail",
-  "private": true,
   "version": "0.1.0",
+  "description": "Browser extension to display the tab bar in a snail layout",
+  "author": "Jonathan Gruber <gruberjonathan@gmail.com>",
+  "private": true,
+  "repository": "https://github.com/grubersjoe/tabsnail",
+  "bugs": "https://github.com/grubersjoe/tabsnail/issues",
   "type": "module",
   "scripts": {
-    "build": "tsc && rm -rf build/* && pnpm run build:background && pnpm run build:content && pnpm run build:settings && pnpm run build:themes",
-    "build:background": "vite build -c vite.config.background.ts",
-    "build:content": "vite build -c vite.config.content.ts",
-    "build:settings": "vite build -c vite.config.settings.ts",
-    "build:themes": "vite build -c vite.config.themes.ts",
+    "build": "wxt build",
+    "build:chrome": "wxt build -b chrome",
+    "build:firefox": "wxt build -b firefox",
     "check": "pnpx prettier -c . && pnpm exec tsc && pnpm lint",
-    "dev": "npm run watch",
+    "dev": "wxt",
+    "dev:chrome": "wxt -b chrome",
+    "dev:firefox": "wxt -b firefox",
     "format": "prettier --write .",
     "lint": "eslint .",
-    "watch": "pnpm run build && concurrently -n 'background,content,settings,themes' 'pnpm run watch:background' 'pnpm run watch:content' 'pnpm run watch:settings' 'pnpm run watch:themes'",
-    "watch:content": "chokidar 'public/manifest.json' 'src/lib/**' 'src/content/**/*' -c 'pnpm run build:content'",
-    "watch:background": "chokidar 'public/manifest.json' 'src/lib/**' 'src/background.ts' -c 'pnpm run build:background'",
-    "watch:settings": "chokidar 'public/manifest.json' 'src/lib/**' 'src/settings/**/*' -c 'pnpm run build:settings'",
-    "watch:themes": "chokidar 'public/manifest.json' 'src/lib/**' 'src/content/themes/**/*' -c 'pnpm run build:themes'",
-    "prepare": "husky"
+    "postinstall": "wxt prepare",
+    "prepare": "husky",
+    "zip": "wxt zip",
+    "zip:chrome": "wxt zip -b chrome",
+    "zip:firefox": "wxt zip -b firefox"
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
-    "@popperjs/core": "^2.11.8",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.0",
     "@types/bootstrap": "^5.2.10",
-    "@types/chrome": "^0.1.24",
-    "@types/node": "^24.9.1",
     "bootstrap": "^5.3.8",
-    "chokidar-cli": "^3.0.0",
-    "concurrently": "^9.2.1",
     "eslint": "^9.38.0",
-    "globals": "^16.4.0",
+    "globals": "^16.5.0",
     "husky": "^9.1.7",
-    "jiti": "^2.6.1",
     "prettier": "^3.6.2",
-    "sass": "^1.93.3",
-    "typescript": "~5.9.3",
+    "sass-embedded": "^1.93.3",
+    "typescript": "^5.9.2",
     "typescript-eslint": "^8.46.2",
-    "vite": "^7.1.12"
+    "wxt": "^0.20.6"
   },
   "prettier": {
     "arrowParens": "avoid",
     "printWidth": 100,
     "proseWrap": "always",
     "singleQuote": true,
-    "semi": false
+    "semi": false,
+    "plugins": [
+      "@trivago/prettier-plugin-sort-imports"
+    ]
   }
 }

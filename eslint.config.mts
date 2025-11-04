@@ -25,6 +25,6 @@ export default defineConfig(
   },
   {
     // Note: there must be no other properties in this object
-    ignores: ['build/'],
+    ignores: ['build', '.wxt'],
   },
 )

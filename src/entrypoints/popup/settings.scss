@@ -1,18 +1,19 @@
 @import '~bootstrap/scss/bootstrap';
 
+* {
+  box-sizing: border-box;
+}
+
 html {
-  width: 220px;
-  padding: 1rem;
   font-size: 14px;
 }
 
-html,
 body {
-  height: min-content;
+  padding: 1rem;
 }
 
 form {
-  margin: 0;
+  width: 200px;
 }
 
 .fs-7 {

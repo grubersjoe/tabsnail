@@ -1,0 +1,49 @@
+import {
+  isActivateTabMessage,
+  isCloseTabMessage,
+  type Message,
+  type UpdateTabsMessage,
+} from '@/lib/messages'
+
+export default defineBackground(() => {
+  browser.runtime.onMessage.addListener((message: Message, _sender, response) => {
+    if (isActivateTabMessage(message)) {
+      void browser.tabs.update(message.tabId, { active: true }).then(response)
+    }
+    if (isCloseTabMessage(message)) {
+      void browser.tabs.remove(message.tabId).then(response)
+    }
+  })
+
+  browser.tabs.onUpdated.addListener(() => {
+    void sendTabs()
+  })
+
+  browser.tabs.onRemoved.addListener(() => {
+    void sendTabs()
+  })
+
+  async function sendTabs() {
+    const tabs = await browser.tabs.query({ currentWindow: true })
+    const promises = []
+
+    for (const tab of tabs) {
+      if (!tab.id) {
+        console.warn(`Tab #${tab.index} has no ID.`)
+        continue
+      }
+      promises.push(
+        browser.tabs.sendMessage<UpdateTabsMessage>(tab.id, {
+          type: 'update-tabs',
+          tabs: tabs.map(t => ({
+            id: t.id,
+            title: t.title,
+            active: t.active,
+          })),
+        }),
+      )
+    }
+
+    return Promise.allSettled(promises)
+  }
+})

@@ -1,4 +1,4 @@
-import type { Settings } from '../settings/settings.ts'
+import type { Settings } from '@/lib/settings'
 
 export function debounce(callback: (...args: unknown[]) => unknown, wait: number) {
   let timeoutId: number | undefined
@@ -20,7 +20,7 @@ export function loadTheme(theme: Settings['theme']) {
   const stylesheet = document.createElement('link')
   stylesheet.id = 'tabsnail-theme'
   stylesheet.rel = 'stylesheet'
-  stylesheet.href = chrome.runtime.getURL(`themes/${theme}.css`)
+  stylesheet.href = browser.runtime.getURL(`/themes/${theme}.css`)
 
   document.head.appendChild(stylesheet)
 }
