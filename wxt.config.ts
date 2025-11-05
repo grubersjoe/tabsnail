@@ -3,6 +3,15 @@ import { defineConfig } from 'wxt'
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
+  outDir: 'build',
+  srcDir: 'src',
+  hooks: {
+    'build:manifestGenerated': (wxt, manifest) => {
+      manifest.content_scripts?.forEach(cs => {
+        cs.run_at = 'document_end' // overwrite default (document_idle)
+      })
+    },
+  },
   manifest: {
     name: 'Tabsnail',
     description: 'Display the tab bar in a snail-like layout around the page.',
@@ -19,8 +28,6 @@ export default defineConfig({
       },
     },
   },
-  outDir: 'build',
-  srcDir: 'src',
   vite: () => ({
     resolve: {
       alias: {
