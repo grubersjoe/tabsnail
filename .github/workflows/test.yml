@@ -32,7 +32,7 @@ jobs:
           restore-keys: ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install -r --ignore-scripts
+        run: pnpm install
 
       - name: Check formatting (Prettier)
         run: pnpx prettier -c . !build/ !pnpm-lock.yaml

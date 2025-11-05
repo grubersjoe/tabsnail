@@ -1,6 +1,7 @@
 node_modules
 build
 .env*
+.wxt
 web-ext.config.ts
 
 .idea
