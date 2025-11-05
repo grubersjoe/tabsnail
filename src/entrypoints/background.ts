@@ -15,6 +15,10 @@ export default defineBackground(() => {
     }
   })
 
+  browser.tabs.onActivated.addListener(() => {
+    void sendTabs()
+  })
+
   browser.tabs.onUpdated.addListener(() => {
     void sendTabs()
   })
