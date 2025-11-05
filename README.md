@@ -31,7 +31,7 @@ manually at the moment (see instructions below).
 - [ ] [Themes](https://www.instagram.com/p/DMdTtUJpaxi)
   - [x] Striped (default) with color setting
   - [x] Pride
-  - [ ] Windows 95
+  - [x] Windows 95
   - [ ] Leopard Slug
   - [ ] Pacific Banana Slug
   - [ ] Red Slug

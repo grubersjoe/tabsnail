@@ -18,7 +18,7 @@ export default defineConfig({
     permissions: ['tabs', 'storage'],
     web_accessible_resources: [
       {
-        resources: ['/themes/*.css'],
+        resources: ['/themes/*'],
         matches: ['<all_urls>'],
       },
     ],

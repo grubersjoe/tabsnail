@@ -6,7 +6,7 @@
   --padding: 8px;
   --btn-close-size: 18px;
 
-  pointer-events: none;
+  pointer-events: none; /* allow clicking through the Tabsnail (except the buttons, see below) */
   position: fixed;
   inset: 0;
   z-index: 99999;
@@ -82,16 +82,16 @@
   .tabsnail-top,
   .tabsnail-bottom {
     .tabsnail-btn-activate {
-      mask-image: linear-gradient(to right, var(--color-bg) 94%, transparent 100%);
+      mask-image: linear-gradient(to right, currentColor 94%, transparent 100%);
     }
   }
 
   .tabsnail-right .tabsnail-btn-activate {
-    mask-image: linear-gradient(to bottom, var(--color-bg) 94%, transparent 100%);
+    mask-image: linear-gradient(to bottom, currentColor 94%, transparent 100%);
   }
 
   .tabsnail-left .tabsnail-btn-activate {
-    mask-image: linear-gradient(to top, var(--color-bg) 94%, transparent 100%);
+    mask-image: linear-gradient(to top, currentColor 94%, transparent 100%);
   }
 
   .tabsnail-btn-close {

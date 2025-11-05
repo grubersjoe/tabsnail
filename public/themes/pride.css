@@ -51,34 +51,18 @@
 
   .tabsnail-top {
     background: linear-gradient(in oklch to right, var(--color-bg-1), var(--color-bg-2));
-
-    .tabsnail-btn-activate {
-      mask-image: linear-gradient(to right, var(--color-bg-2) 94%, transparent 100%);
-    }
   }
 
   .tabsnail-right {
     background: linear-gradient(in oklch to bottom, var(--color-bg-1), var(--color-bg-2));
-
-    .tabsnail-btn-activate {
-      mask-image: linear-gradient(to bottom, var(--color-bg-2) 94%, transparent 100%);
-    }
   }
 
   .tabsnail-bottom {
     background: linear-gradient(in oklch to left, var(--color-bg-1), var(--color-bg-2));
-
-    .tabsnail-btn-activate {
-      mask-image: linear-gradient(to right, var(--color-bg-2) 94%, transparent 100%);
-    }
   }
 
   .tabsnail-left {
     background: linear-gradient(in oklch to top, var(--color-bg-1), var(--color-bg-2));
-
-    .tabsnail-btn-activate {
-      mask-image: linear-gradient(to top, var(--color-bg-2) 94%, transparent 100%);
-    }
   }
 
   button {
