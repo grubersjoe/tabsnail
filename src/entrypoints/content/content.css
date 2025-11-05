@@ -1,6 +1,11 @@
 /**
- * Common Tabsnail styles
- * The --color, --grid-columns and --grid-rows properties are set dynamically.
+ * Common Tabsnail styles.
+ *
+ * The following properties are injected by the content script:
+ * --color,
+ * --grid-columns
+ * --grid-rows
+ * --tabsnail-cell-size
  */
 #tabsnail {
   --padding: 8px;
@@ -106,7 +111,7 @@
 
 body {
   /* There will always be at least one tab. */
-  translate: 0 32px;
-  max-height: calc(100% - 32px);
+  translate: 0 var(--tabsnail-cell-size, 32px);
+  max-height: calc(100% - var(--tabsnail-cell-size, 32px));
   box-sizing: border-box;
 }

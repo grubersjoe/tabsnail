@@ -1,5 +1,3 @@
-import type { Settings } from '@/lib/settings'
-
 export function debounce(callback: (...args: unknown[]) => unknown, wait: number) {
   let timeoutId: number | undefined
   return (...args: unknown[]) => {
@@ -12,17 +10,6 @@ export function debounce(callback: (...args: unknown[]) => unknown, wait: number
 
 export function className(name: string) {
   return `tabsnail-${name}`
-}
-
-export function loadTheme(theme: Settings['theme']) {
-  document.getElementById('tabsnail-theme')?.remove()
-
-  const stylesheet = document.createElement('link')
-  stylesheet.id = 'tabsnail-theme'
-  stylesheet.rel = 'stylesheet'
-  stylesheet.href = browser.runtime.getURL(`/themes/${theme}.css`)
-
-  document.head.appendChild(stylesheet)
 }
 
 export function isDarkColor(hex: string) {

@@ -1,6 +1,6 @@
 import './content.css'
 import closeIcon from '@/assets/close.svg?raw'
-import { className, debounce, isDarkColor, loadTheme } from '@/lib'
+import { className, debounce, isDarkColor } from '@/lib'
 import { snailBounds, snailGrid, snailGridSize } from '@/lib/layout'
 import {
   type ActivateTabMessage,
@@ -9,12 +9,13 @@ import {
   type Message,
   type UpdateTabsMessage,
 } from '@/lib/messages'
-import { defaultSettings, getSettings, type Settings, settingsStorage } from '@/lib/settings'
+import { defaultState, getStateSnapshot, type State, stateStorage } from '@/lib/state'
+import { loadTheme, themes } from '@/lib/themes'
 
 const tabsnail = document.createElement('div')
 tabsnail.id = 'tabsnail'
 
-const settings: Settings = defaultSettings
+let state: State = defaultState
 
 export default defineContentScript({
   matches: ['<all_urls>'],
@@ -26,13 +27,14 @@ export default defineContentScript({
       onMount(container) {
         container.append(tabsnail)
 
-        // Load settings from storage and initialize
-        getSettings()
+        // Load state from storage and initialize
+        getStateSnapshot()
           .then(snapshot => {
-            onColorChange(snapshot.color)
-            onShrinkViewportChange(snapshot.shrinkViewport, snapshot.tabSize)
-            onThemeChange(snapshot.theme)
-            onTabSizeChange(snapshot.tabSize)
+            state = snapshot
+            onColorChange()
+            onShrinkViewportChange()
+            onThemeChange()
+            onTabSizeChange()
           })
           .catch(console.error)
       },
@@ -51,21 +53,24 @@ export default defineContentScript({
       }
     })
 
-    settingsStorage.color.watch(color => {
-      onColorChange(color)
+    stateStorage.color.watch(color => {
+      state.color = color
+      onColorChange()
     })
 
-    settingsStorage.shrinkViewport.watch(shrinkViewport => {
-      onShrinkViewportChange(shrinkViewport, settings.tabSize)
+    stateStorage.shrinkViewport.watch(shrinkViewport => {
+      state.shrinkViewport = shrinkViewport
+      onShrinkViewportChange()
     })
 
-    settingsStorage.tabSize.watch(tabSize => {
-      onTabSizeChange(tabSize)
-      onShrinkViewportChange(settings.shrinkViewport, tabSize) // also depends on the tabSize
+    stateStorage.tabSize.watch(tabSize => {
+      state.tabSize = tabSize
+      onTabSizeChange()
     })
 
-    settingsStorage.theme.watch(theme => {
-      onThemeChange(theme)
+    stateStorage.theme.watch(theme => {
+      state.theme = theme
+      onThemeChange()
     })
 
     window.addEventListener('resize', () => {
@@ -79,10 +84,10 @@ export default defineContentScript({
 })
 
 function updateTabs(tabsnail: HTMLElement, message: UpdateTabsMessage) {
-  const gridSize = snailGridSize()
-  const gridPositions = snailGrid(gridSize, message.tabs.length, settings.tabSize)
+  const gridSize = snailGridSize(themes[state.theme].cellSizePixel)
+  const gridPositions = snailGrid(gridSize, message.tabs.length, state.tabSize)
 
-  if (settings.shrinkViewport) {
+  if (state.shrinkViewport) {
     shrinkViewport(gridSize, gridPositions)
   } else {
     resetViewport()
@@ -145,9 +150,9 @@ function updateTabs(tabsnail: HTMLElement, message: UpdateTabsMessage) {
   tabsnail.replaceChildren(fragment)
 }
 
-function updateSnailLayout(tabsnail: HTMLElement, tabSize: number) {
-  const gridSize = snailGridSize()
-  const gridPositions = snailGrid(gridSize, tabsnail.children.length, tabSize)
+function updateSnailLayout(tabsnail: HTMLElement) {
+  const gridSize = snailGridSize(themes[state.theme].cellSizePixel)
+  const gridPositions = snailGrid(gridSize, tabsnail.children.length, state.tabSize)
 
   shrinkViewport(gridSize, gridPositions)
 
@@ -203,35 +208,29 @@ function resetViewport() {
   document.body.style.paddingBottom = 'revert'
 }
 
-function onThemeChange(theme: Settings['theme']) {
-  settings.theme = theme
-  loadTheme(theme)
+function onThemeChange() {
+  loadTheme(state.theme, tabsnail)
+  updateSnailLayout(tabsnail)
+  onShrinkViewportChange()
 }
 
-function onColorChange(color: Settings['color']) {
-  settings.color = color
-  tabsnail.style.setProperty('--color', color)
-  tabsnail.classList.toggle(className('dark'), isDarkColor(color))
+function onColorChange() {
+  tabsnail.style.setProperty('--color', state.color)
+  tabsnail.classList.toggle(className('dark'), isDarkColor(state.color))
 }
 
-function onShrinkViewportChange(
-  shrinkViewportArg: Settings['shrinkViewport'],
-  tabSize: Settings['tabSize'],
-) {
-  settings.shrinkViewport = shrinkViewportArg
-  settings.tabSize = tabSize
-
-  if (shrinkViewportArg) {
-    const gridSize = snailGridSize()
-    shrinkViewport(gridSize, snailGrid(gridSize, tabsnail.children.length, tabSize))
+function onShrinkViewportChange() {
+  if (state.shrinkViewport) {
+    const gridSize = snailGridSize(themes[state.theme].cellSizePixel)
+    shrinkViewport(gridSize, snailGrid(gridSize, tabsnail.children.length, state.tabSize))
   } else {
     resetViewport()
   }
 }
 
-function onTabSizeChange(tabSize: Settings['tabSize']) {
-  settings.tabSize = tabSize
-  updateSnailLayout(tabsnail, tabSize)
+function onTabSizeChange() {
+  updateSnailLayout(tabsnail)
+  onShrinkViewportChange()
 }
 
 function onResize() {
@@ -240,7 +239,7 @@ function onResize() {
   }
 
   debounce(() => {
-    updateSnailLayout(tabsnail, settings.tabSize)
+    updateSnailLayout(tabsnail)
   }, 150)()
 }
 
@@ -249,8 +248,8 @@ function onFullscreenChange() {
 
   if (tabsnail.hidden) {
     resetViewport()
-  } else if (settings.shrinkViewport) {
-    const gridSize = snailGridSize()
-    shrinkViewport(gridSize, snailGrid(gridSize, tabsnail.children.length, settings.tabSize))
+  } else if (state.shrinkViewport) {
+    const gridSize = snailGridSize(themes[state.theme].cellSizePixel)
+    shrinkViewport(gridSize, snailGrid(gridSize, tabsnail.children.length, state.tabSize))
   }
 }

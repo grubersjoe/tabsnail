@@ -1,12 +1,10 @@
 type Side = 'top' | 'right' | 'bottom' | 'left'
 
-const gridCellSize = 32
-
 /**
  * Returns the grid position of elements in a snail-shaped layout that goes
  * from top, to right, to bottom, to left. `elemSize` is the number of cells
  * to use for one element. Elements are one cell tall or wide, depending on
- * the side. The cell size is 32 pixels.
+ * the side.
  */
 export function snailGrid(gridSize: ReturnType<typeof snailGridSize>, n: number, elemSize: number) {
   n = Math.max(1, n)
@@ -110,10 +108,10 @@ export function snailGrid(gridSize: ReturnType<typeof snailGridSize>, n: number,
   return result.slice(0, n)
 }
 
-export function snailGridSize() {
+export function snailGridSize(gridCellSizePixel: number) {
   return {
-    cols: Math.round(document.documentElement.clientWidth / gridCellSize),
-    rows: Math.round(document.documentElement.clientHeight / gridCellSize),
+    cols: Math.round(document.documentElement.clientWidth / gridCellSizePixel),
+    rows: Math.round(document.documentElement.clientHeight / gridCellSizePixel),
   }
 }
 
