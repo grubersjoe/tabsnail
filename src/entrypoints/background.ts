@@ -31,6 +31,14 @@ export default defineBackground(() => {
     void sendTabs() // (reordering tabs)
   })
 
+  browser.tabs.onAttached.addListener(() => {
+    void sendTabs() // (attaching a tab to this window)
+  })
+
+  browser.tabs.onDetached.addListener(() => {
+    void sendTabs() // (detaching a tab from this window)
+  })
+
   async function sendTabs() {
     const tabs = await browser.tabs.query({ currentWindow: true })
     const promises = []
