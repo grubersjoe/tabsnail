@@ -27,6 +27,10 @@ export default defineBackground(() => {
     void sendTabs()
   })
 
+  browser.tabs.onMoved.addListener(() => {
+    void sendTabs() // (reordering tabs)
+  })
+
   async function sendTabs() {
     const tabs = await browser.tabs.query({ currentWindow: true })
     const promises = []
