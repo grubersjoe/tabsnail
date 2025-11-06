@@ -36,30 +36,41 @@
     gap: calc(var(--padding));
   }
 
+  .tabsnail-btn-activate {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    mask-repeat: no-repeat;
+    mask-size: cover;
+  }
+
   .tabsnail-top,
   .tabsnail-bottom {
     padding: 0 calc(var(--padding) / 2) 0 0;
 
     .tabsnail-btn-activate {
       padding: 0 0 0 var(--padding);
+      mask-image: linear-gradient(to right, currentcolor 94%, transparent 100%);
     }
   }
 
   .tabsnail-left {
     writing-mode: sideways-lr;
-    padding: calc(var(--padding) / 2) 0 0 0;
+    padding: calc(var(--padding) / 2) 0 0;
 
     .tabsnail-btn-activate {
       padding: 0 0 var(--padding) 0;
+      mask-image: linear-gradient(to top, currentcolor 94%, transparent 100%);
     }
   }
 
   .tabsnail-right {
     writing-mode: sideways-rl;
-    padding: 0 0 calc(var(--padding) / 2) 0;
+    padding: 0 0 calc(var(--padding) / 2);
 
     .tabsnail-btn-activate {
       padding: var(--padding) 0 0 0;
+      mask-image: linear-gradient(to bottom, currentcolor 94%, transparent 100%);
     }
   }
 
@@ -76,34 +87,10 @@
     letter-spacing: normal; /* Some websites set this 🫠 */
   }
 
-  .tabsnail-btn-activate {
-    flex-grow: 1;
-    width: 100%;
-    height: 100%;
-    mask-repeat: no-repeat;
-    mask-size: cover;
-  }
-
-  .tabsnail-top,
-  .tabsnail-bottom {
-    .tabsnail-btn-activate {
-      mask-image: linear-gradient(to right, currentColor 94%, transparent 100%);
-    }
-  }
-
-  .tabsnail-right .tabsnail-btn-activate {
-    mask-image: linear-gradient(to bottom, currentColor 94%, transparent 100%);
-  }
-
-  .tabsnail-left .tabsnail-btn-activate {
-    mask-image: linear-gradient(to top, currentColor 94%, transparent 100%);
-  }
-
   .tabsnail-btn-close {
     display: flex;
     flex: 0 0 var(--btn-close-size);
-    align-content: center;
-    justify-content: center;
+    place-content: center center;
     border-radius: 50%;
     background-color: transparent;
   }

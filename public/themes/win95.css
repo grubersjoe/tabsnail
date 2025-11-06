@@ -1,6 +1,6 @@
 /* Windows 95 theme - Credits to https://github.com/YoshiMannaert/95CSS */
 @font-face {
-  /* noinspection CssUnknownTarget*/
+  /* noinspection CssUnknownTarget */
   src: url('/themes/fonts/win95.woff2');
   font-family: 'Win95';
   font-display: swap;
@@ -13,7 +13,6 @@
   --color-gray-100: #dedede;
   --color-gray-200: #c3c3c3;
   --color-gray-300: #808080;
-
   --shadow-default-button-default:
     inset -2px -2px 0 var(--color-black), inset 2px 2px 0 var(--color-white),
     inset -4px -4px 0 var(--color-gray-300), inset 4px 4px 0 var(--color-gray-100);

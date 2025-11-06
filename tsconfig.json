@@ -1,6 +1,7 @@
 {
   "extends": "./.wxt/tsconfig.json",
   "compilerOptions": {
+    "allowJs": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "verbatimModuleSyntax": true

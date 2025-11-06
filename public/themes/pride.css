@@ -1,6 +1,6 @@
-/* Pride theme 🏳️‍🌈*/
+/* Pride theme 🏳️‍🌈 */
 #tabsnail {
-  --color-outline: hsl(0, 0%, 50%);
+  --color-outline: hsl(0 0% 50%);
   --outline-width: 1px;
 
   /* https://en.wikipedia.org/wiki/Rainbow_flag_(LGBTQ) */
@@ -22,26 +22,31 @@
       --color-bg-1: var(--color-pride-red);
       --color-bg-2: var(--color-pride-orange);
     }
+
     &:nth-of-type(6n + 1) {
-      --color-text: hsl(0, 0%, 5%);
+      --color-text: hsl(0 0% 5%);
       --color-bg-1: var(--color-pride-orange);
       --color-bg-2: var(--color-pride-yellow);
     }
+
     &:nth-of-type(6n + 2) {
-      --color-text: hsl(0, 0%, 5%);
+      --color-text: hsl(0 0% 5%);
       --color-bg-1: var(--color-pride-yellow);
       --color-bg-2: var(--color-pride-green);
     }
+
     &:nth-of-type(6n + 3) {
       --color-text: white;
       --color-bg-1: var(--color-pride-green);
       --color-bg-2: var(--color-pride-blue);
     }
+
     &:nth-of-type(6n + 4) {
       --color-text: white;
       --color-bg-1: var(--color-pride-blue);
       --color-bg-2: var(--color-pride-violet);
     }
+
     &:nth-of-type(6n + 5) {
       --color-text: white;
       --color-bg-1: var(--color-pride-violet);

@@ -40,5 +40,5 @@ jobs:
       - name: Run type checks (TypeScript)
         run: pnpm tsc
 
-      - name: Run linter (ESLint)
+      - name: Run linter (ESLint and Stylelint)
         run: pnpm lint

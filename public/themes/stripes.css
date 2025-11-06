@@ -2,9 +2,9 @@
 #tabsnail {
   --color-shift-active: 0.08;
   --color-shift-hover: 0.04;
-  --color-text: hsl(0, 0%, 5%);
-  --color-bg: hsl(0, 0%, 93%);
-  --color-bg-active: hsl(0, 0%, 100%);
+  --color-text: hsl(0 0% 5%);
+  --color-bg: hsl(0 0% 93%);
+  --color-bg-active: hsl(0 0% 100%);
   --color-bg-active-hover: oklch(
     from var(--color-bg-active) calc(l - var(--color-shift-hover)) c h
   );
@@ -63,11 +63,6 @@
     }
   }
 
-  > *:hover,
-  .tabsnail-btn-close:hover {
-    transition: background-color 200ms ease-in-out;
-  }
-
   .tabsnail-btn-close {
     border-radius: 50%;
     background-color: transparent;
@@ -76,5 +71,10 @@
     &:hover {
       background-color: var(--btn-close-bg-hover);
     }
+  }
+
+  > *:hover,
+  .tabsnail-btn-close:hover {
+    transition: background-color 200ms ease-in-out;
   }
 }
