@@ -17,6 +17,8 @@ tabsnail.id = 'tabsnail'
 
 let state: State = defaultState
 
+const port = browser.runtime.connect()
+
 export default defineContentScript({
   matches: ['<all_urls>'],
   cssInjectionMode: 'manifest',
@@ -46,10 +48,9 @@ export default defineContentScript({
 
     ui.mount()
 
-    browser.runtime.onMessage.addListener((message: Message, _sender, response) => {
+    port.onMessage.addListener((message: Message) => {
       if (isUpdateTabsMessage(message)) {
         updateTabs(tabsnail, message)
-        response()
       }
     })
 
@@ -124,10 +125,7 @@ function updateTabs(tabsnail: HTMLElement, message: UpdateTabsMessage) {
     activateButton.classList.add(className('btn-activate'))
 
     activateButton.addEventListener('click', () => {
-      void browser.runtime.sendMessage<ActivateTabMessage>({
-        type: 'activate-tab',
-        tabId,
-      })
+      port.postMessage({ type: 'activate-tab', tabId } satisfies ActivateTabMessage)
     })
 
     const closeButton = document.createElement('button')
@@ -136,10 +134,7 @@ function updateTabs(tabsnail: HTMLElement, message: UpdateTabsMessage) {
     closeButton.innerHTML = closeIcon
 
     closeButton.addEventListener('click', () => {
-      void browser.runtime.sendMessage<CloseTabMessage>({
-        type: 'close-tab',
-        tabId,
-      })
+      port.postMessage({ type: 'close-tab', tabId } satisfies CloseTabMessage)
     })
 
     container.appendChild(activateButton)

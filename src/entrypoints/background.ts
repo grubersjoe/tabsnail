@@ -1,3 +1,4 @@
+import { browser } from '#imports'
 import {
   isActivateTabMessage,
   isCloseTabMessage,
@@ -6,60 +7,85 @@ import {
 } from '@/lib/messages'
 
 export default defineBackground(() => {
-  browser.runtime.onMessage.addListener((message: Message, _sender, response) => {
-    if (isActivateTabMessage(message)) {
-      void browser.tabs.update(message.tabId, { active: true }).then(response)
+  const ports = new Map<number, Browser.runtime.Port>()
+
+  // Store the port of each content script to exchange messages with it.
+  browser.runtime.onConnect.addListener(port => {
+    const tabId = port.sender?.tab?.id
+    const windowId = port.sender?.tab?.windowId
+
+    if (!tabId) {
+      return
     }
-    if (isCloseTabMessage(message)) {
-      void browser.tabs.remove(message.tabId).then(response)
+
+    ports.set(tabId, port)
+
+    if (windowId) {
+      void postTabs(windowId)
     }
+
+    port.onMessage.addListener((message: Message) => {
+      if (isActivateTabMessage(message)) {
+        void browser.tabs.update(message.tabId, { active: true })
+      }
+      if (isCloseTabMessage(message)) {
+        void browser.tabs.remove(message.tabId)
+      }
+    })
+
+    port.onDisconnect.addListener(() => {
+      ports.delete(tabId)
+    })
   })
 
   browser.tabs.onActivated.addListener(() => {
-    void sendTabs()
+    void postTabs()
   })
 
   browser.tabs.onUpdated.addListener(() => {
-    void sendTabs()
+    void postTabs()
   })
 
   browser.tabs.onRemoved.addListener(() => {
-    void sendTabs()
+    void postTabs()
   })
 
   browser.tabs.onMoved.addListener(() => {
-    void sendTabs() // (reordering tabs)
+    void postTabs() // (reordering tabs)
   })
 
   browser.tabs.onAttached.addListener(() => {
-    void sendTabs() // (attaching a tab to this window)
+    void postTabs()
   })
 
-  browser.tabs.onDetached.addListener(() => {
-    void sendTabs() // (detaching a tab from this window)
+  browser.tabs.onDetached.addListener((_, detachInfo) => {
+    void postTabs(detachInfo.oldWindowId)
   })
 
-  async function sendTabs() {
-    const tabs = await browser.tabs.query({ currentWindow: true })
-    const promises = []
+  async function postTabs(windowId?: number) {
+    const query: Browser.tabs.QueryInfo = windowId
+      ? { windowType: 'normal', windowId }
+      : { windowType: 'normal', currentWindow: true }
 
-    for (const tab of tabs) {
-      if (!tab.id) {
-        console.warn(`Tab #${tab.index} has no ID.`)
-        continue
-      }
-      promises.push(
-        browser.tabs.sendMessage<UpdateTabsMessage>(tab.id, {
-          type: 'update-tabs',
-          tabs: tabs.map(t => ({
-            id: t.id,
-            title: t.title,
-            active: t.active,
-          })),
-        }),
-      )
+    const tabs = await browser.tabs.query(query)
+
+    const message: UpdateTabsMessage = {
+      type: 'update-tabs',
+      tabs: tabs.map(t => ({
+        id: t.id,
+        title: t.title,
+        active: t.active,
+      })),
     }
 
-    return Promise.allSettled(promises)
+    for (const tab of tabs) {
+      if (tab.id) {
+        const port = ports.get(tab.id)
+
+        if (port) {
+          port.postMessage(message)
+        }
+      }
+    }
   }
 })
