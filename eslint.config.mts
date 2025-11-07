@@ -1,4 +1,5 @@
 import eslint from '@eslint/js'
+import svelte from 'eslint-plugin-svelte'
 import { defineConfig } from 'eslint/config'
 import globals from 'globals'
 import typescript from 'typescript-eslint'
@@ -7,6 +8,7 @@ export default defineConfig(
   eslint.configs.recommended,
   typescript.configs.strictTypeChecked,
   typescript.configs.stylisticTypeChecked,
+  svelte.configs.recommended,
   {
     rules: {
       '@typescript-eslint/array-type': ['error', { default: 'array' }],
@@ -21,6 +23,19 @@ export default defineConfig(
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
+    },
+  },
+  {
+    files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        extraFileExtensions: ['.svelte'],
+        parser: typescript.parser,
+      },
+    },
+    rules: {
+      'svelte/no-at-html-tags': 'off',
     },
   },
   {

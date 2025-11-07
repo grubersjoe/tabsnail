@@ -11,14 +11,15 @@
     "build": "wxt build",
     "build:chrome": "wxt build -b chrome",
     "build:firefox": "wxt build -b firefox",
-    "check": "pnpx prettier -c . && pnpm exec tsc && pnpm lint",
+    "check": "pnpm exec prettier -c . && pnpm exec tsc && pnpm lint",
     "dev": "wxt",
     "dev:chrome": "wxt -b chrome",
     "dev:firefox": "wxt -b firefox",
     "format": "prettier --write .",
-    "lint": "npm run lint:eslint && npm run lint:stylelint",
+    "lint": "pnpm lint:eslint && pnpm lint:stylelint && pnpm lint:svelte",
     "lint:eslint": "eslint .",
     "lint:stylelint": "stylelint '{src,public}/**/*.{css,scss}'",
+    "lint:svelte": "svelte-check",
     "postinstall": "wxt prepare",
     "prepare": "husky",
     "zip": "wxt zip",
@@ -28,27 +29,23 @@
   "devDependencies": {
     "@eslint/js": "^9.38.0",
     "@trivago/prettier-plugin-sort-imports": "^6.0.0",
+    "@tsconfig/svelte": "^5.0.5",
     "@types/bootstrap": "^5.2.10",
+    "@wxt-dev/module-svelte": "^2.0.3",
     "bootstrap": "^5.3.8",
     "eslint": "^9.38.0",
+    "eslint-plugin-svelte": "^3.13.0",
     "globals": "^16.5.0",
     "husky": "^9.1.7",
     "prettier": "^3.6.2",
+    "prettier-plugin-svelte": "^3.4.0",
     "sass-embedded": "^1.93.3",
     "stylelint": "^16.25.0",
     "stylelint-config-standard": "^39.0.1",
+    "svelte": "^5.38.6",
+    "svelte-check": "^4.3.1",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.46.2",
     "wxt": "^0.20.6"
-  },
-  "prettier": {
-    "arrowParens": "avoid",
-    "printWidth": 100,
-    "proseWrap": "always",
-    "singleQuote": true,
-    "semi": false,
-    "plugins": [
-      "@trivago/prettier-plugin-sort-imports"
-    ]
   }
 }

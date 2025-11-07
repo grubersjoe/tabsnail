@@ -1,6 +1,6 @@
 import './settings.scss'
 import { debounce } from '@/lib'
-import { getStateSnapshot, type State, stateStorage } from '@/lib/state'
+import { type Settings, getSettingsSnapshot, settingsStorage } from '@/lib/settings'
 
 const shrinkViewportInput = document.getElementById('shrink-viewport') as HTMLInputElement
 const themeSelect = document.getElementById('theme') as HTMLSelectElement
@@ -9,33 +9,33 @@ const colorPickerContainer = document.getElementById('color-picker-container') a
 const tabSizeInput = document.getElementById('tab-size') as HTMLInputElement
 const tabSizeValue = document.getElementById('tab-size-value') as HTMLSpanElement
 
-const state = await getStateSnapshot()
+const settings = await getSettingsSnapshot()
 
-shrinkViewportInput.checked = state.shrinkViewport
-themeSelect.value = state.theme
+shrinkViewportInput.checked = settings.shrinkViewport
+themeSelect.value = settings.theme
 
-colorPicker.value = state.color
+colorPicker.value = settings.color
 colorPickerContainer.classList.toggle('d-none', themeSelect.value !== 'default')
 
-tabSizeInput.value = String(state.tabSize)
+tabSizeInput.value = String(settings.tabSize)
 tabSizeValue.textContent = tabSizeInput.value
 
 shrinkViewportInput.addEventListener('input', () => {
-  debounce(() => void stateStorage.shrinkViewport.setValue(shrinkViewportInput.checked), 100)()
+  debounce(() => void settingsStorage.shrinkViewport.setValue(shrinkViewportInput.checked), 100)()
 })
 
 themeSelect.addEventListener('change', () => {
-  const theme = themeSelect.value as State['theme']
+  const theme = themeSelect.value as Settings['theme']
   colorPickerContainer.classList.toggle('d-none', theme !== 'default')
-  void stateStorage.theme.setValue(theme)
+  void settingsStorage.theme.setValue(theme)
 })
 
 colorPicker.addEventListener(
   'input',
-  debounce(() => stateStorage.color.setValue(colorPicker.value), 100),
+  debounce(() => settingsStorage.color.setValue(colorPicker.value), 100),
 )
 
 tabSizeInput.addEventListener('input', () => {
   tabSizeValue.textContent = tabSizeInput.value
-  debounce(() => void stateStorage.tabSize.setValue(Number(tabSizeInput.value)), 100)()
+  debounce(() => void settingsStorage.tabSize.setValue(Number(tabSizeInput.value)), 100)()
 })

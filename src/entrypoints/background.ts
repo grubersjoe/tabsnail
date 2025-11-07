@@ -1,9 +1,9 @@
 import { browser } from '#imports'
 import {
-  isActivateTabMessage,
-  isCloseTabMessage,
   type Message,
   type UpdateTabsMessage,
+  isActivateTabMessage,
+  isCloseTabMessage,
 } from '@/lib/messages'
 
 export default defineBackground(() => {
@@ -21,7 +21,7 @@ export default defineBackground(() => {
     ports.set(tabId, port)
 
     if (windowId) {
-      void postTabs(windowId)
+      void updateTabs(windowId)
     }
 
     port.onMessage.addListener((message: Message) => {
@@ -39,30 +39,30 @@ export default defineBackground(() => {
   })
 
   browser.tabs.onActivated.addListener(() => {
-    void postTabs()
+    void updateTabs()
   })
 
   browser.tabs.onUpdated.addListener(() => {
-    void postTabs()
+    void updateTabs()
   })
 
   browser.tabs.onRemoved.addListener(() => {
-    void postTabs()
+    void updateTabs()
   })
 
   browser.tabs.onMoved.addListener(() => {
-    void postTabs() // (reordering tabs)
+    void updateTabs() // (reordering tabs)
   })
 
   browser.tabs.onAttached.addListener(() => {
-    void postTabs()
+    void updateTabs()
   })
 
   browser.tabs.onDetached.addListener((_, detachInfo) => {
-    void postTabs(detachInfo.oldWindowId)
+    void updateTabs(detachInfo.oldWindowId)
   })
 
-  async function postTabs(windowId?: number) {
+  async function updateTabs(windowId?: number) {
     const query: Browser.tabs.QueryInfo = windowId
       ? { windowType: 'normal', windowId }
       : { windowType: 'normal', currentWindow: true }

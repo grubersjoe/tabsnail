@@ -6,9 +6,7 @@ type Side = 'top' | 'right' | 'bottom' | 'left'
  * to use for one element. Elements are one cell tall or wide, depending on
  * the side.
  */
-export function snailGrid(gridSize: ReturnType<typeof snailGridSize>, n: number, elemSize: number) {
-  n = Math.max(1, n)
-
+export function snailGrid(gridColumns: number, gridRows: number, elemSize: number) {
   const minElemSize = 4
 
   if (elemSize < minElemSize) {
@@ -16,9 +14,9 @@ export function snailGrid(gridSize: ReturnType<typeof snailGridSize>, n: number,
   }
 
   let top = 0
-  let bottom = gridSize.rows - 1
+  let bottom = gridRows - 1
   let left = 0
-  let right = gridSize.cols - 1
+  let right = gridColumns - 1
 
   const result = []
   while (top <= bottom && left <= right) {
@@ -30,10 +28,10 @@ export function snailGrid(gridSize: ReturnType<typeof snailGridSize>, n: number,
       const actualSize = nextRemaining > 0 && nextRemaining < minElemSize ? remaining : desiredSize
 
       result.push({
-        gridRowStart: top + 1,
-        gridColumnStart: col + 1,
-        gridRowEnd: top + 2,
-        gridColumnEnd: col + actualSize + 1,
+        rowStart: top + 1,
+        columnStart: col + 1,
+        rowEnd: top + 2,
+        columnEnd: col + actualSize + 1,
         side: 'top' as Side,
       })
 
@@ -49,10 +47,10 @@ export function snailGrid(gridSize: ReturnType<typeof snailGridSize>, n: number,
       const actualSize = nextRemaining > 0 && nextRemaining < minElemSize ? remaining : desiredSize
 
       result.push({
-        gridRowStart: row + 1,
-        gridColumnStart: right + 1,
-        gridRowEnd: row + actualSize + 1,
-        gridColumnEnd: right + 2,
+        rowStart: row + 1,
+        columnStart: right + 1,
+        rowEnd: row + actualSize + 1,
+        columnEnd: right + 2,
         side: 'right' as Side,
       })
 
@@ -70,10 +68,10 @@ export function snailGrid(gridSize: ReturnType<typeof snailGridSize>, n: number,
           nextRemaining > 0 && nextRemaining < minElemSize ? remaining : desiredSize
 
         result.push({
-          gridRowStart: bottom + 1,
-          gridColumnStart: col - actualSize + 2,
-          gridRowEnd: bottom + 2,
-          gridColumnEnd: col + 2,
+          rowStart: bottom + 1,
+          columnStart: col - actualSize + 2,
+          rowEnd: bottom + 2,
+          columnEnd: col + 2,
           side: 'bottom' as Side,
         })
 
@@ -92,10 +90,10 @@ export function snailGrid(gridSize: ReturnType<typeof snailGridSize>, n: number,
           nextRemaining > 0 && nextRemaining < minElemSize ? remaining : desiredSize
 
         result.push({
-          gridRowStart: row - actualSize + 2,
-          gridColumnStart: left + 1,
-          gridRowEnd: row + 2,
-          gridColumnEnd: left + 2,
+          rowStart: row - actualSize + 2,
+          columnStart: left + 1,
+          rowEnd: row + 2,
+          columnEnd: left + 2,
           side: 'left' as Side,
         })
 
@@ -105,41 +103,60 @@ export function snailGrid(gridSize: ReturnType<typeof snailGridSize>, n: number,
     }
   }
 
-  return result.slice(0, n)
-}
-
-export function snailGridSize(gridCellSizePixel: number) {
-  return {
-    cols: Math.round(document.documentElement.clientWidth / gridCellSizePixel),
-    rows: Math.round(document.documentElement.clientHeight / gridCellSizePixel),
-  }
+  return result
 }
 
 /**
  * Returns the number of pixels occupied by the Tabsnail on each side.
  */
 export function snailBounds(
-  gridSize: ReturnType<typeof snailGridSize>,
-  elems: ReturnType<typeof snailGrid>,
+  gridColumns: number,
+  gridRows: number,
+  grid: ReturnType<typeof snailGrid>,
 ) {
   const bounds = { top: 0, right: 0, bottom: 0, left: 0 }
-  const cellWidth = document.documentElement.clientWidth / gridSize.cols
-  const cellHeight = document.documentElement.clientHeight / gridSize.rows
+  const cellWidth = document.documentElement.clientWidth / gridColumns
+  const cellHeight = document.documentElement.clientHeight / gridRows
 
-  return elems.reduce((bounds, { gridRowStart, gridColumnStart, side }) => {
+  return grid.reduce((bounds, { rowStart, columnStart, side }) => {
     switch (side) {
       case 'top':
-        bounds.top = Math.max(bounds.top, gridRowStart * cellHeight)
+        bounds.top = Math.max(bounds.top, rowStart * cellHeight)
         return bounds
       case 'right':
-        bounds.right = Math.max(bounds.right, (gridSize.cols - gridColumnStart + 1) * cellWidth)
+        bounds.right = Math.max(bounds.right, (gridColumns - columnStart + 1) * cellWidth)
         return bounds
       case 'bottom':
-        bounds.bottom = Math.max(bounds.bottom, (gridSize.rows - gridRowStart + 1) * cellHeight)
+        bounds.bottom = Math.max(bounds.bottom, (gridRows - rowStart + 1) * cellHeight)
         return bounds
       case 'left':
-        bounds.left = Math.max(bounds.left, gridColumnStart * cellWidth)
+        bounds.left = Math.max(bounds.left, columnStart * cellWidth)
         return bounds
     }
   }, bounds)
+}
+
+export function setViewportBounds(condition: boolean, bounds: ReturnType<typeof snailBounds>) {
+  if (condition) {
+    document.body.style.translate = `${bounds.left}px ${bounds.top}px`
+
+    if (bounds.left + bounds.right > 0) {
+      document.body.style.width = `calc(100% - ${bounds.left + bounds.right}px)`
+    } else {
+      document.body.style.removeProperty('width')
+    }
+
+    if (bounds.bottom > 0) {
+      document.body.style.boxSizing = 'border-box'
+      document.body.style.paddingBottom = `${bounds.bottom}px`
+    } else {
+      document.body.style.removeProperty('padding-bottom')
+      document.body.style.removeProperty('box-sizing')
+    }
+  } else {
+    document.body.style.removeProperty('box-sizing')
+    document.body.style.translate = 'initial' // must not be removed because a default is set in content.css
+    document.body.style.removeProperty('width')
+    document.body.style.removeProperty('padding-bottom')
+  }
 }
