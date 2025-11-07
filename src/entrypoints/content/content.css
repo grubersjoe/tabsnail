@@ -1,15 +1,10 @@
 /**
  * Common Tabsnail styles.
  *
- * The following properties are injected by the content script:
- * --color,
- * --grid-columns
- * --grid-rows
- * --tabsnail-cell-size
+ * --grid-columns and --grid-rows are set by the content script.
  */
 #tabsnail {
   --padding: 8px;
-  --btn-close-size: 18px;
 
   pointer-events: none; /* allow clicking through the Tabsnail (except the buttons, see below) */
   position: fixed;
@@ -33,7 +28,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: calc(var(--padding));
+    gap: var(--padding);
   }
 
   .tabsnail-btn-activate {
@@ -89,16 +84,14 @@
 
   .tabsnail-btn-close {
     display: flex;
-    flex: 0 0 var(--btn-close-size);
+    flex: 0 0 18px;
     place-content: center center;
     border-radius: 50%;
     background-color: transparent;
   }
 }
 
+/* There will always be at least one tab row. Most themes use 32px as cell size. */
 body {
-  /* There will always be at least one tab. */
-  translate: 0 var(--tabsnail-cell-size, 32px);
-  max-height: calc(100% - var(--tabsnail-cell-size, 32px));
-  box-sizing: border-box;
+  translate: 0 32px;
 }

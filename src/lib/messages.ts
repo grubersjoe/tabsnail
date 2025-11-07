@@ -1,8 +1,10 @@
 import { type Browser } from 'wxt/browser'
 
+export type Tab = Pick<Browser.tabs.Tab, 'id' | 'title' | 'active'>
+
 export type UpdateTabsMessage = {
   type: 'update-tabs'
-  tabs: Pick<Browser.tabs.Tab, 'id' | 'title' | 'active'>[]
+  tabs: Tab[]
 }
 
 export type ActivateTabMessage = {
