@@ -6,29 +6,31 @@ This project is a **work in progress** to bring [Fiona's](https://runjak.codes/)
 life: display your web browser's tab bar in a snail-like layout around the page. The more tabs you
 have open, the bigger the snail grows!
 
-Chrome and Firefox are currently supported. To use the extension, you need to build and install it
-manually at the moment (see instructions below).
+Currently, Chrome and Firefox are supported. Because it is not published yet, you need to build and
+install the extension yourself if you want to use it (see [development](#development)).
 
 ![Screenshot](tabsnail.jpg)
 
 ## Features
 
-- 🐌 **Tab management** – Navigate between tabs and close them using the intuitive snail interface
-- 😵‍💫 **Tab awareness** – Visual feedback that naturally discourages tab hoarding as the snail grows
-- 💅 **Beautiful themes** – Pick your favorite snail color scheme
-- 📏 **Customizable size** – Configure tab dimensions to fit your preference
-- 🤓 **Smart viewport** – Automatically adjusts the viewport to fit the snail's inner bounds
+- 🐌 Navigate between your tabs using an intuitive snail-layout
+- 😵‍💫 Feel naturally discouraged from tab hoarding as the snail grows
+- 💅 Pick your favorite snail color theme
+- ⚙️ Customize colors and the tab bar size
+- 🤓 The viewport automatically adjusts to fit inside the snail
 
 ## TODO
 
 - [x] Migrate to [WXT](https://wxt.dev) for cross-browser support
+- [ ] Use [Svelte](https://svelte.dev) for rendering (in progress)
 - [x] Show all tabs in snail form
 - [x] Navigation
 - [x] Close tabs
 - [x] Shrink viewport to inner snail bounds
 - [x] Update layout on viewport changes
 - [x] Configurable tab size
-- [ ] [Themes](https://www.instagram.com/p/DMdTtUJpaxi)
+- [ ] Tab groups
+- [ ] Themes [inspiration](https://www.instagram.com/p/DMdTtUJpaxi)
   - [x] Striped (default) with color setting
   - [x] Pride
   - [x] Windows 95
