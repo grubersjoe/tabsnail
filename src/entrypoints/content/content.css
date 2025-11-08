@@ -78,7 +78,6 @@
     overflow: hidden;
     font-family: system-ui, sans-serif;
     font-size: 12px;
-    line-height: 1.5;
     letter-spacing: normal; /* Some websites set this 🫠 */
   }
 

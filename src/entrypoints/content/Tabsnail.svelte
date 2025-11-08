@@ -75,7 +75,7 @@
   id="tabsnail"
   bind:clientWidth
   bind:clientHeight
-  class={[isDarkColor(settings.color) && className('dark')]}
+  class={[className('theme'), isDarkColor(settings.color) && className('dark')]}
   hidden={isFullscreen}
   style:--grid-columns={gridColumns}
   style:--grid-rows={gridRows}

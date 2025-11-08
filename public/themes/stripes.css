@@ -1,5 +1,5 @@
-/* Default theme: Striped */
-#tabsnail {
+/* Striped theme (default) */
+#tabsnail.tabsnail-theme {
   --color-shift-active: 0.08;
   --color-shift-hover: 0.04;
   --color-text: hsl(0 0% 5%);

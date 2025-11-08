@@ -7,7 +7,7 @@
   font-style: normal;
 }
 
-#tabsnail {
+#tabsnail.tabsnail-theme {
   --color-white: #fff;
   --color-black: #000;
   --color-gray-100: #dedede;
