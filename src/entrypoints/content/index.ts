@@ -1,14 +1,22 @@
-import Tabsnail from './Tabsnail.svelte'
-import './content.css'
+import Tabsnail from '../../components/Tabsnail.svelte'
+import './tabsnail.css'
 import { mount, unmount } from 'svelte'
 
 export default defineContentScript({
   matches: ['<all_urls>'],
-  main(ctx) {
-    const ui = createIntegratedUi(ctx, {
-      position: 'inline',
+  cssInjectionMode: 'ui',
+  async main(ctx) {
+    if (ctx.isInvalid) {
+      return
+    }
+
+    const ui = await createShadowRootUi(ctx, {
+      name: 'tabsnail-ui',
       anchor: 'html',
-      onMount: container => mount(Tabsnail, { target: container }),
+      position: 'inline',
+      isolateEvents: true,
+      onMount: (container, shadowRoot) =>
+        mount(Tabsnail, { target: container, props: { shadowRoot } }),
       onRemove: app => {
         if (app) {
           unmount(app).catch(console.error)

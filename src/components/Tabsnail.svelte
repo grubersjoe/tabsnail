@@ -10,8 +10,15 @@
     isUpdateTabsMessage,
   } from '@/lib/messages'
   import { defaultSettings, getSettingsSnapshot, settingsStorage } from '@/lib/settings'
-  import { loadTheme, themes } from '@/lib/themes'
+  import { loadTheme } from '@/lib/themes'
+  import { themes } from '@@/public/themes'
   import { onDestroy } from 'svelte'
+
+  type Props = {
+    shadowRoot: ShadowRoot
+  }
+
+  let { shadowRoot }: Props = $props()
 
   let tabs = $state<Tab[]>([])
   let settings = $state(defaultSettings)
@@ -30,7 +37,7 @@
   getSettingsSnapshot()
     .then(snapshot => {
       settings = snapshot
-      loadTheme(snapshot.theme)
+      void loadTheme(shadowRoot, snapshot.theme)
     })
     .catch(console.error)
 
@@ -56,7 +63,7 @@
 
   settingsStorage.theme.watch(theme => {
     settings.theme = theme
-    loadTheme(theme)
+    void loadTheme(shadowRoot, theme)
   })
 
   $effect(() => {

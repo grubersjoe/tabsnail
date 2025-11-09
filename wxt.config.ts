@@ -8,8 +8,10 @@ export default defineConfig({
   srcDir: 'src',
   hooks: {
     'build:manifestGenerated': (wxt, manifest) => {
-      manifest.content_scripts?.forEach(cs => {
-        cs.run_at = 'document_end' // overwrite default (document_idle)
+      manifest.content_scripts ??= []
+      manifest.content_scripts.push({
+        css: ['content-scripts/global.css'],
+        matches: ['<all_urls>'],
       })
     },
   },
@@ -19,7 +21,11 @@ export default defineConfig({
     permissions: ['tabs', 'storage'],
     web_accessible_resources: [
       {
-        resources: ['/themes/*'],
+        resources: ['content-scripts/global.css'],
+        matches: ['<all_urls>'],
+      },
+      {
+        resources: ['themes/*'],
         matches: ['<all_urls>'],
       },
     ],

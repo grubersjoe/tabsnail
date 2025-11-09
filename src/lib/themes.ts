@@ -1,42 +1,23 @@
-export type Theme = keyof typeof themes
+import { themes } from '@@/public/themes'
 
-type ThemeDefinition = {
+export type Theme = {
   name: string
   url: string
+  font?: FontFace
   cellSizePx: number
 }
 
-export const themes = {
-  default: {
-    name: 'Stripes',
-    url: browser.runtime.getURL(`/themes/stripes.css`),
-    cellSizePx: 32,
-  },
-  pride: {
-    name: 'Pride',
-    url: browser.runtime.getURL(`/themes/pride.css`),
-    cellSizePx: 32,
-  },
-  win95: {
-    name: 'Windows 95',
-    url: browser.runtime.getURL(`/themes/win95.css`),
-    cellSizePx: 36,
-  },
-} as const satisfies Record<string, ThemeDefinition>
+export type ThemeKey = keyof typeof themes
 
-export function loadTheme(theme: Theme) {
-  let stylesheet = document.getElementById('tabsnail-theme') as HTMLLinkElement | null
+export async function loadTheme(shadowRoot: ShadowRoot, theme: ThemeKey) {
+  const { url, font } = themes[theme] as Theme
 
-  if (!stylesheet) {
-    stylesheet = document.createElement('link')
-    stylesheet.id = 'tabsnail-theme'
-    stylesheet.rel = 'stylesheet'
-    document.head.appendChild(stylesheet)
+  const stylesheet = new CSSStyleSheet()
+  const cssFile = await fetch(url)
+  await stylesheet.replace(await cssFile.text())
+  shadowRoot.adoptedStyleSheets = [stylesheet]
+
+  if (font) {
+    document.fonts.add(font)
   }
-
-  if (stylesheet.href !== themes[theme].url) {
-    stylesheet.href = themes[theme].url
-  }
-
-  return theme
 }
