@@ -1,9 +1,9 @@
-import type { Theme } from '@/lib/themes'
+import { type ThemeKey } from '@/lib/themes'
 
 export type Settings = {
   color: string
   shrinkViewport: boolean
-  theme: Theme
+  theme: ThemeKey
   tabSize: number
 }
 

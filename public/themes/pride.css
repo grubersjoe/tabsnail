@@ -70,10 +70,6 @@
     background: linear-gradient(in oklch to top, var(--color-bg-1), var(--color-bg-2));
   }
 
-  button {
-    font-size: 12px;
-  }
-
   .tabsnail-btn-activate {
     mask-repeat: no-repeat;
     mask-size: cover;

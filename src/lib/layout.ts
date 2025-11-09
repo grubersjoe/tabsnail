@@ -155,7 +155,7 @@ export function setViewportBounds(condition: boolean, bounds: ReturnType<typeof 
     }
   } else {
     document.body.style.removeProperty('box-sizing')
-    document.body.style.translate = 'initial' // must not be removed because a default is set in content.css
+    document.body.style.translate = 'initial' // must not be removed because a default is set in tabsnail.css
     document.body.style.removeProperty('width')
     document.body.style.removeProperty('padding-bottom')
   }

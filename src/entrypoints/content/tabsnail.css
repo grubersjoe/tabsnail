@@ -1,3 +1,13 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
 /**
  * Common Tabsnail styles.
  *
@@ -9,26 +19,22 @@
   pointer-events: none; /* allow clicking through the Tabsnail (except the buttons, see below) */
   position: fixed;
   inset: 0;
-  z-index: 99999;
+  z-index: 9999;
   width: 100%;
   height: 100%;
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
   grid-template-rows: repeat(var(--grid-rows), minmax(0, 1fr));
-
-  &,
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
 
   > * {
     pointer-events: auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--padding);
+    gap: 8px;
+    background-color: white;
   }
 
   .tabsnail-btn-activate {
@@ -76,9 +82,6 @@
     flex-direction: column;
     white-space: nowrap;
     overflow: hidden;
-    font-family: system-ui, sans-serif;
-    font-size: 12px;
-    letter-spacing: normal; /* Some websites set this 🫠 */
   }
 
   .tabsnail-btn-close {
@@ -88,9 +91,4 @@
     border-radius: 50%;
     background-color: transparent;
   }
-}
-
-/* There will always be at least one tab row. Most themes use 32px as cell size. */
-body {
-  translate: 0 32px;
 }
