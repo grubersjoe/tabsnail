@@ -1,4 +1,3 @@
-import { browser } from '#imports'
 import {
   type Message,
   type UpdateTabsMessage,

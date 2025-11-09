@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { browser } from '#imports'
   import closeIcon from '@/assets/close.svg?raw'
   import { className, isDarkColor } from '@/lib'
   import { setViewportBounds, snailBounds, snailGrid } from '@/lib/layout'

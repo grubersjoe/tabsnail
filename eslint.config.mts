@@ -1,3 +1,4 @@
+import autoImports from './.wxt/eslint-auto-imports.mjs'
 import eslint from '@eslint/js'
 import svelte from 'eslint-plugin-svelte'
 import { defineConfig } from 'eslint/config'
@@ -5,6 +6,7 @@ import globals from 'globals'
 import typescript from 'typescript-eslint'
 
 export default defineConfig(
+  autoImports,
   eslint.configs.recommended,
   typescript.configs.strictTypeChecked,
   typescript.configs.stylisticTypeChecked,
