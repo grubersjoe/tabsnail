@@ -12,7 +12,6 @@
   import { defaultSettings, getSettingsSnapshot, settingsStorage } from '@/lib/settings'
   import { loadTheme } from '@/lib/themes'
   import { themes } from '@@/public/themes'
-  import { onDestroy } from 'svelte'
 
   type Props = {
     shadowRoot: ShadowRoot
@@ -41,9 +40,7 @@
     })
     .catch(console.error)
 
-  const port = browser.runtime.connect()
-
-  port.onMessage.addListener((message: Message) => {
+  browser.runtime.onMessage.addListener((message: Message) => {
     if (isUpdateTabsMessage(message)) {
       tabs = message.tabs
     }
@@ -68,10 +65,6 @@
 
   $effect(() => {
     setViewportBounds(settings.shrinkViewport && !isFullscreen, bounds)
-  })
-
-  onDestroy(() => {
-    port.disconnect()
   })
 </script>
 
@@ -101,8 +94,10 @@
           class={className('btn-activate')}
           onclick={() => {
             if (tab.id) {
-              const message: ActivateTabMessage = { type: 'activate-tab', tabId: tab.id }
-              port.postMessage(message)
+              void browser.runtime.sendMessage<ActivateTabMessage>({
+                type: 'activate-tab',
+                tabId: tab.id,
+              })
             }
           }}
         >
@@ -114,8 +109,10 @@
           class={className('btn-close')}
           onclick={() => {
             if (tab.id) {
-              const message: CloseTabMessage = { type: 'close-tab', tabId: tab.id }
-              port.postMessage(message)
+              void browser.runtime.sendMessage<CloseTabMessage>({
+                type: 'close-tab',
+                tabId: tab.id,
+              })
             }
           }}
         >

@@ -6,35 +6,13 @@ import {
 } from '@/lib/messages'
 
 export default defineBackground(() => {
-  const ports = new Map<number, Browser.runtime.Port>()
-
-  // Store the port of each content script to exchange messages with it.
-  browser.runtime.onConnect.addListener(port => {
-    const tabId = port.sender?.tab?.id
-    const windowId = port.sender?.tab?.windowId
-
-    if (!tabId) {
-      return
+  browser.runtime.onMessage.addListener((message: Message) => {
+    if (isActivateTabMessage(message)) {
+      void browser.tabs.update(message.tabId, { active: true })
     }
-
-    ports.set(tabId, port)
-
-    if (windowId) {
-      void updateTabs(windowId)
+    if (isCloseTabMessage(message)) {
+      void browser.tabs.remove(message.tabId)
     }
-
-    port.onMessage.addListener((message: Message) => {
-      if (isActivateTabMessage(message)) {
-        void browser.tabs.update(message.tabId, { active: true })
-      }
-      if (isCloseTabMessage(message)) {
-        void browser.tabs.remove(message.tabId)
-      }
-    })
-
-    port.onDisconnect.addListener(() => {
-      ports.delete(tabId)
-    })
   })
 
   browser.tabs.onActivated.addListener(() => {
@@ -67,24 +45,25 @@ export default defineBackground(() => {
       : { windowType: 'normal', currentWindow: true }
 
     const tabs = await browser.tabs.query(query)
-
-    const message: UpdateTabsMessage = {
-      type: 'update-tabs',
-      tabs: tabs.map(t => ({
-        id: t.id,
-        title: t.title,
-        active: t.active,
-      })),
-    }
+    const promises = []
 
     for (const tab of tabs) {
-      if (tab.id) {
-        const port = ports.get(tab.id)
-
-        if (port) {
-          port.postMessage(message)
-        }
+      if (!tab.id) {
+        console.warn(`Tab #${tab.index} has no ID.`)
+        continue
       }
+      promises.push(
+        browser.tabs.sendMessage<UpdateTabsMessage>(tab.id, {
+          type: 'update-tabs',
+          tabs: tabs.map(t => ({
+            id: t.id,
+            title: t.title,
+            active: t.active,
+          })),
+        }),
+      )
     }
+
+    return Promise.allSettled(promises)
   }
 })
