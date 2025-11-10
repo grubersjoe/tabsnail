@@ -6,8 +6,9 @@
     type ActivateTabMessage,
     type CloseTabMessage,
     type Message,
+    type RequestTabsMessage,
     type Tab,
-    isUpdateTabsMessage,
+    isTabsMessage,
   } from '@/lib/messages'
   import { defaultSettings, getSettingsSnapshot, settingsStorage } from '@/lib/settings'
   import { loadTheme } from '@/lib/themes'
@@ -28,7 +29,10 @@
   let gridColumns = $derived(Math.round(clientWidth / cellSize))
   let gridRows = $derived(Math.round(clientHeight / cellSize))
   let grid = $derived(snailGrid(gridColumns, gridRows, settings.tabSize))
-  let bounds = $derived(snailBounds(gridColumns, gridRows, grid.slice(0, tabs.length)))
+
+  let bounds = $derived(
+    snailBounds(clientWidth, clientHeight, gridColumns, gridRows, grid.slice(0, tabs.length)),
+  )
 
   let fullscreenElement = $state(document.fullscreenElement)
   let isFullscreen = $derived(fullscreenElement !== null)
@@ -40,8 +44,17 @@
     })
     .catch(console.error)
 
+  browser.runtime
+    .sendMessage<RequestTabsMessage>({ type: 'request-tabs' })
+    .then((message: Message) => {
+      if (isTabsMessage(message)) {
+        tabs = message.tabs
+      }
+    })
+    .catch(console.error)
+
   browser.runtime.onMessage.addListener((message: Message) => {
-    if (isUpdateTabsMessage(message)) {
+    if (isTabsMessage(message)) {
       tabs = message.tabs
     }
   })

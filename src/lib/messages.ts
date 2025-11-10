@@ -2,9 +2,13 @@ import { type Browser } from 'wxt/browser'
 
 export type Tab = Pick<Browser.tabs.Tab, 'id' | 'title' | 'active'>
 
-export type UpdateTabsMessage = {
-  type: 'update-tabs'
+export type TabsMessage = {
+  type: 'tabs'
   tabs: Tab[]
+}
+
+export type RequestTabsMessage = {
+  type: 'request-tabs'
 }
 
 export type ActivateTabMessage = {
@@ -17,10 +21,14 @@ export type CloseTabMessage = {
   tabId: number
 }
 
-export type Message = UpdateTabsMessage | ActivateTabMessage | CloseTabMessage
+export type Message = TabsMessage | RequestTabsMessage | ActivateTabMessage | CloseTabMessage
 
-export function isUpdateTabsMessage(msg: Message): msg is UpdateTabsMessage {
-  return msg.type === 'update-tabs'
+export function isTabsMessage(msg: Message): msg is TabsMessage {
+  return msg.type === 'tabs'
+}
+
+export function isRequestTabsMessage(msg: Message): msg is RequestTabsMessage {
+  return msg.type === 'request-tabs'
 }
 
 export function isActivateTabMessage(msg: Message): msg is ActivateTabMessage {

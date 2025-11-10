@@ -110,13 +110,15 @@ export function snailGrid(gridColumns: number, gridRows: number, elemSize: numbe
  * Returns the number of pixels occupied by the Tabsnail on each side.
  */
 export function snailBounds(
+  clientWidth: number,
+  clientHeight: number,
   gridColumns: number,
   gridRows: number,
   grid: ReturnType<typeof snailGrid>,
 ) {
   const bounds = { top: 0, right: 0, bottom: 0, left: 0 }
-  const cellWidth = document.documentElement.clientWidth / gridColumns
-  const cellHeight = document.documentElement.clientHeight / gridRows
+  const cellWidth = clientWidth / gridColumns
+  const cellHeight = clientHeight / gridRows
 
   return grid.reduce((bounds, { rowStart, columnStart, side }) => {
     switch (side) {
