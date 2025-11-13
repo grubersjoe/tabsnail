@@ -40,7 +40,7 @@
   getSettingsSnapshot()
     .then(snapshot => {
       settings = snapshot
-      void loadTheme(shadowRoot, snapshot.theme)
+      loadTheme(shadowRoot, snapshot.theme)
     })
     .catch(console.error)
 
@@ -73,7 +73,7 @@
 
   settingsStorage.theme.watch(theme => {
     settings.theme = theme
-    void loadTheme(shadowRoot, theme)
+    loadTheme(shadowRoot, theme)
   })
 
   $effect(() => {
