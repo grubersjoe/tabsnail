@@ -13,7 +13,7 @@ importers:
         version: 9.39.1
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^6.0.0
-        version: 6.0.0(prettier-plugin-svelte@3.4.0(prettier@3.7.3)(svelte@5.45.2))(prettier@3.7.3)(svelte@5.45.2)
+        version: 6.0.0(prettier-plugin-svelte@3.4.0(prettier@3.6.2)(svelte@5.45.2))(prettier@3.6.2)(svelte@5.45.2)
       '@tsconfig/svelte':
         specifier: ^5.0.6
         version: 5.0.6
@@ -39,11 +39,11 @@ importers:
         specifier: ^9.1.7
         version: 9.1.7
       prettier:
-        specifier: ^3.7.3
-        version: 3.7.3
+        specifier: ~3.6.0
+        version: 3.6.2
       prettier-plugin-svelte:
         specifier: ^3.4.0
-        version: 3.4.0(prettier@3.7.3)(svelte@5.45.2)
+        version: 3.4.0(prettier@3.6.2)(svelte@5.45.2)
       sass-embedded:
         specifier: ^1.93.3
         version: 1.93.3
@@ -2035,8 +2035,8 @@ packages:
       prettier: ^3.0.0
       svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
 
-  prettier@3.7.3:
-    resolution: {integrity: sha512-QgODejq9K3OzoBbuyobZlUhznP5SKwPqp+6Q6xw6o8gnhr4O85L2U915iM2IDcfF2NPXVaM9zlo9tdwipnYwzg==}
+  prettier@3.6.2:
+    resolution: {integrity: sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -3185,7 +3185,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@trivago/prettier-plugin-sort-imports@6.0.0(prettier-plugin-svelte@3.4.0(prettier@3.7.3)(svelte@5.45.2))(prettier@3.7.3)(svelte@5.45.2)':
+  '@trivago/prettier-plugin-sort-imports@6.0.0(prettier-plugin-svelte@3.4.0(prettier@3.6.2)(svelte@5.45.2))(prettier@3.6.2)(svelte@5.45.2)':
     dependencies:
       '@babel/generator': 7.28.5
       '@babel/parser': 7.28.5
@@ -3195,9 +3195,9 @@ snapshots:
       lodash-es: 4.17.21
       minimatch: 9.0.5
       parse-imports-exports: 0.2.4
-      prettier: 3.7.3
+      prettier: 3.6.2
     optionalDependencies:
-      prettier-plugin-svelte: 3.4.0(prettier@3.7.3)(svelte@5.45.2)
+      prettier-plugin-svelte: 3.4.0(prettier@3.6.2)(svelte@5.45.2)
       svelte: 5.45.2
     transitivePeerDependencies:
       - supports-color
@@ -4536,12 +4536,12 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-svelte@3.4.0(prettier@3.7.3)(svelte@5.45.2):
+  prettier-plugin-svelte@3.4.0(prettier@3.6.2)(svelte@5.45.2):
     dependencies:
-      prettier: 3.7.3
+      prettier: 3.6.2
       svelte: 5.45.2
 
-  prettier@3.7.3: {}
+  prettier@3.6.2: {}
 
   process-nextick-args@2.0.1: {}
 
