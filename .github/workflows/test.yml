@@ -35,7 +35,7 @@ jobs:
         run: pnpm install
 
       - name: Check formatting (Prettier)
-        run: pnpx prettier -c . !build/ !pnpm-lock.yaml
+        run: pnpm exec prettier -c . !build/ !pnpm-lock.yaml
 
       - name: Run type checks (TypeScript)
         run: pnpm tsc
