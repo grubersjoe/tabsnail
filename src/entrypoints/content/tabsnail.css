@@ -28,13 +28,51 @@
   font-family: system-ui, sans-serif;
   font-size: 12px;
 
-  > * {
+  .tab {
     pointer-events: auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
     background-color: white;
+  }
+
+  #head {
+    pointer-events: auto;
+    z-index: -1;
+    display: flex;
+
+    &.top {
+      justify-content: flex-start;
+
+      img {
+        transform: scale(2.6) translate(8px, 5px);
+      }
+    }
+
+    &.right {
+      align-items: flex-start;
+
+      img {
+        transform: scale(2.6) rotate(90deg) translate(8px, 5px);
+      }
+    }
+
+    &.bottom {
+      justify-content: flex-end;
+
+      img {
+        transform: scale(2.6) rotate(180deg) translate(8px, 5px);
+      }
+    }
+
+    &.left {
+      align-items: flex-end;
+
+      img {
+        transform: scale(2.6) rotate(270deg) translate(8px, 5px);
+      }
+    }
   }
 
   .tabsnail-btn-activate {

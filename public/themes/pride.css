@@ -13,7 +13,7 @@
 
   gap: var(--outline-width);
 
-  > * {
+  .tab {
     color: var(--color-text);
     box-shadow: 0 0 0 var(--outline-width) var(--color-outline);
 

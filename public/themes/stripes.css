@@ -17,35 +17,7 @@
 
   gap: var(--outline-width);
 
-  /* Colored segments */
-  > :nth-of-type(odd) {
-    --color-bg: var(--color);
-    --color-bg-active: oklch(from var(--color-bg) calc(l + var(--color-shift-active)) c h);
-    --color-bg-active-hover: oklch(
-      from var(--color-bg-active) calc(l + var(--color-shift-hover)) c h
-    );
-    --color-bg-hover: oklch(from var(--color-bg) calc(l - var(--color-shift-hover)) c h);
-    --btn-close-bg-hover: oklch(
-      from var(--color-bg-hover) calc(l - calc(var(--color-shift-hover) * 1.5)) c h
-    );
-  }
-
-  /* Colored segments (dark) */
-  &.tabsnail-dark > :nth-of-type(odd) {
-    --color-text: white;
-    --color-bg-active: oklch(
-      from var(--color-bg) calc(l - calc(var(--color-shift-active) * 2)) c h
-    );
-    --color-bg-active-hover: oklch(
-      from var(--color-bg-active) calc(l + calc(var(--color-shift-hover) * 2)) c h
-    );
-    --color-bg-hover: oklch(from var(--color-bg) calc(l + calc(var(--color-shift-hover) * 2)) c h);
-    --btn-close-bg-hover: oklch(
-      from var(--color-bg-hover) calc(l + calc(var(--color-shift-hover) * 1.5)) c h
-    );
-  }
-
-  > * {
+  .tab {
     color: var(--color-text);
     background-color: var(--color-bg);
     box-shadow: 0 0 0 var(--outline-width) var(--color-outline);
@@ -63,6 +35,34 @@
     }
   }
 
+  /* Colored segments */
+  .tab:nth-of-type(odd) {
+    --color-bg: var(--color);
+    --color-bg-active: oklch(from var(--color-bg) calc(l + var(--color-shift-active)) c h);
+    --color-bg-active-hover: oklch(
+      from var(--color-bg-active) calc(l + var(--color-shift-hover)) c h
+    );
+    --color-bg-hover: oklch(from var(--color-bg) calc(l - var(--color-shift-hover)) c h);
+    --btn-close-bg-hover: oklch(
+      from var(--color-bg-hover) calc(l - calc(var(--color-shift-hover) * 1.5)) c h
+    );
+  }
+
+  /* Colored segments (dark) */
+  &.tabsnail-dark .tab:nth-of-type(odd) {
+    --color-text: white;
+    --color-bg-active: oklch(
+      from var(--color-bg) calc(l - calc(var(--color-shift-active) * 2)) c h
+    );
+    --color-bg-active-hover: oklch(
+      from var(--color-bg-active) calc(l + calc(var(--color-shift-hover) * 2)) c h
+    );
+    --color-bg-hover: oklch(from var(--color-bg) calc(l + calc(var(--color-shift-hover) * 2)) c h);
+    --btn-close-bg-hover: oklch(
+      from var(--color-bg-hover) calc(l + calc(var(--color-shift-hover) * 1.5)) c h
+    );
+  }
+
   .tabsnail-btn-close {
     border-radius: 50%;
     background-color: transparent;
@@ -73,7 +73,7 @@
     }
   }
 
-  > *:hover,
+  .tab:hover,
   .tabsnail-btn-close:hover {
     transition: background-color 200ms ease-in-out;
   }
