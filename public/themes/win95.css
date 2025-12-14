@@ -20,7 +20,7 @@
   font-family: 'Win95', system-ui, sans-serif;
   font-size: 14px;
 
-  > * {
+  .tab {
     color: var(--color-black);
     text-decoration: none;
     background-color: var(--color-gray-200);
@@ -31,7 +31,7 @@
     }
   }
 
-  > .tabsnail-active {
+  .tab.tabsnail-active {
     box-shadow: var(--shadow-default-button-highlighted);
   }
 }

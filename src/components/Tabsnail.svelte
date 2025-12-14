@@ -1,5 +1,6 @@
 <script lang="ts">
   import closeIcon from '@/assets/close.svg?raw'
+  import snailHead from '@/assets/snail-head.svg'
   import { className, isDarkColor } from '@/lib'
   import { setViewportBounds, snailBounds, snailGrid } from '@/lib/layout'
   import {
@@ -100,7 +101,7 @@
         style:grid-column-start={grid[i].columnStart}
         style:grid-row-end={grid[i].rowEnd}
         style:grid-column-end={grid[i].columnEnd}
-        class={[className(grid[i].side), tab.active ? className('active') : '']}
+        class={['tab', className(grid[i].side), tab.active ? className('active') : '']}
       >
         <button
           type="button"
@@ -134,4 +135,17 @@
       </div>
     {/if}
   {/each}
+
+  {#if tabs.length > 0 && grid[tabs.length]}
+    <div
+      id="head"
+      style:grid-row-start={grid[tabs.length]?.rowStart}
+      style:grid-column-start={grid[tabs.length]?.columnStart}
+      style:grid-row-end={grid[tabs.length]?.rowEnd}
+      style:grid-column-end={grid[tabs.length]?.columnEnd}
+      class={[grid[tabs.length]?.side]}
+    >
+      <img src={snailHead} alt="Snail head" />
+    </div>
+  {/if}
 </div>
