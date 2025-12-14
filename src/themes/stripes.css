@@ -1,5 +1,5 @@
 /* Striped theme (default) */
-#tabsnail.tabsnail-theme {
+#tabsnail {
   --color-shift-active: 0.08;
   --color-shift-hover: 0.04;
   --color-text: hsl(0 0% 5%);
@@ -14,11 +14,31 @@
     from var(--color-bg-hover) calc(l - calc(var(--color-shift-hover) * 1.5)) c h
   );
   --outline-width: 1px;
+  --head-bg: var(--color);
 
   gap: var(--outline-width);
 
+  .tab {
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    box-shadow: 0 0 0 var(--outline-width) var(--color-outline);
+
+    &:hover {
+      transition: background-color 200ms ease-in-out;
+      background-color: var(--color-bg-hover);
+    }
+
+    &.tabsnail-active {
+      background-color: var(--color-bg-active);
+
+      &:hover {
+        background-color: var(--color-bg-active-hover);
+      }
+    }
+  }
+
   /* Colored segments */
-  > :nth-of-type(odd) {
+  .tab:nth-of-type(odd) {
     --color-bg: var(--color);
     --color-bg-active: oklch(from var(--color-bg) calc(l + var(--color-shift-active)) c h);
     --color-bg-active-hover: oklch(
@@ -31,7 +51,7 @@
   }
 
   /* Colored segments (dark) */
-  &.tabsnail-dark > :nth-of-type(odd) {
+  &.tabsnail-dark .tab:nth-of-type(odd) {
     --color-text: white;
     --color-bg-active: oklch(
       from var(--color-bg) calc(l - calc(var(--color-shift-active) * 2)) c h
@@ -45,24 +65,6 @@
     );
   }
 
-  > * {
-    color: var(--color-text);
-    background-color: var(--color-bg);
-    box-shadow: 0 0 0 var(--outline-width) var(--color-outline);
-
-    &:hover {
-      background-color: var(--color-bg-hover);
-    }
-
-    &.tabsnail-active {
-      background-color: var(--color-bg-active);
-
-      &:hover {
-        background-color: var(--color-bg-active-hover);
-      }
-    }
-  }
-
   .tabsnail-btn-close {
     border-radius: 50%;
     background-color: transparent;
@@ -70,11 +72,7 @@
 
     &:hover {
       background-color: var(--btn-close-bg-hover);
+      transition: background-color 200ms ease-in-out;
     }
-  }
-
-  > *:hover,
-  .tabsnail-btn-close:hover {
-    transition: background-color 200ms ease-in-out;
   }
 }

@@ -1,5 +1,6 @@
 <script lang="ts">
   import closeIcon from '@/assets/close.svg?raw'
+  import Head from '@/components/Head.svelte'
   import { className, isDarkColor } from '@/lib'
   import { setViewportBounds, snailBounds, snailGrid } from '@/lib/layout'
   import {
@@ -12,7 +13,7 @@
   } from '@/lib/messages'
   import { defaultSettings, getSettingsSnapshot, settingsStorage } from '@/lib/settings'
   import { loadTheme } from '@/lib/themes'
-  import { themes } from '@@/public/themes'
+  import { themes } from '@/themes'
 
   type Props = {
     shadowRoot: ShadowRoot
@@ -87,7 +88,7 @@
   id="tabsnail"
   bind:clientWidth
   bind:clientHeight
-  class={[className('theme'), isDarkColor(settings.color) && className('dark')]}
+  class={[isDarkColor(settings.color) && className('dark')]}
   hidden={isFullscreen}
   style:--grid-columns={gridColumns}
   style:--grid-rows={gridRows}
@@ -100,7 +101,7 @@
         style:grid-column-start={grid[i].columnStart}
         style:grid-row-end={grid[i].rowEnd}
         style:grid-column-end={grid[i].columnEnd}
-        class={[className(grid[i].side), tab.active ? className('active') : '']}
+        class={['tab', className(grid[i].side), tab.active ? className('active') : '']}
       >
         <button
           type="button"
@@ -134,4 +135,16 @@
       </div>
     {/if}
   {/each}
+
+  {#if tabs.length > 0 && grid[tabs.length]}
+    <div
+      style:display="flex"
+      style:grid-row-start={grid[tabs.length]?.rowStart}
+      style:grid-column-start={grid[tabs.length]?.columnStart}
+      style:grid-row-end={grid[tabs.length]?.rowEnd}
+      style:grid-column-end={grid[tabs.length]?.columnEnd}
+    >
+      <Head side={grid[tabs.length]?.side ?? 'top'} />
+    </div>
+  {/if}
 </div>
