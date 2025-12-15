@@ -1,6 +1,6 @@
 <script lang="ts">
   import closeIcon from '@/assets/close.svg?raw'
-  import snailHead from '@/assets/snail-head.svg'
+  import Head from '@/components/Head.svelte'
   import { className, isDarkColor } from '@/lib'
   import { setViewportBounds, snailBounds, snailGrid } from '@/lib/layout'
   import {
@@ -145,7 +145,7 @@
       style:grid-column-end={grid[tabs.length]?.columnEnd}
       class={[grid[tabs.length]?.side]}
     >
-      <img src={snailHead} alt="Snail head" />
+      <Head />
     </div>
   {/if}
 </div>
