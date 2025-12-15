@@ -1,45 +1,46 @@
-<script lang="ts">
-  let head: HTMLElement
-  let rot = $state(0)
+<script>
+  import Eye from '@/components/Eye.svelte'
 </script>
 
-<svelte:window
-  on:mousemove={e => {
-    const rect = head.getBoundingClientRect()
-    const x = rect.x + rect.width / 2
-    const y = rect.y + rect.height / 2
-    const rad = Math.atan2(e.clientX - x, e.clientY - y)
-    rot = rad * (180 / Math.PI) * -1
-  }}
-/>
-
-<div class="head" bind:this={head}>
-  <div class="eye" style="transform: rotate({rot}deg)"></div>
-  <div class="eye" style="transform: rotate({rot}deg)"></div>
+<div class="head">
+  <div class="feeler">
+    <Eye style="top: -5px; left: 32px;" />
+  </div>
+  <div class="feeler">
+    <Eye style="top: -5px; left: 32px;" />
+  </div>
 </div>
 
 <style>
   .head {
-    pointer-events: all;
-    display: flex;
-  }
-
-  .eye {
-    aspect-ratio: 1;
     position: relative;
-    border-radius: 50%;
-    background: #ccc;
+    pointer-events: all;
+    width: 50px;
+    background: #eee;
+    outline: solid 1px #ddd;
+    border-radius: 0 50% 40% 0;
   }
 
-  .eye:after {
-    /*pupil*/
+  .feeler {
     position: absolute;
-    aspect-ratio: 1;
-    top: 54%;
-    right: 34%;
-    width: 34%;
-    background: #000;
-    border-radius: 50%;
-    content: '';
+    width: 60px;
+    height: 50px;
+    border-style: solid;
+    border-width: 5px;
+    border-color: #ddd transparent transparent transparent;
+    border-radius: 50% / 30px 30px 0 0;
+    z-index: -1;
+
+    &:nth-of-type(1) {
+      top: 29%;
+      right: -34px;
+      transform: rotate(36deg);
+    }
+
+    &:nth-of-type(2) {
+      top: 62%;
+      right: -15px;
+      transform: rotate(53deg);
+    }
   }
 </style>
