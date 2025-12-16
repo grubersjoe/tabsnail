@@ -3,12 +3,10 @@
 </script>
 
 <div class="head">
-  <div class="feeler">
-    <Eye style="top: -5px; left: 32px;" />
-  </div>
-  <div class="feeler">
-    <Eye style="top: -5px; left: 32px;" />
-  </div>
+  <div class="feeler"></div>
+  <div class="feeler"></div>
+  <Eye style="top: 20px; left: 67px;" />
+  <Eye style="top: 19px; left: 48px;" />
 </div>
 
 <style>

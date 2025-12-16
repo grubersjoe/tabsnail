@@ -33,11 +33,12 @@
 
   /* Pupil */
   .eye:after {
+    --width: 34%;
     position: absolute;
     aspect-ratio: 1;
+    width: var(--width);
+    right: calc(50% - var(--width) / 2); /* center */
     top: 54%;
-    right: 34%;
-    width: 34%;
     background: #000;
     border-radius: 50%;
     content: '';
