@@ -31,7 +31,7 @@ export default defineConfig({
     ],
     browser_specific_settings: {
       gecko: {
-        id: 'hello@jogruber.de',
+        id: 'tabsnail@jogruber.de',
       },
     },
   },
