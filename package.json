@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@trivago/prettier-plugin-sort-imports": "^6.0.0",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.1",
     "@tsconfig/svelte": "^5.0.6",
     "@types/bootstrap": "^5.2.10",
     "@wxt-dev/module-svelte": "^2.0.3",
@@ -39,13 +39,13 @@
     "husky": "^9.1.7",
     "prettier": "^3.7.4",
     "prettier-plugin-svelte": "^3.4.1",
-    "sass-embedded": "^1.97.0",
+    "sass-embedded": "^1.97.1",
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^39.0.1",
-    "svelte": "^5.46.0",
-    "svelte-check": "^4.3.4",
+    "svelte": "^5.46.1",
+    "svelte-check": "^4.3.5",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.50.0",
+    "typescript-eslint": "^8.51.0",
     "wxt": "^0.20.13"
   }
 }
