@@ -5,11 +5,11 @@
 This project is a **work in progress** to bring [Fiona's](https://runjak.codes/) brilliant idea to
 life: display your web browser's tab bar in a snail-like layout around the page.
 
-- 🐌 Navigate between your tabs using an intuitive snail-layout
-- 😵‍💫 Feel naturally discouraged from tab hoarding as the snail grows
-- 💅 Pick your favorite snail color theme
-- ⚙️ Customize colors and the tab bar size
-- 🤓 The viewport automatically adjusts to fit inside the snail
+- Navigate between your tabs using an intuitive snail-layout
+- Feel naturally discouraged from tab hoarding as the snail grows
+- Pick your favorite snail color theme
+- Customize colors and the tab size
+- Automatically shrinks the viewport to fit inside the snail
 
 ![Screenshot](tabsnail.jpg)
 
