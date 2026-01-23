@@ -23,6 +23,7 @@
     box-shadow: 0 0 0 var(--outline-width) var(--color-outline);
 
     &:hover {
+      transition: background-color 200ms ease-in-out;
       background-color: var(--color-bg-hover);
     }
 
@@ -70,11 +71,7 @@
 
     &:hover {
       background-color: var(--btn-close-bg-hover);
+      transition: background-color 200ms ease-in-out;
     }
-  }
-
-  .tab:hover,
-  .tabsnail-btn-close:hover {
-    transition: background-color 200ms ease-in-out;
   }
 }
