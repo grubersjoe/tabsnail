@@ -42,7 +42,7 @@
     "sass-embedded": "^1.97.2",
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^39.0.1",
-    "svelte": "^5.46.1",
+    "svelte": "^5.46.4",
     "svelte-check": "^4.3.5",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.52.0",
