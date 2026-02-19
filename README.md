@@ -27,6 +27,7 @@ install the extension yourself if you want to use it (see [development](#develop
 - [x] Update layout on viewport changes
 - [x] Configurable tab size
 - [ ] Tab groups
+- [ ] Optional address bar (for full screen mode)
 - [ ] Themes [inspiration](https://www.instagram.com/p/DMdTtUJpaxi)
   - [x] Striped (default) with color setting
   - [x] Pride
