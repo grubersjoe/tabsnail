@@ -27,7 +27,7 @@
     "zip:firefox": "wxt zip -b firefox"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^9.39.3",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@tsconfig/svelte": "^5.0.7",
     "@types/bootstrap": "^5.2.10",
