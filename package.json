@@ -31,10 +31,10 @@
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@tsconfig/svelte": "^5.0.8",
     "@types/bootstrap": "^5.2.10",
-    "@wxt-dev/module-svelte": "^2.0.3",
+    "@wxt-dev/module-svelte": "^2.0.5",
     "bootstrap": "^5.3.8",
     "eslint": "^9.39.2",
-    "eslint-plugin-svelte": "^3.15.2",
+    "eslint-plugin-svelte": "^3.16.0",
     "globals": "^17.4.0",
     "husky": "^9.1.7",
     "prettier": "^3.8.1",
@@ -42,10 +42,10 @@
     "sass-embedded": "^1.98.0",
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^39.0.1",
-    "svelte": "^5.53.12",
+    "svelte": "^5.54.1",
     "svelte-check": "^4.4.5",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.57.0",
-    "wxt": "^0.20.19"
+    "typescript-eslint": "^8.57.1",
+    "wxt": "^0.20.20"
   }
 }
