@@ -33,7 +33,7 @@
     "@types/bootstrap": "^5.2.10",
     "@wxt-dev/module-svelte": "^2.0.5",
     "bootstrap": "^5.3.8",
-    "eslint": "^9.39.2",
+    "eslint": "^10.1.0",
     "eslint-plugin-svelte": "^3.16.0",
     "globals": "^17.4.0",
     "husky": "^9.1.7",
