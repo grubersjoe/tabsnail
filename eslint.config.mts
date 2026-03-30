@@ -15,6 +15,7 @@ export default defineConfig(
     rules: {
       '@typescript-eslint/array-type': ['error', { default: 'array' }],
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+      '@typescript-eslint/no-unnecessary-type-arguments': 'off',
       '@typescript-eslint/restrict-template-expressions': ['error', { allowNullish: true }],
     },
     languageOptions: {
