@@ -53,6 +53,9 @@ importers:
       stylelint-config-standard:
         specifier: ^40.0.0
         version: 40.0.0(stylelint@17.6.0(typescript@5.9.3))
+      sv:
+        specifier: ^0.13.0
+        version: 0.13.0
       svelte:
         specifier: ^5.55.1
         version: 5.55.1
@@ -814,6 +817,9 @@ packages:
     resolution: {integrity: sha512-lVJX6qEgs/4DOcRTpo56tmKzVPtoWAaVbL4hfO7t7NVwl9AAXzQR6cihesW1BmNMPl+bK6dreu2sOKBP2Q9CIA==}
     peerDependencies:
       acorn: ^8.9.0
+
+  '@sveltejs/sv-utils@0.0.3':
+    resolution: {integrity: sha512-rILMrx0zQMR0OlFXR/peTu+9z6x/5iOsEiWJelkI670WPWdAunikKLQrIE7zN8U/8DjN5WBvIWu0OAyEuZ4ohA==}
 
   '@sveltejs/vite-plugin-svelte@7.0.0':
     resolution: {integrity: sha512-ILXmxC7HAsnkK2eslgPetrqqW1BKSL7LktsFgqzNj83MaivMGZzluWq32m25j2mDOjmSKX7GGWahePhuEs7P/g==}
@@ -2728,6 +2734,10 @@ packages:
     resolution: {integrity: sha512-UKbpT93hN5Nr9go5UY7bopIB9YQlMz9nm/ct4IXt/irb5YRkn9WaqrOBJGZ5Pwvsd5FQzSVeYlGdXoCAPQZrPg==}
     engines: {node: '>=20'}
 
+  sv@0.13.0:
+    resolution: {integrity: sha512-dTjex1KUoN1Uys6xTSYFJQu86lO0ApKkke6k0xoKfjymI5OL7RrXeguG7zSWb/uv6z20wYGrCsxwYU6iHJ3r6A==}
+    hasBin: true
+
   svelte-check@4.4.5:
     resolution: {integrity: sha512-1bSwIRCvvmSHrlK52fOlZmVtUZgil43jNL/2H18pRpa+eQjzGt6e3zayxhp1S7GajPFKNM/2PMCG+DZFHlG9fw==}
     engines: {node: '>= 18.0.0'}
@@ -3564,6 +3574,8 @@ snapshots:
   '@sveltejs/acorn-typescript@1.0.9(acorn@8.16.0)':
     dependencies:
       acorn: 8.16.0
+
+  '@sveltejs/sv-utils@0.0.3': {}
 
   '@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.55.1)(vite@8.0.1(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(sass-embedded@1.98.0)(sass@1.98.0))':
     dependencies:
@@ -5460,6 +5472,10 @@ snapshots:
     dependencies:
       has-flag: 5.0.1
       supports-color: 10.2.2
+
+  sv@0.13.0:
+    dependencies:
+      '@sveltejs/sv-utils': 0.0.3
 
   svelte-check@4.4.5(picomatch@4.0.3)(svelte@5.55.1)(typescript@5.9.3):
     dependencies:
