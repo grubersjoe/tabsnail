@@ -42,10 +42,10 @@
     "sass-embedded": "^1.98.0",
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^39.0.1",
-    "svelte": "^5.54.1",
+    "svelte": "^5.55.1",
     "svelte-check": "^4.4.5",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.57.1",
+    "typescript-eslint": "^8.57.2",
     "wxt": "^0.20.20"
   }
 }
