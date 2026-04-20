@@ -33,7 +33,7 @@
     "@types/bootstrap": "^5.2.10",
     "@wxt-dev/module-svelte": "^2.0.5",
     "bootstrap": "^5.3.8",
-    "eslint": "^10.2.0",
+    "eslint": "^10.2.1",
     "eslint-plugin-svelte": "^3.17.0",
     "globals": "^17.5.0",
     "husky": "^9.1.7",
@@ -45,8 +45,8 @@
     "sv": "^0.15.1",
     "svelte": "^5.55.3",
     "svelte-check": "^4.4.6",
-    "typescript": "^6.0.2",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.58.1",
-    "wxt": "^0.20.20"
+    "wxt": "^0.20.25"
   }
 }
