@@ -33,20 +33,20 @@
     "@types/bootstrap": "^5.2.11",
     "@wxt-dev/module-svelte": "^2.0.5",
     "bootstrap": "^5.3.8",
-    "eslint": "^10.8.0",
-    "eslint-plugin-svelte": "^3.22.0",
-    "globals": "^17.9.0",
+    "eslint": "^10.8.1",
+    "eslint-plugin-svelte": "^3.23.0",
+    "globals": "^17.11.0",
     "husky": "^9.1.7",
     "prettier": "^3.9.6",
     "prettier-plugin-svelte": "^3.5.2",
-    "sass-embedded": "^1.100.0",
+    "sass-embedded": "^1.102.0",
     "stylelint": "^17.14.1",
     "stylelint-config-standard": "^40.0.0",
     "sv": "^0.17.0",
-    "svelte": "^5.56.8",
-    "svelte-check": "^4.7.4",
+    "svelte": "^5.56.9",
+    "svelte-check": "^4.7.6",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.66.0",
-    "wxt": "^0.21.3"
+    "typescript-eslint": "^8.67.0",
+    "wxt": "^0.21.4"
   }
 }
