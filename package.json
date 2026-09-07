@@ -35,18 +35,18 @@
     "bootstrap": "^5.3.8",
     "eslint": "^10.9.1",
     "eslint-plugin-svelte": "^3.23.0",
-    "globals": "^17.11.0",
+    "globals": "^17.12.0",
     "husky": "^9.1.7",
     "prettier": "^3.9.6",
     "prettier-plugin-svelte": "^3.5.2",
-    "sass-embedded": "^1.103.1",
+    "sass-embedded": "^1.104.0",
     "stylelint": "^17.14.1",
     "stylelint-config-standard": "^40.0.0",
     "sv": "^0.17.0",
-    "svelte": "^5.56.10",
+    "svelte": "^5.57.0",
     "svelte-check": "^4.7.6",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.68.0",
+    "typescript-eslint": "^8.69.0",
     "wxt": "^0.21.4"
   }
 }
