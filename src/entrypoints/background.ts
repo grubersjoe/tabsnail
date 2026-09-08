@@ -7,9 +7,9 @@ import {
 } from '@/lib/messages'
 
 export default defineBackground(() => {
-  browser.runtime.onMessage.addListener((message: Message, _, sendResponse) => {
+  browser.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
     if (isRequestTabsMessage(message)) {
-      void getTabs().then(tabs => {
+      void getTabs(sender.tab?.windowId).then(tabs => {
         sendResponse({ type: 'tabs', tabs } satisfies TabsMessage)
       })
       return true // required for asynchronous responses
@@ -24,31 +24,31 @@ export default defineBackground(() => {
     }
   })
 
-  browser.tabs.onActivated.addListener(() => {
-    void sendTabs()
+  browser.tabs.onActivated.addListener(activeInfo => {
+    void sendTabs(activeInfo.windowId)
   })
 
-  browser.tabs.onUpdated.addListener(() => {
-    void sendTabs()
+  browser.tabs.onUpdated.addListener((_tabId, _changeInfo, tab) => {
+    void sendTabs(tab.windowId)
   })
 
-  browser.tabs.onRemoved.addListener(() => {
-    void sendTabs()
+  browser.tabs.onRemoved.addListener((_tabId, removeInfo) => {
+    void sendTabs(removeInfo.windowId)
   })
 
-  browser.tabs.onMoved.addListener(() => {
-    void sendTabs() // (reordering tabs)
+  browser.tabs.onMoved.addListener((_tabId, moveInfo) => {
+    void sendTabs(moveInfo.windowId) // (reordering tabs)
   })
 
-  browser.tabs.onAttached.addListener(() => {
-    void sendTabs()
+  browser.tabs.onAttached.addListener((_tabId, attachInfo) => {
+    void sendTabs(attachInfo.newWindowId)
   })
 
   browser.tabs.onDetached.addListener((_, detachInfo) => {
     void sendTabs(detachInfo.oldWindowId)
   })
 
-  async function sendTabs(windowId?: number) {
+  async function sendTabs(windowId: number) {
     const tabs = await getTabs(windowId)
     const promises = []
 
@@ -60,11 +60,7 @@ export default defineBackground(() => {
       promises.push(
         browser.tabs.sendMessage<TabsMessage>(tab.id, {
           type: 'tabs',
-          tabs: tabs.map(t => ({
-            id: t.id,
-            title: t.title,
-            active: t.active,
-          })),
+          tabs: tabs.map(({ id, title, active }) => ({ id, title, active })),
         }),
       )
     }
