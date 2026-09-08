@@ -8,10 +8,6 @@ export function debounce(callback: (...args: unknown[]) => unknown, wait: number
   }
 }
 
-export function className(name: string) {
-  return `tabsnail-${name}`
-}
-
 export function isDarkColor(hex: string) {
   hex = hex.slice(1)
   const int = parseInt(

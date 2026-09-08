@@ -37,7 +37,7 @@
     background-color: white;
   }
 
-  .tabsnail-btn-activate {
+  .btn-activate {
     flex-grow: 1;
     width: 100%;
     height: 100%;
@@ -45,31 +45,31 @@
     mask-size: cover;
   }
 
-  .tabsnail-top,
-  .tabsnail-bottom {
+  .top,
+  .bottom {
     padding: 0 calc(var(--padding) / 2) 0 0;
 
-    .tabsnail-btn-activate {
+    .btn-activate {
       padding: 0 0 0 var(--padding);
       mask-image: linear-gradient(to right, currentcolor 94%, transparent 100%);
     }
   }
 
-  .tabsnail-left {
+  .left {
     writing-mode: sideways-lr;
     padding: calc(var(--padding) / 2) 0 0;
 
-    .tabsnail-btn-activate {
+    .btn-activate {
       padding: 0 0 var(--padding) 0;
       mask-image: linear-gradient(to top, currentcolor 94%, transparent 100%);
     }
   }
 
-  .tabsnail-right {
+  .right {
     writing-mode: sideways-rl;
     padding: 0 0 calc(var(--padding) / 2);
 
-    .tabsnail-btn-activate {
+    .btn-activate {
       padding: var(--padding) 0 0 0;
       mask-image: linear-gradient(to bottom, currentcolor 94%, transparent 100%);
     }
@@ -84,7 +84,7 @@
     overflow: hidden;
   }
 
-  .tabsnail-btn-close {
+  .btn-close {
     display: flex;
     flex: 0 0 18px;
     place-content: center center;

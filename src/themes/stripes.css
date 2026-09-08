@@ -28,7 +28,7 @@
       background-color: var(--color-bg-hover);
     }
 
-    &.tabsnail-active {
+    &.active {
       background-color: var(--color-bg-active);
 
       &:hover {
@@ -51,7 +51,7 @@
   }
 
   /* Colored segments (dark) */
-  &.tabsnail-dark .tab:nth-of-type(odd) {
+  &.dark .tab:nth-of-type(odd) {
     --color-text: white;
     --color-bg-active: oklch(
       from var(--color-bg) calc(l - calc(var(--color-shift-active) * 2)) c h
@@ -65,7 +65,7 @@
     );
   }
 
-  .tabsnail-btn-close {
+  .btn-close {
     border-radius: 50%;
     background-color: transparent;
     transition-duration: 150ms;

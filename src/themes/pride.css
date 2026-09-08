@@ -59,25 +59,25 @@
       --color-bg-1: var(--color-pride-violet);
       --color-bg-2: var(--color-pride-red);
     }
+
+    &.top {
+      background: linear-gradient(in oklch to right, var(--color-bg-1), var(--color-bg-2));
+    }
+
+    &.right {
+      background: linear-gradient(in oklch to bottom, var(--color-bg-1), var(--color-bg-2));
+    }
+
+    &.bottom {
+      background: linear-gradient(in oklch to left, var(--color-bg-1), var(--color-bg-2));
+    }
+
+    &.left {
+      background: linear-gradient(in oklch to top, var(--color-bg-1), var(--color-bg-2));
+    }
   }
 
-  .tabsnail-top {
-    background: linear-gradient(in oklch to right, var(--color-bg-1), var(--color-bg-2));
-  }
-
-  .tabsnail-right {
-    background: linear-gradient(in oklch to bottom, var(--color-bg-1), var(--color-bg-2));
-  }
-
-  .tabsnail-bottom {
-    background: linear-gradient(in oklch to left, var(--color-bg-1), var(--color-bg-2));
-  }
-
-  .tabsnail-left {
-    background: linear-gradient(in oklch to top, var(--color-bg-1), var(--color-bg-2));
-  }
-
-  .tabsnail-btn-activate {
+  .btn-activate {
     mask-repeat: no-repeat;
     mask-size: cover;
   }

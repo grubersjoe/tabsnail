@@ -49,9 +49,9 @@
     &:active {
       box-shadow: var(--shadow-default-button-active);
     }
-  }
 
-  .tab.tabsnail-active {
-    box-shadow: var(--shadow-default-button-highlighted);
+    &.active {
+      box-shadow: var(--shadow-default-button-highlighted);
+    }
   }
 }

@@ -1,7 +1,7 @@
 <script lang="ts">
   import closeIcon from '@/assets/close.svg?raw'
   import Head from '@/components/Head.svelte'
-  import { className, isDarkColor } from '@/lib'
+  import { isDarkColor } from '@/lib'
   import { setViewportBounds, snailBounds, snailGrid } from '@/lib/layout'
   import {
     type ActivateTabMessage,
@@ -95,7 +95,7 @@
   id="tabsnail"
   bind:clientWidth
   bind:clientHeight
-  class={[isDarkColor(settings.color) && className('dark')]}
+  class={[isDarkColor(settings.color) && 'dark']}
   hidden={isFullscreen}
   style:--grid-columns={gridColumns}
   style:--grid-rows={gridRows}
@@ -108,11 +108,11 @@
         style:grid-column-start={grid[i].columnStart}
         style:grid-row-end={grid[i].rowEnd}
         style:grid-column-end={grid[i].columnEnd}
-        class={['tab', className(grid[i].side), tab.active ? className('active') : '']}
+        class={['tab', grid[i].side, tab.active ? 'active' : '']}
       >
         <button
           type="button"
-          class={className('btn-activate')}
+          class="btn-activate"
           onclick={() => {
             if (tab.id) {
               void browser.runtime.sendMessage<ActivateTabMessage>({
@@ -127,7 +127,7 @@
 
         <button
           type="button"
-          class={className('btn-close')}
+          class="btn-close"
           onclick={() => {
             if (tab.id) {
               void browser.runtime.sendMessage<CloseTabMessage>({
