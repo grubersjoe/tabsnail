@@ -15,14 +15,14 @@
     var(--color-pride-orange),
     var(--color-pride-yellow)
   );
-  --feeler-bg: var(--color-pride-green);
+  --eyestalk-bg: var(--color-pride-green);
   --eye-color: var(--color-pride-violet);
 
   gap: var(--outline-width);
 
   .tab {
     color: var(--color-text);
-    box-shadow: 0 0 0 var(--outline-width) var(--color-outline);
+    outline: solid var(--outline-width) var(--color-outline);
 
     &:nth-of-type(6n) {
       --color-text: white;

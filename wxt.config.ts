@@ -1,4 +1,4 @@
-import { resolve } from 'path'
+import path from 'node:path'
 import { defineConfig } from 'wxt'
 
 // See https://wxt.dev/api/config.html
@@ -38,14 +38,14 @@ export default defineConfig({
   vite: () => ({
     resolve: {
       alias: {
-        '~bootstrap': resolve(__dirname, 'node_modules/bootstrap'),
+        '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
       },
     },
     css: {
       preprocessorOptions: {
         scss: {
           // https://github.com/twbs/bootstrap/issues/40962
-          silenceDeprecations: ['color-functions', 'global-builtin', 'import'],
+          silenceDeprecations: ['color-functions', 'global-builtin', 'if-function', 'import'],
         },
       },
     },

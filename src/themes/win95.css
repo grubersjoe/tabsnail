@@ -21,10 +21,15 @@
   font-size: 14px;
 
   --head-bg: var(--color-gray-200);
-  --feeler-bg: var(--color-gray-200);
+  --eyestalk-bg: var(--color-gray-200);
 
   .head {
     box-shadow: var(--shadow-default-button-default);
+    outline: none;
+
+    .eyestalk {
+      filter: drop-shadow(1px 1px 0 hsl(0 0% 10%)); /* can't use box-shadow here */
+    }
 
     .eye {
       box-shadow:

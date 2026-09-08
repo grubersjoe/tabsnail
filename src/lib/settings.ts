@@ -18,12 +18,15 @@ export const settingsStorage = {
   color: storage.defineItem<Settings['color']>('sync:color', {
     fallback: defaultSettings.color,
   }),
+
   shrinkViewport: storage.defineItem<Settings['shrinkViewport']>('sync:shrinkViewport', {
     fallback: defaultSettings.shrinkViewport,
   }),
+
   tabSize: storage.defineItem<Settings['tabSize']>('sync:tabSize', {
     fallback: defaultSettings.tabSize,
   }),
+
   theme: storage.defineItem<Settings['theme']>('sync:theme', {
     fallback: defaultSettings.theme,
   }),

@@ -21,7 +21,7 @@
   .tab {
     color: var(--color-text);
     background-color: var(--color-bg);
-    box-shadow: 0 0 0 var(--outline-width) var(--color-outline);
+    outline: solid var(--outline-width) var(--color-outline);
 
     &:hover {
       transition: background-color 200ms ease-in-out;

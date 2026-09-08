@@ -28,7 +28,7 @@
   font-family: system-ui, sans-serif;
   font-size: 12px;
 
-  > * {
+  .tab {
     pointer-events: auto;
     display: flex;
     align-items: center;

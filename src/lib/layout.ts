@@ -1,4 +1,4 @@
-type Side = 'top' | 'right' | 'bottom' | 'left'
+export type Side = 'top' | 'right' | 'bottom' | 'left'
 
 /**
  * Returns the grid position of elements in a snail-shaped layout that goes
