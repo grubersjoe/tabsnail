@@ -9,6 +9,10 @@ export type Theme = {
 
 export type ThemeKey = keyof typeof themes
 
+export function isThemeKey(key: string): key is ThemeKey {
+  return key in themes
+}
+
 let style: HTMLStyleElement | undefined
 
 export function loadTheme(shadowRoot: ShadowRoot, theme: ThemeKey) {

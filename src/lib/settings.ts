@@ -1,4 +1,4 @@
-import { type ThemeKey } from '@/lib/themes'
+import { type ThemeKey, isThemeKey } from '@/lib/themes'
 
 export type Settings = {
   color: string
@@ -34,5 +34,12 @@ export const settingsStorage = {
 
 export async function getSettingsSnapshot() {
   const snapshot = await storage.snapshot('sync')
-  return Object.assign({}, defaultSettings, snapshot) as Settings
+  const settings = Object.assign({}, defaultSettings, snapshot) as Settings
+
+  // A theme key may be removed later but still exist in the storage.
+  if (!isThemeKey(settings.theme)) {
+    settings.theme = defaultSettings.theme
+  }
+
+  return settings
 }

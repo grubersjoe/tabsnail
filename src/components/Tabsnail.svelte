@@ -12,7 +12,7 @@
     isTabsMessage,
   } from '@/lib/messages'
   import { defaultSettings, getSettingsSnapshot, settingsStorage } from '@/lib/settings'
-  import { loadTheme } from '@/lib/themes'
+  import { isThemeKey, loadTheme } from '@/lib/themes'
   import { themes } from '@/themes'
 
   type Props = {
@@ -80,6 +80,10 @@
   })
 
   settingsStorage.theme.watch(theme => {
+    if (!isThemeKey(theme)) {
+      return // stale/unrecognized theme key in storage
+    }
+
     settings.theme = theme
     loadTheme(shadowRoot, theme)
   })
