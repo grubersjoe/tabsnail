@@ -19,9 +19,10 @@ export function loadTheme(shadowRoot: ShadowRoot, theme: ThemeKey) {
     shadowRoot.append(style)
   }
 
-  style.textContent = themes[theme].css
+  const { css, font } = themes[theme]
+  style.textContent = css
 
-  if (themes[theme].font) {
-    document.fonts.add(themes[theme].font)
+  if (font) {
+    document.fonts.add(font)
   }
 }
