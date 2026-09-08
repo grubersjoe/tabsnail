@@ -2,6 +2,10 @@ import './settings.scss'
 import { debounce } from '@/lib'
 import { type Settings, getSettingsSnapshot, settingsStorage } from '@/lib/settings'
 
+// Themes that read the `color` setting (via the --color custom property) and
+// therefore need the color picker shown.
+const THEMES_WITH_COLOR: Settings['theme'][] = ['default', 'spiral']
+
 const shrinkViewportInput = document.getElementById('shrink-viewport') as HTMLInputElement
 const showHeadInput = document.getElementById('show-head') as HTMLInputElement
 const themeSelect = document.getElementById('theme') as HTMLSelectElement
@@ -17,7 +21,10 @@ showHeadInput.checked = settings.showHead
 themeSelect.value = settings.theme
 
 colorPicker.value = settings.color
-colorPickerContainer.classList.toggle('d-none', themeSelect.value !== 'default')
+colorPickerContainer.classList.toggle(
+  'd-none',
+  !THEMES_WITH_COLOR.includes(themeSelect.value as Settings['theme']),
+)
 
 tabSizeInput.value = String(settings.tabSize)
 tabSizeValue.textContent = tabSizeInput.value
@@ -34,7 +41,7 @@ showHeadInput.addEventListener(
 
 themeSelect.addEventListener('change', () => {
   const theme = themeSelect.value as Settings['theme']
-  colorPickerContainer.classList.toggle('d-none', theme !== 'default')
+  colorPickerContainer.classList.toggle('d-none', !THEMES_WITH_COLOR.includes(theme))
   void settingsStorage.theme.setValue(theme)
 })
 

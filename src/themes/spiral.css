@@ -1,0 +1,28 @@
+/* Spiral theme */
+#tabsnail {
+  --color-text: hsl(0 0% 5%);
+  --head-bg: hsl(none 0% 92%);
+
+  .tab {
+    color: var(--color-text);
+    background-color: color-mix(
+      in oklch,
+      var(--color) calc((1 - var(--pos)) * 100%),
+      var(--head-bg)
+    );
+  }
+
+  &.dark .tab {
+    color: white;
+  }
+
+  .btn-close {
+    border-radius: 50%;
+    background-color: transparent;
+    transition-duration: 150ms;
+
+    &:hover {
+      /* TODO */
+    }
+  }
+}

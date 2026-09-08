@@ -1,4 +1,5 @@
 import pride from './pride.css?raw'
+import spiral from './spiral.css?raw'
 import stripes from './stripes.css?raw'
 import win95 from './win95.css?raw'
 import type { Theme } from '@/lib/themes.ts'
@@ -11,6 +12,10 @@ export const themes = {
   pride: {
     name: 'Pride',
     css: pride,
+  },
+  spiral: {
+    name: 'Spiral',
+    css: spiral,
   },
   win95: {
     name: 'Windows 95',

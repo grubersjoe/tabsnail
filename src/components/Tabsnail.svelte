@@ -110,11 +110,12 @@
   {#each tabs as tab, i (tab.id)}
     {#if grid[i]}
       <div
+        class={['tab', grid[i].side, tab.active ? 'active' : '']}
         style:grid-row-start={grid[i].rowStart}
         style:grid-column-start={grid[i].columnStart}
         style:grid-row-end={grid[i].rowEnd}
         style:grid-column-end={grid[i].columnEnd}
-        class={['tab', grid[i].side, tab.active ? 'active' : '']}
+        style:--pos={(i + 1) / tabs.length}
       >
         <button
           type="button"

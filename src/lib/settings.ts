@@ -9,7 +9,7 @@ export type Settings = {
 }
 
 export const defaultSettings: Settings = {
-  color: '#edffb8',
+  color: '#351e9e',
   shrinkViewport: true,
   showHead: true,
   theme: 'default',
