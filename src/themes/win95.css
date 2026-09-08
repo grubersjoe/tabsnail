@@ -1,5 +1,5 @@
 /* Windows 95 theme - Credits to https://github.com/YoshiMannaert/95CSS */
-#tabsnail.tabsnail-theme {
+#tabsnail {
   --padding: 12px;
   --color-white: #fff;
   --color-black: #000;
@@ -20,7 +20,22 @@
   font-family: 'Win95', system-ui, sans-serif;
   font-size: 14px;
 
-  > * {
+  --head-bg: var(--color-gray-200);
+  --feeler-bg: var(--color-gray-200);
+
+  .head {
+    box-shadow: var(--shadow-default-button-default);
+
+    .eye {
+      box-shadow:
+        inset -1px -1px 0 var(--color-black),
+        inset 1px 1px 0 var(--color-white),
+        inset -2px -2px 0 var(--color-gray-300),
+        inset 2px 2px 0 var(--color-gray-100);
+    }
+  }
+
+  .tab {
     color: var(--color-black);
     text-decoration: none;
     background-color: var(--color-gray-200);
@@ -31,7 +46,7 @@
     }
   }
 
-  > .tabsnail-active {
+  .tab.tabsnail-active {
     box-shadow: var(--shadow-default-button-highlighted);
   }
 }

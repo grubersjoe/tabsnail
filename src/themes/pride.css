@@ -1,5 +1,5 @@
 /* Pride theme 🏳️‍🌈 */
-#tabsnail.tabsnail-theme {
+#tabsnail {
   --color-outline: hsl(0 0% 50%);
   --outline-width: 1px;
 
@@ -10,10 +10,17 @@
   --color-pride-green: #00821b;
   --color-pride-blue: #004bff;
   --color-pride-violet: #780089;
+  --head-bg: linear-gradient(
+    in oklch to right,
+    var(--color-pride-orange),
+    var(--color-pride-yellow)
+  );
+  --feeler-bg: var(--color-pride-green);
+  --eye-color: var(--color-pride-violet);
 
   gap: var(--outline-width);
 
-  > * {
+  .tab {
     color: var(--color-text);
     box-shadow: 0 0 0 var(--outline-width) var(--color-outline);
 

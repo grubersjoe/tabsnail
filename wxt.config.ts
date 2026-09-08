@@ -25,7 +25,7 @@ export default defineConfig({
         matches: ['<all_urls>'],
       },
       {
-        resources: ['themes/*'],
+        resources: ['fonts/*'],
         matches: ['<all_urls>'],
       },
     ],

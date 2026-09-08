@@ -1,32 +1,27 @@
-import { themes } from '@@/public/themes'
+import { themes } from '@/themes'
 
 export type Theme = {
   name: string
-  url: string
+  css: string
   font?: FontFace
   cellSizePx: number
 }
 
 export type ThemeKey = keyof typeof themes
 
+let style: HTMLStyleElement | undefined
+
 export function loadTheme(shadowRoot: ShadowRoot, theme: ThemeKey) {
-  const { url, font } = themes[theme] as Theme
-
-  // Using the shadow roots adoptedStyleSheets field would be cool,
-  // but Firefox has a bug:
-  // https://bugzilla.mozilla.org/show_bug.cgi?id=1928865
-  let link = shadowRoot.querySelector<HTMLLinkElement>('#theme')
-
-  if (!link) {
-    link = document.createElement('link')
-    link.id = 'theme'
-    link.rel = 'stylesheet'
-    shadowRoot.querySelector('head')?.appendChild(link)
+  // Using shadowRoot.adoptedStyleSheets would be cool,
+  // but unfortunately, Firefox does not support this.
+  if (!style) {
+    style = document.createElement('style')
+    shadowRoot.append(style)
   }
 
-  link.href = url
+  style.textContent = themes[theme].css
 
-  if (font) {
-    document.fonts.add(font)
+  if (themes[theme].font) {
+    document.fonts.add(themes[theme].font)
   }
 }
