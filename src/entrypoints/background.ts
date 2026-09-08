@@ -32,8 +32,10 @@ export default defineBackground(() => {
     void sendTabs(tab.windowId)
   })
 
-  browser.tabs.onRemoved.addListener((_tabId, removeInfo) => {
-    void sendTabs(removeInfo.windowId)
+  browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
+    // There is a race condition in Firefox where the removed tab is still returned
+    // by tabs.query() after the onRemoved event, so exclude the tab manually.
+    void sendTabs(removeInfo.windowId, tabId)
   })
 
   browser.tabs.onMoved.addListener((_tabId, moveInfo) => {
@@ -48,17 +50,21 @@ export default defineBackground(() => {
     void sendTabs(detachInfo.oldWindowId)
   })
 
-  async function sendTabs(windowId: number) {
+  async function sendTabs(windowId: number, excludeTabId?: number) {
     let tabs: Browser.tabs.Tab[]
 
     try {
       tabs = await getTabs(windowId)
-    } catch {
-      return // the window may already be gone (just closed)
+    } catch (error) {
+      console.error(error) // the window may already be gone (just closed)
+      return
+    }
+
+    if (excludeTabId !== undefined) {
+      tabs = tabs.filter(tab => tab.id !== excludeTabId)
     }
 
     const promises = []
-
     for (const tab of tabs) {
       if (!tab.id) {
         continue // unexpected
