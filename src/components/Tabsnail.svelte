@@ -30,7 +30,7 @@
   let gridColumns = $derived(Math.round(clientWidth / cellSize))
   let gridRows = $derived(Math.round(clientHeight / cellSize))
   let grid = $derived(snailGrid(gridColumns, gridRows, settings.tabSize))
-  let showHead = $derived(tabs.length > 0 && grid[tabs.length] !== undefined)
+  let showHead = $derived(settings.showHead && tabs.length > 0 && grid[tabs.length] !== undefined)
 
   let bounds = $derived(
     snailBounds(
@@ -73,6 +73,10 @@
 
   settingsStorage.shrinkViewport.watch(shrinkViewport => {
     settings.shrinkViewport = shrinkViewport
+  })
+
+  settingsStorage.showHead.watch(showHead => {
+    settings.showHead = showHead
   })
 
   settingsStorage.tabSize.watch(tabSize => {

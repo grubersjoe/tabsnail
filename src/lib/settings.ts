@@ -3,6 +3,7 @@ import { type ThemeKey, isThemeKey } from '@/lib/themes'
 export type Settings = {
   color: string
   shrinkViewport: boolean
+  showHead: boolean
   theme: ThemeKey
   tabSize: number
 }
@@ -10,6 +11,7 @@ export type Settings = {
 export const defaultSettings: Settings = {
   color: '#edffb8',
   shrinkViewport: true,
+  showHead: true,
   theme: 'default',
   tabSize: 8,
 }
@@ -21,6 +23,10 @@ export const settingsStorage = {
 
   shrinkViewport: storage.defineItem<Settings['shrinkViewport']>('sync:shrinkViewport', {
     fallback: defaultSettings.shrinkViewport,
+  }),
+
+  showHead: storage.defineItem<Settings['showHead']>('sync:showHead', {
+    fallback: defaultSettings.showHead,
   }),
 
   tabSize: storage.defineItem<Settings['tabSize']>('sync:tabSize', {

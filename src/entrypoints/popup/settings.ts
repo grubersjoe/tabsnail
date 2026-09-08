@@ -3,6 +3,7 @@ import { debounce } from '@/lib'
 import { type Settings, getSettingsSnapshot, settingsStorage } from '@/lib/settings'
 
 const shrinkViewportInput = document.getElementById('shrink-viewport') as HTMLInputElement
+const showHeadInput = document.getElementById('show-head') as HTMLInputElement
 const themeSelect = document.getElementById('theme') as HTMLSelectElement
 const colorPicker = document.getElementById('color-picker') as HTMLInputElement
 const colorPickerContainer = document.getElementById('color-picker-container') as HTMLInputElement
@@ -12,6 +13,7 @@ const tabSizeValue = document.getElementById('tab-size-value') as HTMLSpanElemen
 const settings = await getSettingsSnapshot()
 
 shrinkViewportInput.checked = settings.shrinkViewport
+showHeadInput.checked = settings.showHead
 themeSelect.value = settings.theme
 
 colorPicker.value = settings.color
@@ -23,6 +25,11 @@ tabSizeValue.textContent = tabSizeInput.value
 shrinkViewportInput.addEventListener(
   'input',
   debounce(() => settingsStorage.shrinkViewport.setValue(shrinkViewportInput.checked), 100),
+)
+
+showHeadInput.addEventListener(
+  'input',
+  debounce(() => settingsStorage.showHead.setValue(showHeadInput.checked), 100),
 )
 
 themeSelect.addEventListener('change', () => {
