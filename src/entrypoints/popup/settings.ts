@@ -20,9 +20,10 @@ colorPickerContainer.classList.toggle('d-none', themeSelect.value !== 'default')
 tabSizeInput.value = String(settings.tabSize)
 tabSizeValue.textContent = tabSizeInput.value
 
-shrinkViewportInput.addEventListener('input', () => {
-  debounce(() => void settingsStorage.shrinkViewport.setValue(shrinkViewportInput.checked), 100)()
-})
+shrinkViewportInput.addEventListener(
+  'input',
+  debounce(() => settingsStorage.shrinkViewport.setValue(shrinkViewportInput.checked), 100),
+)
 
 themeSelect.addEventListener('change', () => {
   const theme = themeSelect.value as Settings['theme']
@@ -35,7 +36,9 @@ colorPicker.addEventListener(
   debounce(() => settingsStorage.color.setValue(colorPicker.value), 100),
 )
 
+const setTabSize = debounce(() => settingsStorage.tabSize.setValue(Number(tabSizeInput.value)), 100)
+
 tabSizeInput.addEventListener('input', () => {
   tabSizeValue.textContent = tabSizeInput.value
-  debounce(() => void settingsStorage.tabSize.setValue(Number(tabSizeInput.value)), 100)()
+  setTabSize()
 })
