@@ -4,10 +4,13 @@ export type Theme = {
   name: string
   css: string
   font?: FontFace
-  cellSizePx: number
 }
 
 export type ThemeKey = keyof typeof themes
+
+export function getTheme(key: ThemeKey): Theme {
+  return themes[key]
+}
 
 export function isThemeKey(key: string): key is ThemeKey {
   return key in themes
@@ -23,7 +26,7 @@ export function loadTheme(shadowRoot: ShadowRoot, theme: ThemeKey) {
     shadowRoot.append(style)
   }
 
-  const { css, font } = themes[theme]
+  const { css, font } = getTheme(theme)
   style.textContent = css
 
   if (font) {

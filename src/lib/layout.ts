@@ -1,3 +1,5 @@
+export const cellSizePx = 32
+
 export type Side = 'top' | 'right' | 'bottom' | 'left'
 
 /**

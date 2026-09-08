@@ -2,7 +2,7 @@
   import closeIcon from '@/assets/close.svg?raw'
   import Head from '@/components/Head.svelte'
   import { isDarkColor } from '@/lib'
-  import { setViewportBounds, snailBounds, snailGrid } from '@/lib/layout'
+  import { cellSizePx, setViewportBounds, snailBounds, snailGrid } from '@/lib/layout'
   import {
     type ActivateTabMessage,
     type CloseTabMessage,
@@ -12,8 +12,7 @@
     isTabsMessage,
   } from '@/lib/messages'
   import { defaultSettings, getSettingsSnapshot, settingsStorage } from '@/lib/settings'
-  import { isThemeKey, loadTheme } from '@/lib/themes'
-  import { themes } from '@/themes'
+  import { isThemeKey, loadTheme } from '@/lib/themes.ts'
 
   type Props = {
     shadowRoot: ShadowRoot
@@ -26,9 +25,8 @@
 
   let clientWidth = $state(document.documentElement.clientWidth)
   let clientHeight = $state(document.documentElement.clientHeight)
-  let cellSize = $derived(themes[settings.theme].cellSizePx)
-  let gridColumns = $derived(Math.round(clientWidth / cellSize))
-  let gridRows = $derived(Math.round(clientHeight / cellSize))
+  let gridColumns = $derived(Math.round(clientWidth / cellSizePx))
+  let gridRows = $derived(Math.round(clientHeight / cellSizePx))
   let grid = $derived(snailGrid(gridColumns, gridRows, settings.tabSize))
   let showHead = $derived(settings.showHead && tabs.length > 0 && grid[tabs.length] !== undefined)
 
