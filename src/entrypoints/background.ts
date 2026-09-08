@@ -49,7 +49,14 @@ export default defineBackground(() => {
   })
 
   async function sendTabs(windowId: number) {
-    const tabs = await getTabs(windowId)
+    let tabs: Browser.tabs.Tab[]
+
+    try {
+      tabs = await getTabs(windowId)
+    } catch {
+      return // the window may already be gone (just closed)
+    }
+
     const promises = []
 
     for (const tab of tabs) {
