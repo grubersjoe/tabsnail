@@ -8,25 +8,25 @@
 
 <div class="head {side}">
   {#if side === 'top'}
-    <Eyestalk top="29%" left="24px" rotate="36deg" />
-    <Eyestalk top="62%" left="5px" rotate="53deg" />
-    <Eye top="20px" left="67px" />
-    <Eye top="19px" left="48px" />
+    <Eyestalk top="29%" left="48%" rotate="36deg" />
+    <Eyestalk top="62%" left="10%" rotate="53deg" />
+    <Eye top="65%" left="147%" />
+    <Eye top="43%" left="103%" />
   {:else if side === 'right'}
-    <Eyestalk top="0" left="-48px" rotate="160deg" />
-    <Eyestalk top="44%" left="-48px" rotate="120deg" />
-    <Eye top="34px" left="-42px" />
-    <Eye top="42px" left="-30px" />
+    <Eyestalk top="-29%" left="-148%" rotate="158deg" />
+    <Eyestalk top="11%" left="-152%" rotate="132deg" />
+    <Eye top="48%" left="-154%" />
+    <Eye top="97%" left="-59%" />
   {:else if side === 'bottom'}
-    <Eyestalk top="-144%" left="-14px" rotate="224deg" />
-    <Eyestalk top="-150%" left="4px" rotate="242deg" />
-    <Eye top="-36px" left="-20px" />
-    <Eye top="-61px" left="0" />
+    <Eyestalk top="-139%" left="-25%" rotate="210deg" />
+    <Eyestalk top="-139%" left="13%" rotate="230deg" />
+    <Eye top="-87%" left="-36%" />
+    <Eye top="-177%" left="6%" />
   {:else if side === 'left'}
-    <Eyestalk top="-12px" left="21px" rotate="316deg" />
-    <Eyestalk top="12px" left="21px" rotate="316deg" />
-    <Eye top="-22px" left="52px" />
-    <Eye top="-18px" left="54px" />
+    <Eyestalk top="-20%" left="61%" rotate="306deg" />
+    <Eyestalk top="10%" left="72%" rotate="323deg" />
+    <Eye top="-112%" left="124%" />
+    <Eye top="-75%" left="98%" />
   {/if}
 </div>
 
