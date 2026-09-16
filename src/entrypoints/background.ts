@@ -1,25 +1,19 @@
-import {
-  type Message,
-  type TabsMessage,
-  isActivateTabMessage,
-  isCloseTabMessage,
-  isRequestTabsMessage,
-} from '@/lib/messages'
+import { type Message, type TabsMessage } from '@/lib/messages'
 
 export default defineBackground(() => {
   browser.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
-    if (isRequestTabsMessage(message)) {
+    if (message.type === 'request-tabs') {
       void getTabs(sender.tab?.windowId).then(tabs => {
         sendResponse({ type: 'tabs', tabs } satisfies TabsMessage)
       })
       return true // required for asynchronous responses
     }
 
-    if (isActivateTabMessage(message)) {
+    if (message.type === 'activate-tab') {
       void browser.tabs.update(message.tabId, { active: true })
     }
 
-    if (isCloseTabMessage(message)) {
+    if (message.type === 'close-tab') {
       void browser.tabs.remove(message.tabId)
     }
   })

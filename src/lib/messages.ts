@@ -22,19 +22,3 @@ export type CloseTabMessage = {
 }
 
 export type Message = TabsMessage | RequestTabsMessage | ActivateTabMessage | CloseTabMessage
-
-export function isTabsMessage(msg: Message): msg is TabsMessage {
-  return msg.type === 'tabs'
-}
-
-export function isRequestTabsMessage(msg: Message): msg is RequestTabsMessage {
-  return msg.type === 'request-tabs'
-}
-
-export function isActivateTabMessage(msg: Message): msg is ActivateTabMessage {
-  return msg.type === 'activate-tab'
-}
-
-export function isCloseTabMessage(msg: Message): msg is CloseTabMessage {
-  return msg.type === 'close-tab'
-}

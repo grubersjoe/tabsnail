@@ -9,7 +9,6 @@
     type Message,
     type RequestTabsMessage,
     type Tab,
-    isTabsMessage,
   } from '@/lib/messages'
   import { defaultSettings, getSettingsSnapshot, settingsStorage } from '@/lib/settings'
   import { isThemeKey, loadTheme } from '@/lib/themes.ts'
@@ -53,14 +52,14 @@
   browser.runtime
     .sendMessage<RequestTabsMessage>({ type: 'request-tabs' })
     .then((message: Message) => {
-      if (isTabsMessage(message)) {
+      if (message.type === 'tabs') {
         tabs = message.tabs
       }
     })
     .catch(console.error)
 
   browser.runtime.onMessage.addListener((message: Message) => {
-    if (isTabsMessage(message)) {
+    if (message.type === 'tabs') {
       tabs = message.tabs
     }
   })
