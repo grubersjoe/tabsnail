@@ -14,7 +14,7 @@
     from var(--color-bg-hover) calc(l - calc(var(--color-shift-hover) * 1.5)) c h
   );
   --outline-width: 1px;
-  --head-bg: var(--color);
+  --head-bg: var(--color-bg);
 
   gap: var(--outline-width);
 
